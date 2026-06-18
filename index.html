@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>예미스쿨</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:'맑은 고딕',sans-serif;
+    background:#f4f6f9;
+}
+
+header{
+    background:#2c3e50;
+    color:white;
+    text-align:center;
+    padding:40px;
+}
+
+header h1{
+    margin:0;
+    font-size:40px;
+}
+
+header p{
+    margin-top:10px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+    transition:0.2s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card a{
+    text-decoration:none;
+    color:#2c3e50;
+    font-weight:bold;
+    font-size:20px;
+}
+
+.icon{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+footer{
+    text-align:center;
+    padding:30px;
+    color:#888;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏫 예미스쿨</h1>
+    <p>AI · 코딩 · 창의융합 교육 자료실</p>
+</header>
+
+<div class="container">
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="icon">🧩</div>
+            <a href="cube/">화살표 그림큐브</a>
+            <p>큐브 방향 학습용 시뮬레이터</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">💼</div>
+            <a href="jobs/">직업 탐색</a>
+            <p>직업 카드 활동</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🎭</div>
+            <a href="bodygame/">몸으로 말해요</a>
+            <p>교실 활동 게임</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">⌨️</div>
+            <a href="typing/">타자 게임</a>
+            <p>한글 입력 연습</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🌐</div>
+            <a href="metaverse/">메타버스</a>
+            <p>수업 자료 모음</p>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    © YEME School
+</footer>
+
+</body>
+</html>
