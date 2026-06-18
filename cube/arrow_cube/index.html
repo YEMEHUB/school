@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=640">
+  <title>화살표 333 그림큐브</title>
+  <link rel="stylesheet" href="styles/cube.css">
+  <link rel="stylesheet" href="styles/explorer.css">
+  <script charset="utf-8" src="scripts/bowser.min.js"></script>
+  <script charset="utf-8" src="scripts/cuber.min.js"></script>
+  <script charset="utf-8" src="scripts/patches.js"></script>
+  <script charset="utf-8" src="scripts/buttons.js"></script>
+  <script charset="utf-8" src="scripts/demos.js"></script>
+  <script charset="utf-8" src="scripts/explorer.js"></script>
+  <style>
+    body { background:#282828; }
+    #info, footer, #offerChrome, #infoToggle { display:none !important; }
+    nav { opacity: .94; }
+    #actionDemo { display:none !important; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="navRequester"></div>
+  <nav class="show">
+    <div class="navGroup" id="styles"><h3>Styles</h3><ul><li id="styleGrid">Grid</li><li id="styleGlass">Glass</li></ul></div>
+    <div class="navGroup" id="highlights"><h3>Cubelets</h3><ul><li id="highlightCenters">Centers</li><li id="highlightEdges">Edges</li><li id="highlightCorners">Corners</li><li id="highlightWhites">Whites</li></ul></div>
+    <div class="navGroup" id="labels"><h3>Labels</h3><ul><li id="labelNumbers" class="selected">Arrows</li><li id="labelFaces">Faces</li></ul></div>
+    <div class="navGroup" id="actions"><h3>Actions</h3><ul><li id="actionRotate">Rotate</li><li id="actionRealign">Realign</li><li id="actionShuffle">Shuffle</li><li id="actionUndo">Undo</li><li id="actionDemo">Demo</li></ul></div>
+    <div class="closer">Close</div>
+  </nav>
+  <div id="alerts"></div>
+  <div id="info"></div>
+  <img id="infoToggle" src="media/buttons/info.png">
+  <footer></footer>
+</body>
+</html>
