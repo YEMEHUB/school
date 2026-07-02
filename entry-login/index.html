@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>엔트리 로그인 아이디</title>
+  <style>
+    :root {
+      --entry-orange:#f47a20;
+      --entry-green:#50bf7b;
+      --entry-blue:#6695d1;
+      --entry-purple:#6257ad;
+      --entry-yellow:#ffd51d;
+      --entry-red:#f7543d;
+      --paper:#fffaf1;
+      --ink:#111;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      font-family:'Pretendard','Noto Sans KR','Malgun Gothic',Arial,sans-serif;
+      background:linear-gradient(180deg,#fff7eb 0%,#ffe2c8 100%);
+      color:var(--ink);
+    }
+    .page { max-width:1380px; margin:0 auto; padding:22px 18px 40px; }
+    header {
+      background:var(--paper);
+      border:12px solid var(--entry-orange);
+      border-radius:34px;
+      padding:22px 22px 26px;
+      text-align:center;
+      box-shadow:0 10px 22px rgba(120,65,0,.14);
+      margin-bottom:22px;
+    }
+    .logo { width:min(520px,92%); height:auto; display:block; margin:0 auto 10px; }
+    h1 { margin:4px 0 6px; font-size:clamp(30px,4.5vw,58px); letter-spacing:-.05em; }
+    .sub { margin:0; font-size:clamp(17px,2vw,25px); font-weight:800; color:#333; }
+    .login-btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:12px;
+      margin-top:18px; padding:14px 26px;
+      border-radius:999px; border:0; text-decoration:none;
+      background:var(--entry-orange); color:white; font-size:clamp(20px,2.4vw,30px); font-weight:900;
+      box-shadow:0 8px 0 #c75a13;
+      transition:.12s transform ease,.12s box-shadow ease;
+    }
+    .login-btn:active { transform:translateY(5px); box-shadow:0 3px 0 #c75a13; }
+    .login-btn img { width:150px; max-width:36vw; background:white; border-radius:10px; padding:4px 7px; }
+    .hint { margin:18px auto 12px; max-width:940px; text-align:center; font-size:18px; font-weight:700; line-height:1.5; }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(5, minmax(190px,1fr));
+      gap:16px;
+    }
+    .card {
+      min-height:245px;
+      background:#fffdf8;
+      border:6px solid var(--entry-orange);
+      border-radius:26px;
+      padding:14px 12px 16px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      box-shadow:0 8px 16px rgba(106,55,0,.12);
+    }
+    .character-wrap { height:104px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:6px; }
+    .character { max-height:104px; max-width:130px; object-fit:contain; filter:drop-shadow(0 4px 4px rgba(0,0,0,.12)); }
+    .info { width:100%; }
+    .label { font-size:21px; font-weight:900; text-align:center; margin:3px 0 4px; }
+    .copy-field {
+      width:100%; border:0; border-radius:6px; padding:10px 8px;
+      background:linear-gradient(180deg,#ff9239,#ed701c);
+      color:white; font-size:25px; font-weight:900; text-align:center; cursor:pointer;
+      box-shadow:inset 0 0 0 2px rgba(255,255,255,.24), 0 4px 0 #d66014;
+    }
+    .copy-field.copied { background:linear-gradient(180deg,#67c889,#39ad68); box-shadow:inset 0 0 0 2px rgba(255,255,255,.24), 0 4px 0 #248b51; }
+    footer { text-align:center; margin-top:20px; font-size:14px; color:#555; }
+    @media (max-width:1120px) { .grid { grid-template-columns:repeat(4, minmax(180px,1fr)); } }
+    @media (max-width:860px) { .grid { grid-template-columns:repeat(3, minmax(160px,1fr)); } .card{min-height:230px} }
+    @media (max-width:620px) {
+      .page { padding:12px 10px 26px; } header { border-width:8px; border-radius:24px; padding:16px 10px 18px; }
+      .grid { grid-template-columns:repeat(2, minmax(140px,1fr)); gap:10px; }
+      .card { border-width:4px; border-radius:20px; padding:10px 8px; min-height:218px; }
+      .character-wrap { height:88px; } .character { max-height:88px; max-width:108px; }
+      .label { font-size:18px; } .copy-field { font-size:21px; padding:9px 4px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <img src="assets/entry-logo.jpg" alt="엔트리 로고" class="logo" />
+      <h1>엔트리 로그인 아이디</h1>
+      <p class="sub">아이디와 비밀번호를 눌러 복사한 뒤 엔트리에 로그인하세요.</p>
+      <a class="login-btn" href="https://playentry.org/signin" target="_blank" rel="noopener">
+        <img src="assets/entry-logo.jpg" alt="entry" /> 로그인하러 가기
+      </a>
+    </header>
+
+    <p class="hint">카드의 <b>아이디</b> 또는 <b>비밀번호</b>를 클릭하면 자동으로 복사됩니다. 비밀번호는 모두 <b>zzz1111</b>입니다.</p>
+
+    <section class="grid" aria-label="엔트리 계정 카드">
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_01.png" alt="티니핑 캐릭터 1" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0101" title="아이디 복사">yeme0101</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_02.png" alt="티니핑 캐릭터 2" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0102" title="아이디 복사">yeme0102</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_03.png" alt="티니핑 캐릭터 3" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0103" title="아이디 복사">yeme0103</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_04.png" alt="티니핑 캐릭터 4" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0104" title="아이디 복사">yeme0104</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_05.png" alt="티니핑 캐릭터 5" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0105" title="아이디 복사">yeme0105</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_06.png" alt="티니핑 캐릭터 6" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0106" title="아이디 복사">yeme0106</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_07.png" alt="티니핑 캐릭터 7" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0107" title="아이디 복사">yeme0107</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_08.png" alt="티니핑 캐릭터 8" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0108" title="아이디 복사">yeme0108</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_09.png" alt="티니핑 캐릭터 9" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0109" title="아이디 복사">yeme0109</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_10.png" alt="티니핑 캐릭터 10" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0110" title="아이디 복사">yeme0110</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_11.png" alt="티니핑 캐릭터 11" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0111" title="아이디 복사">yeme0111</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_12.png" alt="티니핑 캐릭터 12" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0112" title="아이디 복사">yeme0112</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_13.png" alt="티니핑 캐릭터 13" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0113" title="아이디 복사">yeme0113</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_14.png" alt="티니핑 캐릭터 14" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0114" title="아이디 복사">yeme0114</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_15.png" alt="티니핑 캐릭터 15" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0115" title="아이디 복사">yeme0115</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_16.png" alt="티니핑 캐릭터 16" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0116" title="아이디 복사">yeme0116</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_17.png" alt="티니핑 캐릭터 17" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0117" title="아이디 복사">yeme0117</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_18.png" alt="티니핑 캐릭터 18" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0118" title="아이디 복사">yeme0118</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_19.png" alt="티니핑 캐릭터 19" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0119" title="아이디 복사">yeme0119</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_20.png" alt="티니핑 캐릭터 20" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0120" title="아이디 복사">yeme0120</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_21.png" alt="티니핑 캐릭터 21" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0121" title="아이디 복사">yeme0121</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_22.png" alt="티니핑 캐릭터 22" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0122" title="아이디 복사">yeme0122</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_23.png" alt="티니핑 캐릭터 23" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0123" title="아이디 복사">yeme0123</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_24.png" alt="티니핑 캐릭터 24" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0124" title="아이디 복사">yeme0124</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_25.png" alt="티니핑 캐릭터 25" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0125" title="아이디 복사">yeme0125</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_26.png" alt="티니핑 캐릭터 26" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0126" title="아이디 복사">yeme0126</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_27.png" alt="티니핑 캐릭터 27" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0127" title="아이디 복사">yeme0127</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_28.png" alt="티니핑 캐릭터 28" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0128" title="아이디 복사">yeme0128</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_29.png" alt="티니핑 캐릭터 29" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0129" title="아이디 복사">yeme0129</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+<article class="card">
+  <div class="character-wrap"><img src="assets/tiniping/tiniping_30.png" alt="티니핑 캐릭터 30" class="character"></div>
+  <div class="info">
+    <div class="label">아이디</div>
+    <button class="copy-field" data-copy="yeme0130" title="아이디 복사">yeme0130</button>
+    <div class="label">비밀번호</div>
+    <button class="copy-field" data-copy="zzz1111" title="비밀번호 복사">zzz1111</button>
+  </div>
+</article>
+    </section>
+    <footer>수업용 엔트리 로그인 바로가기 페이지</footer>
+  </main>
+  <script>
+    document.querySelectorAll('.copy-field').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const text = btn.dataset.copy;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const temp = document.createElement('textarea');
+          temp.value = text;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          temp.remove();
+        }
+        const oldText = btn.textContent;
+        btn.classList.add('copied');
+        btn.textContent = '복사됨!';
+        setTimeout(() => { btn.textContent = oldText; btn.classList.remove('copied'); }, 850);
+      });
+    });
+  </script>
+</body>
+</html>
