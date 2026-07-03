@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>프레디저 카드 검사 (52장 중 13장 선택)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #f5f5fb;
+      color: #222;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px 24px 32px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.06);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.6rem;
+    }
+    .description {
+      font-size: 0.92rem;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #f0f3ff;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+    .status-main { font-weight: 600; }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #d0d4ff;
+      white-space: nowrap;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-T { background: #ff6b6b; }
+    .dot-P { background: #ffd93b; }
+    .dot-D { background: #74b9ff; }
+    .dot-I { background: #55efc4; }
+
+    /* 카드 그리드 */
+    .grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+    .card-btn {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #dde1f0;
+      background: #ffffff;
+      padding: 9px 9px 18px;
+      font-size: 0.86rem;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease,
+        border-color 0.08s ease, background-color 0.08s ease, color 0.08s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      min-height: 60px;
+    }
+    .card-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+      border-color: #c3c8ff;
+    }
+    .card-btn .type-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .card-btn .label {
+      flex: 1;
+      word-break: keep-all;
+      line-height: 1.3;
+    }
+    .card-btn .index-badge {
+      position: absolute;
+      right: 8px;
+      bottom: 5px;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.04);
+      color: #555;
+    }
+    .card-btn.selected {
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      border-color: transparent;
+    }
+    .card-btn.selected.T { background: #ff6b6b; }
+    .card-btn.selected.P { background: #ffcc40; }
+    .card-btn.selected.D { background: #4c9bff; }
+    .card-btn.selected.I { background: #2ecc9f; }
+    .card-btn.selected .index-badge {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+    }
+
+    /* 결과 카드 */
+    .result-wrapper {
+      margin-top: 24px;
+      border-top: 1px dashed #ddd;
+      padding-top: 18px;
+    }
+    .result-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    @media (max-width: 800px) {
+      .result-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 520px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-card {
+      border-radius: 16px;
+      border: 1px solid #e0e4f0;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 150px;
+    }
+    .result-header {
+      padding: 10px 12px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .result-header span.sub {
+      font-size: 0.75rem;
+      font-weight: 400;
+      opacity: 0.9;
+      margin-left: 4px;
+    }
+    .result-body {
+      padding: 10px 12px 12px;
+      font-size: 0.82rem;
+    }
+    .result-body ul {
+      margin: 0;
+      padding-left: 16px;
+      list-style-type: disc;
+    }
+    .result-body li {
+      margin-bottom: 3px;
+      word-break: keep-all;
+    }
+    .result-header.T { background: #ff6b6b; }
+    .result-header.P { background: #ffcc40; color:#3b2b00; }
+    .result-header.D { background: #4c9bff; }
+    .result-header.I { background: #2ecc9f; }
+
+    .summary {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #444;
+    }
+    .summary strong { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>프레디저 카드 검사</h1>
+    <div class="description">
+      52개의 카드 중에서 <strong>가장 마음에 드는 활동 13개</strong>를 골라보세요.<br />
+      카드를 클릭하면 선택되며, 선택 순서와 영역별 개수가 자동으로 집계됩니다.
+    </div>
+
+    <div class="status-bar">
+      <div class="status-main">
+        선택: <span id="selectedCount">0</span> / 13장
+      </div>
+      <div class="badge-row">
+        <div class="badge"><span class="dot dot-T"></span> 사물(T): <span id="countT">0</span></div>
+        <div class="badge"><span class="dot dot-P"></span> 사람(P): <span id="countP">0</span></div>
+        <div class="badge"><span class="dot dot-D"></span> 자료(D): <span id="countD">0</span></div>
+        <div class="badge"><span class="dot dot-I"></span> 사고(I): <span id="countI">0</span></div>
+      </div>
+    </div>
+
+    <div id="cardGrid" class="grid"></div>
+
+    <div class="result-wrapper">
+      <div class="result-title">
+        👉 선택한 카드가 어느 영역에 속하는지 한눈에 보기
+      </div>
+      <div class="result-grid">
+        <div class="result-card">
+          <div class="result-header T">사물 <span class="sub">(Things)</span></div>
+          <div class="result-body">
+            <ul id="listT"><li>아직 선택한 카드가 없어요.</li></ul>
+          </div>
+        </div>
+        <div class="result-card">
+          <div class="result-header P">사람 <span class="sub">(People)</span></div>
+          <div class="result-body">
+            <ul id="listP"><li>아직 선택한 카드가 없어요.</li></ul>
+          </div>
+        </div>
+        <div class="result-card">
+          <div class="result-header D">자료 <span class="sub">(Data)</span></div>
+          <div class="result-body">
+            <ul id="listD"><li>아직 선택한 카드가 없어요.</li></ul>
+          </div>
+        </div>
+        <div class="result-card">
+          <div class="result-header I">사고 <span class="sub">(Idea)</span></div>
+          <div class="result-body">
+            <ul id="listI"><li>아직 선택한 카드가 없어요.</li></ul>
+          </div>
+        </div>
+      </div>
+      <div class="summary" id="summaryText">
+        13장을 모두 선택하면, 어떤 영역을 가장 많이 선택했는지 요약이 표시됩니다.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =============================
+    // 1. 카드 데이터 정의
+    // type: 'T' 사물, 'P' 사람, 'D' 자료, 'I' 사고
+    // ▶▶▶ 여기 label 부분을 실제 키트 문장으로 바꿔 넣으면 됩니다.
+    // =============================
+    const cards = [
+      // 예시: 사물형 카드들
+      { id: 1,  label: "조립하기", type: "T" },
+      { id: 2,  label: "수리하기", type: "T" },
+      { id: 3,  label: "도구 이용하기", type: "T" },
+      { id: 4,  label: "재배하기", type: "T" },
+      { id: 5,  label: "수집하기", type: "T" },
+      { id: 6,  label: "작동하기", type: "T" },
+      { id: 7,  label: "만들기", type: "T" },
+      { id: 8,  label: "나르기 / 옮기기", type: "T" },
+      { id: 9,  label: "재료 구매하기", type: "T" },
+      { id: 10, label: "이동하기", type: "T" },
+      { id: 11, label: "현장관리", type: "T" },
+      { id: 12, label: "건축하기", type: "T" },
+      { id: 13, label: "실험하기", type: "T" },
+
+      // 사람형 카드들
+      { id: 14, label: "손님 모시기", type: "P" },
+      { id: 15, label: "함께 일하기", type: "P" },
+      { id: 16, label: "판매하기", type: "P" },
+      { id: 17, label: "친구 사귀기", type: "P" },
+      { id: 18, label: "도움주기", type: "P" },
+      { id: 19, label: "이끌기", type: "P" },
+      { id: 20, label: "상담하기", type: "P" },
+      { id: 21, label: "격려하기", type: "P" },
+      { id: 22, label: "훈련시키기", type: "P" },
+      { id: 23, label: "가르치기", type: "P" },
+      { id: 24, label: "충고 / 조언하기", type: "P" },
+      { id: 25, label: "협상하기", type: "P" },
+      { id: 26, label: "화해 시키기", type: "P" },
+
+      // 자료형 카드들
+      { id: 27, label: "계산하기", type: "D" },
+      { id: 28, label: "돈(예산) 관리하기", type: "D" },
+      { id: 29, label: "구분하기", type: "D" },
+      { id: 30, label: "편집하기", type: "D" },
+      { id: 31, label: "정리하기 / 분류하기", type: "D" },
+      { id: 32, label: "분석하기", type: "D" },
+      { id: 33, label: "간추리기", type: "D" },
+      { id: 34, label: "검토하기", type: "D" },
+      { id: 35, label: "단서 모으기 / 탐색하기", type: "D" },
+      { id: 36, label: "관찰 기록하기", type: "D" },
+      { id: 37, label: "확인하기", type: "D" },
+      { id: 38, label: "연구하기", type: "D" },
+      { id: 39, label: "심사하기", type: "D" },
+
+      // 사고형 카드들
+      { id: 40, label: "의견 주장하기", type: "I" },
+      { id: 41, label: "설명하기", type: "I" },
+      { id: 42, label: "글짓기", type: "I" },
+      { id: 43, label: "짐작하기", type: "I" },
+      { id: 44, label: "문제 해결하기", type: "I" },
+      { id: 45, label: "의미 찾기", type: "I" },
+      { id: 46, label: "홍보하기 / 알리기", type: "I" },
+      { id: 47, label: "발표하기", type: "I" },
+      { id: 48, label: "전략짜기", type: "I" },
+      { id: 49, label: "다르게 보기", type: "I" },
+      { id: 50, label: "생각 결합하기", type: "I" },
+      { id: 51, label: "아이디어 내기", type: "I" },
+      { id: 52, label: "발명하기", type: "I" },
+    ];
+
+    // =============================
+    // 2. 유틸: 배열 섞기(랜덤 배치)
+    // =============================
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // =============================
+    // 3. 상태 관리
+    // =============================
+    const selectedIds = []; // 선택한 카드 id를 순서대로 저장
+
+    const gridEl = document.getElementById("cardGrid");
+    const selectedCountEl = document.getElementById("selectedCount");
+    const countTEl = document.getElementById("countT");
+    const countPEl = document.getElementById("countP");
+    const countDEl = document.getElementById("countD");
+    const countIEl = document.getElementById("countI");
+    const listTEl = document.getElementById("listT");
+    const listPEl = document.getElementById("listP");
+    const listDEl = document.getElementById("listD");
+    const listIEl = document.getElementById("listI");
+    const summaryEl = document.getElementById("summaryText");
+
+    // =============================
+    // 4. 카드 렌더링
+    // =============================
+    function renderCards() {
+      shuffle(cards); // 매번 랜덤하게
+      gridEl.innerHTML = "";
+      cards.forEach((card) => {
+        const btn = document.createElement("button");
+        btn.className = "card-btn";
+        btn.dataset.id = card.id;
+        btn.dataset.type = card.type;
+
+        const dot = document.createElement("div");
+        dot.className = "type-dot";
+        dot.style.backgroundColor =
+          card.type === "T"
+            ? "#A6A6A6"
+            : card.type === "P"
+            ? "#A6A6A6"
+            : card.type === "D"
+            ? "#A6A6A6"
+            : "#A6A6A6";
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = card.label;
+
+        const indexBadge = document.createElement("div");
+        indexBadge.className = "index-badge";
+        indexBadge.textContent = "";
+
+        btn.appendChild(dot);
+        btn.appendChild(label);
+        btn.appendChild(indexBadge);
+
+        btn.addEventListener("click", () => {
+          handleCardClick(card.id);
+        });
+
+        gridEl.appendChild(btn);
+      });
+    }
+
+    // =============================
+    // 5. 클릭 처리
+    // =============================
+    function handleCardClick(id) {
+      const idx = selectedIds.indexOf(id);
+      if (idx === -1) {
+        // 새로 선택
+        if (selectedIds.length >= 13) {
+          alert("이미 13장을 선택했습니다. 다른 카드를 선택하려면 먼저 선택을 취소해 주세요.");
+          return;
+        }
+        selectedIds.push(id);
+      } else {
+        // 선택 취소
+        selectedIds.splice(idx, 1);
+      }
+      updateUI();
+    }
+
+    // =============================
+    // 6. UI 업데이트 (선택 표시 + 결과 집계)
+    // =============================
+    function updateUI() {
+      selectedCountEl.textContent = selectedIds.length.toString();
+
+      // 버튼 스타일 업데이트
+      const buttons = gridEl.querySelectorAll(".card-btn");
+      buttons.forEach((btn) => {
+        const id = Number(btn.dataset.id);
+        const type = btn.dataset.type;
+        const indexBadge = btn.querySelector(".index-badge");
+        const selIndex = selectedIds.indexOf(id);
+
+        btn.classList.remove("selected", "T", "P", "D", "I");
+        indexBadge.textContent = "";
+
+        if (selIndex !== -1) {
+          btn.classList.add("selected", type);
+          indexBadge.textContent = selIndex + 1; // 선택 순서
+        }
+      });
+
+      // 영역별 리스트 & 개수
+      const map = { T: [], P: [], D: [], I: [] };
+      selectedIds.forEach((id) => {
+        const card = cards.find((c) => c.id === id);
+        if (card) map[card.type].push(card.label);
+      });
+
+      countTEl.textContent = map.T.length;
+      countPEl.textContent = map.P.length;
+      countDEl.textContent = map.D.length;
+      countIEl.textContent = map.I.length;
+
+      function renderList(listEl, arr) {
+        listEl.innerHTML = "";
+        if (arr.length === 0) {
+          const li = document.createElement("li");
+          li.textContent = "아직 선택한 카드가 없어요.";
+          listEl.appendChild(li);
+          return;
+        }
+        arr.forEach((label) => {
+          const li = document.createElement("li");
+          li.textContent = label;
+          listEl.appendChild(li);
+        });
+      }
+
+      renderList(listTEl, map.T);
+      renderList(listPEl, map.P);
+      renderList(listDEl, map.D);
+      renderList(listIEl, map.I);
+
+      // 요약 문구
+      if (selectedIds.length === 13) {
+        const counts = [
+          { code: "T", name: "사물(Things)", value: map.T.length },
+          { code: "P", name: "사람(People)", value: map.P.length },
+          { code: "D", name: "자료(Data)", value: map.D.length },
+          { code: "I", name: "사고(Idea)", value: map.I.length },
+        ];
+        counts.sort((a, b) => b.value - a.value);
+        const top1 = counts[0];
+        const top2 = counts[1];
+
+        summaryEl.innerHTML =
+          `✅ 13장을 모두 선택했습니다.<br>` +
+          `가장 많이 선택한 영역은 <strong>${top1.name} (${top1.value}장)</strong>이고, ` +
+          `그다음은 <strong>${top2.name} (${top2.value}장)</strong> 입니다.`;
+      } else {
+        summaryEl.textContent =
+          "13장을 모두 선택하면, 어떤 영역을 가장 많이 선택했는지 요약이 표시됩니다.";
+      }
+    }
+
+    // 초기 렌더링
+    renderCards();
+    updateUI();
+  </script>
+</body>
+</html>
