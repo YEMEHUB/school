@@ -1,2 +1,2 @@
-# 직업선택
-> 나의 진로 선택 보드 
+# 엔트리 로그인
+> https://yemehub.github.io/school/login/entry-login/
