@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>직업 가치관 검사 (18문항)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #f5f5fb;
+      color: #222;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px 20px 32px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.06);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.7rem;
+    }
+    .description {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .description strong { font-weight: 700; }
+
+    .info-box {
+      background: #f0f3ff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+
+    .legend {
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    .question {
+      margin-bottom: 16px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #fafbff;
+      border: 1px solid #e0e4f2;
+    }
+    .question-title {
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 4px 10px;
+      font-size: 0.85rem;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .option-label input {
+      accent-color: #4c6fff;
+    }
+
+    .action-row {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .primary-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #4c6fff;
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(76,111,255,0.35);
+      transition: background 0.1s ease, transform 0.1s ease,
+        box-shadow 0.1s ease;
+    }
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(76,111,255,0.45);
+      background: #3f5ae6;
+    }
+
+    .result-section {
+      margin-top: 28px;
+      border-top: 1px dashed #ddd;
+      padding-top: 18px;
+      display: none;
+    }
+    .result-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .result-summary {
+      font-size: 0.95rem;
+      color: #444;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .value-card {
+      border-radius: 16px;
+      border: 1px solid #e0e4f0;
+      background: #fafbff;
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .value-header {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .value-emoji {
+      font-size: 1.5rem;
+    }
+    .value-name {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .value-tagline {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 4px;
+    }
+    .value-body {
+      font-size: 0.83rem;
+      color: #444;
+      line-height: 1.45;
+    }
+    .value-body ul {
+      margin: 4px 0 0;
+      padding-left: 18px;
+    }
+    .value-body li {
+      margin-bottom: 2px;
+    }
+
+    .score-list {
+      font-size: 0.83rem;
+      color: #666;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>💼 직업 가치관 검사 (18문항)</h1>
+  <div class="description">
+    아래 문장을 읽고, <strong>나에게 얼마나 중요한지</strong>를 선택해 주세요.<br />
+    모든 문항에 응답한 뒤 <strong>“결과 보기”</strong> 버튼을 누르면
+    나에게 중요한 직업 가치관 상위 2개가 표시됩니다.
+  </div>
+
+  <div class="info-box">
+    ✅ 이 검사는 점수를 매기는 시험이 아니라,
+    <strong>진로 선택에서 어떤 기준을 중요하게 생각하는지</strong>를 알아보는 참고용 검사입니다.
+    솔직하게 응답해 주세요.
+  </div>
+
+  <div class="legend">
+    응답 척도:<br />
+    <strong>1 전혀 중요하지 않다</strong> ·
+    <strong>2 별로 중요하지 않다</strong> ·
+    <strong>3 중요한 편이다</strong> ·
+    <strong>4 매우 중요하다</strong>
+  </div>
+
+  <form id="quizForm">
+    <!-- 질문은 JS로 렌더링 -->
+  </form>
+
+  <div class="action-row">
+    <button type="button" id="submitBtn" class="primary-btn">결과 보기</button>
+  </div>
+
+  <div class="result-section" id="resultSection">
+    <div class="result-title">결과</div>
+    <div id="resultSummary" class="result-summary"></div>
+    <div class="result-grid" id="resultCards"></div>
+    <div class="score-list" id="scoreList"></div>
+  </div>
+</div>
+
+<script>
+  // 1. 가치관 정의
+  const values = {
+    ACH: {
+      emoji: "🏆",
+      name: "성취 가치",
+      tagline: "성장, 실력, 보람",
+      detail: `
+        <ul>
+          <li>어려운 목표를 이루고 성취감을 느끼는 것을 중요하게 생각합니다.</li>
+          <li>내 능력을 키우고, 실력이 느는 것을 좋아해요.</li>
+          <li>“잘했다!”라는 피드백과 스스로 느끼는 보람이 큰 동기부여가 됩니다.</li>
+        </ul>
+      `
+    },
+    AUT: {
+      emoji: "🕊️",
+      name: "자율 가치",
+      tagline: "자유, 선택, 자기주도",
+      detail: `
+        <ul>
+          <li>스스로 선택하고 결정할 수 있는 일을 선호합니다.</li>
+          <li>일하는 방식·시간·속도에 어느 정도 자유가 있기를 바랍니다.</li>
+          <li>지시만 받기보다, 스스로 방법을 정하는 것이 편합니다.</li>
+        </ul>
+      `
+    },
+    STB: {
+      emoji: "🛡️",
+      name: "안정 가치",
+      tagline: "안정, 예측 가능, 장기지속",
+      detail: `
+        <ul>
+          <li>오랫동안 다닐 수 있고 미래가 비교적 예측 가능한 직업을 선호합니다.</li>
+          <li>수입·복지·고용이 안정적일 때 마음이 편안합니다.</li>
+          <li>큰 변화보다는 꾸준함과 안전함을 중시하는 편입니다.</li>
+        </ul>
+      `
+    },
+    REL: {
+      emoji: "🤝",
+      name: "관계 가치",
+      tagline: "사람, 협력, 분위기",
+      detail: `
+        <ul>
+          <li>함께 일하는 사람들과의 관계와 분위기를 중요하게 생각합니다.</li>
+          <li>서로 도와주고 존중하는 환경에서 일하고 싶어 합니다.</li>
+          <li>사람들에게 도움이 되는 일을 할 때 큰 보람을 느끼는 편입니다.</li>
+        </ul>
+      `
+    },
+    REW: {
+      emoji: "💰",
+      name: "보수 가치",
+      tagline: "수입, 보상, 인정",
+      detail: `
+        <ul>
+          <li>노력한 만큼 수입·보상을 받는 것을 중요하게 생각합니다.</li>
+          <li>경제적으로 여유가 있는 삶을 살고 싶다는 욕구가 있습니다.</li>
+          <li>성과에 대한 보너스·승진·인정을 중시하는 편입니다.</li>
+        </ul>
+      `
+    },
+    DEV: {
+      emoji: "🔍",
+      name: "탐구·성장 가치",
+      tagline: "새로움, 배움, 다양성",
+      detail: `
+        <ul>
+          <li>새로운 것을 배우고 탐구하는 활동을 좋아합니다.</li>
+          <li>단조로운 일보다는 다양한 경험과 변화를 원합니다.</li>
+          <li>지적으로 자극받고 성장할 수 있는 환경을 중요하게 생각합니다.</li>
+        </ul>
+      `
+    }
+  };
+
+  // 2. 문항 정의 (각 가치관 3문항씩, 총 18문항)
+  const questions = [
+    // 성취 (ACH)
+    {
+      value: "ACH",
+      text: "1. 힘들더라도 목표를 이루고 성취감을 느끼는 일이 중요하다."
+    },
+    {
+      value: "ACH",
+      text: "2. 나의 능력을 계속 키우고 실력을 인정받는 직업을 갖고 싶다."
+    },
+    {
+      value: "ACH",
+      text: "3. 일이 잘 풀렸을 때 느끼는 보람과 뿌듯함이 나에게 매우 중요하다."
+    },
+
+    // 자율 (AUT)
+    {
+      value: "AUT",
+      text: "4. 시키는 대로만 하는 일보다, 스스로 방법을 정할 수 있는 일이 좋다."
+    },
+    {
+      value: "AUT",
+      text: "5. 시간·속도·방식을 내가 어느 정도 조절할 수 있는 환경이 중요하다."
+    },
+    {
+      value: "AUT",
+      text: "6. 규칙이 너무 많고 자유가 없는 곳에서는 오래 일하기 힘들 것 같다."
+    },
+
+    // 안정 (STB)
+    {
+      value: "STB",
+      text: "7. 평생 직장까지는 아니어도, 오래 다닐 수 있는 안정적인 직장이 좋다."
+    },
+    {
+      value: "STB",
+      text: "8. 급여가 들쭉날쭉하기보다는 일정하게 나오는 것이 편하다."
+    },
+    {
+      value: "STB",
+      text: "9. 갑작스러운 해고나 큰 변동 위험이 적은 직업을 선호한다."
+    },
+
+    // 관계 (REL)
+    {
+      value: "REL",
+      text: "10. 함께 일하는 동료들과의 관계와 분위기가 매우 중요하다."
+    },
+    {
+      value: "REL",
+      text: "11. 다른 사람을 도와주거나 서비스하는 일에서 보람을 느낀다."
+    },
+    {
+      value: "REL",
+      text: "12. 아무와도 소통하지 않고 혼자만 일하는 직업은 나와 맞지 않을 것 같다."
+    },
+
+    // 보수 (REW)
+    {
+      value: "REW",
+      text: "13. 수입이 높거나, 성장 가능성이 큰 직업에 끌린다."
+    },
+    {
+      value: "REW",
+      text: "14. 성과에 따라 보너스·인센티브를 받는 것이 동기부여가 된다."
+    },
+    {
+      value: "REW",
+      text: "15. 경제적으로 여유 있는 생활을 하는 것이 나에게 중요한 목표이다."
+    },
+
+    // 탐구·성장 (DEV)
+    {
+      value: "DEV",
+      text: "16. 새로운 것을 배우고 연구할 수 있는 일이 좋다."
+    },
+    {
+      value: "DEV",
+      text: "17. 매일 비슷한 일보다는 다양한 일을 경험할 수 있으면 좋겠다."
+    },
+    {
+      value: "DEV",
+      text: "18. 지적으로 성장하고, 계속 공부할 수 있는 직업을 갖고 싶다."
+    }
+  ];
+
+  // 3. 문항 렌더링
+  const formEl = document.getElementById("quizForm");
+
+  questions.forEach((q, index) => {
+    const qDiv = document.createElement("div");
+    qDiv.className = "question";
+
+    const title = document.createElement("div");
+    title.className = "question-title";
+    title.textContent = q.text;
+    qDiv.appendChild(title);
+
+    const optionsDiv = document.createElement("div");
+    optionsDiv.className = "options";
+
+    const labels = [
+      "1 전혀 중요하지 않다",
+      "2 별로 중요하지 않다",
+      "3 중요한 편이다",
+      "4 매우 중요하다"
+    ];
+
+    labels.forEach((labelText, i) => {
+      const id = `q${index}_opt${i+1}`;
+      const label = document.createElement("label");
+      label.className = "option-label";
+      label.setAttribute("for", id);
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `q${index}`;
+      input.id = id;
+      input.value = (i + 1).toString();
+
+      const span = document.createElement("span");
+      span.textContent = labelText;
+
+      label.appendChild(input);
+      label.appendChild(span);
+      optionsDiv.appendChild(label);
+    });
+
+    qDiv.appendChild(optionsDiv);
+    formEl.appendChild(qDiv);
+  });
+
+  // 4. 결과 계산
+  const submitBtn = document.getElementById("submitBtn");
+  const resultSection = document.getElementById("resultSection");
+  const resultSummary = document.getElementById("resultSummary");
+  const resultCards = document.getElementById("resultCards");
+  const scoreList = document.getElementById("scoreList");
+
+  submitBtn.addEventListener("click", () => {
+    const scores = {
+      ACH: 0,
+      AUT: 0,
+      STB: 0,
+      REL: 0,
+      REW: 0,
+      DEV: 0
+    };
+
+    // 응답 체크
+    for (let i = 0; i < questions.length; i++) {
+      const checked = document.querySelector(`input[name="q${i}"]:checked`);
+      if (!checked) {
+        alert("아직 응답하지 않은 문항이 있어요. 모든 문항에 답한 뒤 다시 시도해 주세요.");
+        return;
+      }
+      const value = parseInt(checked.value, 10);
+      const code = questions[i].value;
+      scores[code] += value;
+    }
+
+    const scoreArray = Object.entries(scores)
+      .map(([code, value]) => ({ code, value }))
+      .sort((a, b) => b.value - a.value);
+
+    const top1 = scoreArray[0];
+    const top2 = scoreArray[1];
+    const top3 = scoreArray[2];
+
+    const v1 = values[top1.code];
+    const v2 = values[top2.code];
+
+    resultSummary.innerHTML =
+      `당신이 가장 중요하게 생각하는 직업 가치관은 <strong>${v1.emoji} ${v1.name}</strong> 입니다.<br>` +
+      `그 다음으로 중요한 가치는 <strong>${v2.emoji} ${v2.name}</strong> 입니다.<br>` +
+      `상위 두 가지 가치를 진로 선택의 핵심 기준으로 삼아 보세요.`;
+
+    // 카드 영역 초기화
+    resultCards.innerHTML = "";
+
+    [top1, top2, top3].forEach(item => {
+      const info = values[item.code];
+      const card = document.createElement("div");
+      card.className = "value-card";
+
+      const header = document.createElement("div");
+      header.className = "value-header";
+
+      const emoji = document.createElement("div");
+      emoji.className = "value-emoji";
+      emoji.textContent = info.emoji;
+
+      const name = document.createElement("div");
+      name.className = "value-name";
+      name.textContent = info.name;
+
+      header.appendChild(emoji);
+      header.appendChild(name);
+
+      const tagline = document.createElement("div");
+      tagline.className = "value-tagline";
+      tagline.textContent = info.tagline;
+
+      const body = document.createElement("div");
+      body.className = "value-body";
+      body.innerHTML = info.detail;
+
+      card.appendChild(header);
+      card.appendChild(tagline);
+      card.appendChild(body);
+
+      resultCards.appendChild(card);
+    });
+
+    // 전체 점수 요약
+    const lines = scoreArray.map(({ code, value }) => {
+      const info = values[code];
+      return `${info.emoji} ${info.name} : ${value}점`;
+    });
+    scoreList.textContent = "전체 점수: " + lines.join(" · ");
+
+    resultSection.style.display = "block";
+    const y = resultSection.getBoundingClientRect().top + window.scrollY - 20;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  });
+</script>
+</body>
+</html>
