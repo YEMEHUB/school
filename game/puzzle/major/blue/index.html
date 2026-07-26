@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>가로세로 낱말퍼즐 - 학과편 (블루)</title>
+  <style>
+    :root {
+      --blue-main: #2962ff;
+      --blue-dark: #102b73;
+      --blue-light: #3f7de6;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #e3f2fd;
+      background-image: linear-gradient(180deg, #e8f3ff 0%, #d5e8ff 40%, #c3ddff 100%);
+    }
+    .hero {
+      padding: 18px 24px 10px;
+      background: linear-gradient(90deg, #2962ff, #26a69a);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 900;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+    .hero-sub {
+      padding: 0 24px 14px;
+      font-size: 13px;
+      color: #e1f5fe;
+    }
+    .container {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .grid-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      padding: 14px;
+      border-radius: 18px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      border: 3px solid var(--blue-main);
+    }
+    table {
+      border-collapse: collapse;
+      user-select: none;
+    }
+    td.cell {
+      width: 38px;
+      height: 38px;
+      padding: 4px;
+      border: none;
+    }
+    td.cell.inactive {
+      background: transparent;
+    }
+    td.cell.inactive::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      background: var(--blue-light);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+    }
+    .tile {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffffff 0%, #f7f9ff 45%, #edf3ff 100%);
+      box-shadow:
+        0 2px 0 rgba(155,180,255,0.9),
+        0 4px 6px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border: 1px solid #c4d4ff;
+    }
+    td.cell.active {
+      background: transparent;
+      cursor: pointer;
+    }
+    td.cell.highlight .tile {
+      box-shadow:
+        0 0 0 3px #ffe082,
+        0 2px 0 rgba(155,180,255,0.9),
+        0 4px 6px rgba(0,0,0,0.25);
+    }
+    .cell-input {
+      width: 80%;
+      height: 80%;
+      border-radius: 10px;
+      border: 2px solid #d0ddff;
+      outline: none;
+      background: #ffffff;
+      color: #1b2554;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      caret-color: #2962ff;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.08);
+    }
+    .sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .current-clue-box {
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    }
+    .current-clue-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+      font-size: 16px;
+      color: #1a237e;
+    }
+    .current-clue-text {
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 4px 0;
+      color: #283149;
+    }
+    .current-answer {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #b71c1c;
+      font-weight: 700;
+      display: none;
+    }
+    .current-answer.show {
+      display: block;
+    }
+    .hint-text {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #546e7a;
+    }
+    .clue-lists-box {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 18px;
+      padding: 12px 14px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      max-height: 420px;
+      overflow: auto;
+    }
+    .clue-lists-box h3 {
+      margin: 4px 0 6px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #1a237e;
+    }
+    .clue-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .clue-button {
+      border: none;
+      border-radius: 16px;
+      padding: 5px 12px;
+      font-size: 12px;
+      background: #1e4fd6;
+      color: #ffffff;
+      cursor: pointer;
+      transition: transform 0.05s, box-shadow 0.1s, background 0.1s;
+      box-shadow: 0 3px 0 #102b73;
+    }
+    .clue-button:hover {
+      background: #305ff0;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 0 #102b73;
+    }
+    .clue-button.active {
+      background: #90caf9;
+      color: #0d1b4c;
+      box-shadow: 0 3px 0 #547bb5;
+    }
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .popup-backdrop.show {
+      display: flex;
+    }
+    .popup-inner {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px 20px 16px;
+      min-width: 320px;
+      max-width: 540px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+      position: relative;
+      border: 2px solid var(--blue-main);
+    }
+    .popup-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #1a237e;
+    }
+    .popup-text {
+      font-size: 14px;
+      line-height: 1.5;
+      max-height: 150px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      color: #283149;
+    }
+    .popup-input-row {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    #popup-answer-input {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #c4cfe0;
+      margin-top: 4px;
+    }
+    .popup-hint {
+      font-size: 12px;
+      color: #546e7a;
+    }
+    .popup-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      cursor: pointer;
+      color: #60708a;
+    }
+    .popup-close:hover {
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    가로세로낱말퍼즐 - 학과편 (블루)
+  </header>
+  <div class="hero-sub">
+    퍼즐 칸이나 문제 버튼을 클릭하면 문제가 보이고, <b>오른쪽 클릭</b>하면 정답이 자동으로 채워집니다.
+  </div>
+  <div class="container">
+    <div class="grid-wrapper">
+      <table>
+        <tbody id="puzzle-body"></tbody>
+      </table>
+    </div>
+
+    <div class="sidebar">
+      <div class="current-clue-box">
+        <div class="current-clue-title" id="current-clue-title">문제를 선택해 주세요</div>
+        <div class="current-clue-text" id="current-clue-text">
+        </div>
+        <div class="current-answer" id="current-answer-text"></div>
+        <div class="hint-text">
+        </div>
+      </div>
+
+      <div class="clue-lists-box">
+        <h3>가로 문제</h3>
+        <div class="clue-list" id="across-list"></div>
+        <h3>세로 문제</h3>
+        <div class="clue-list" id="down-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" id="popup">
+    <div class="popup-inner" id="popup-inner">
+      <button class="popup-close" id="popup-close" aria-label="닫기">✕</button>
+      <div class="popup-title" id="popup-clue-title"></div>
+      <div class="popup-text" id="popup-clue-text"></div>
+      <div class="popup-input-row">
+        정답 입력
+        <input type="text" id="popup-answer-input" autocomplete="off" />
+      </div>
+      <div class="popup-hint">
+      </div>
+    </div>
+  </div>
+
+<script>
+  const CLUES = [
+    {"id":1,"type":"across","startCol":1,"startRow":2,"endCol":4,"endRow":2,"question":"OOOO학과는 급격한 사회 변화에 따른 문제를 해결하여 공평한 사회를 만들기 위한 방법을 연구해요.","answer":"사회복지"},
+    {"id":4,"type":"across","startCol":2,"startRow":4,"endCol":5,"endRow":4,"question":"OOOO과는 모든 생명체를 대상으로 생명현상을 분석하고 주변환경과의 상호관계를 연구해요.","answer":"생명과학"},
+    {"id":5,"type":"across","startCol":5,"startRow":1,"endCol":7,"endRow":1,"question":"OOO과는 치아 및 구강 이외에도 얼굴의 질환과 장애, 기형 등에 대해 치료하고 예방하는 내용을 공부해요.","answer":"치의학"},
+    {"id":7,"type":"across","startCol":7,"startRow":4,"endCol":10,"endRow":4,"question":"OOOO과는 공과계열에 소속된 학과로 학과 필요능력으로 수리활용과 논리판단능력이 필요해요. ( 힌트: 기계관련 학과)","answer":"기계공학"},
+    {"id":9,"type":"across","startCol":9,"startRow":1,"endCol":12,"endRow":1,"question":"OOOO는 다양한 동물의 환경이나 질병연구, 위생관리 등을 위해 다양한 실험 및 실습을 통해 전문 지식을 습득하는 학과예요.","answer":"수의학과"},
+    {"id":11,"type":"across","startCol":11,"startRow":5,"endCol":12,"endRow":5,"question":"OO학과는 기업이라는 조직에 속하는 구성원의 행동방식을 분석하고 조직운영에 필요한 다양한 전문지식을 연구해요.","answer":"경영"},
+    {"id":13,"type":"across","startCol":9,"startRow":6,"endCol":10,"endRow":6,"question":"OO학과는 사람들을 최적의 건강상태로 유지하거나 건강을 증진하며 질병예방과 회복, 재활을 돕기 위한 지식과 기술을 습득해요.","answer":"간호"},
+    {"id":15,"type":"across","startCol":5,"startRow":6,"endCol":6,"endRow":6,"question":"OO학과는 실제 학교에서 학생들을 교육하는데 사용될 새로운 수업방식에 대해 연구해요.","answer":"교육"},
+    {"id":18,"type":"across","startCol":1,"startRow":8,"endCol":2,"endRow":8,"question":"OO과학계열은 기초과학을 공부하는 계열로, 우주와 물질의 기원으로부터 생명현상까지 다양한 물질세계의 원리를 과학적 방법으로 탐구하는 학문이에요. 물리학과, 생명과학과, 수학과 등이 이 계열에 속해요.","answer":"자연"},
+    {"id":19,"type":"across","startCol":3,"startRow":9,"endCol":6,"endRow":9,"question":"OOOO학과는 주거학 기초이론과 주거관리 및 계획이론, 실무를 대비한 실내디자인 실기를 공부해요.","answer":"주거환경"},
+    {"id":"21A","no":21,"type":"across","startCol":7,"startRow":7,"endCol":8,"endRow":7,"question":"OO과는 인류 역사에 대해 연구하고 과거의 역사를 분석하여 인간이 앞으로 나아갈 지표와 방향을 찾고자 공부해요!","answer":"사학"},
+    {"id":23,"type":"across","startCol":10,"startRow":8,"endCol":11,"endRow":8,"question":"국어국문학과의 교과과정은 크게 OO학과 국문학으로 나뉘어져요!","answer":"국어"},
+    {"id":25,"type":"across","startCol":8,"startRow":9,"endCol":9,"endRow":9,"question":"OO학과는 중앙부처와 공기업 등 공공분야의 효율적인 관리를 담당하는 행정 전문가를 양성해요.","answer":"행정"},
+    {"id":27,"type":"across","startCol":7,"startRow":11,"endCol":11,"endRow":11,"question":"중어중문, 일어일문, 독어독문, 불어불문, 노어노문 등 영어를 제외한 각 나라의 언어에 대해 연구하는 OOOOO학과예요.","answer":"제2외국어"},
+    {"id":29,"type":"across","startCol":1,"startRow":12,"endCol":6,"endRow":12,"question":"OOOOOO은 생활의 질을 향상시킴으로써 궁극적으로 인간의 삶의 질이 향상될 수 있도록 가족복지학과, 식품영양학과, 주거환경학과가 속해 있어요. (힌트: 계열이름)","answer":"생활과학계열"},
+    {"id":2,"type":"down","startCol":2,"startRow":1,"endCol":2,"endRow":2,"question":"OO과는 인간과 인간이 살아가는 사회에 대해 다룬 학문으로, 사회구성원 간의 상호작용과 사회현상 등을 탐구함으로써 보다 나은 미래사회의 대안을 찾고자 해요.","answer":"사회"},
+    {"id":3,"type":"down","startCol":4,"startRow":2,"endCol":4,"endRow":5,"question":"OOO과는 지구학, 지리학, 지질학으로 나눌 수 있어요.","answer":"지구과학"},
+    {"id":6,"type":"down","startCol":6,"startRow":1,"endCol":6,"endRow":3,"question":"OO과는 인체 내부 및 외부에서 발생하는 여러 가지 질병을 진단하고 치료하고 나아가 질병을 예방하기 위한 연구를 하는 학과예요.","answer":"의학과"},
+    {"id":8,"type":"down","startCol":8,"startRow":2,"endCol":8,"endRow":5,"question":"OOOO계열은 문학, 사학, 철학, 국문학과, 철학과, 제2외국어학과가 이 계열에 속해요.","answer":"인문계열"},
+    {"id":10,"type":"down","startCol":10,"startRow":1,"endCol":10,"endRow":2,"question":"OO과는 의복과 관련된 소재에서 제품까지의 모든 분야를 연구하는 학문이에요.","answer":"의류"},
+    {"id":12,"type":"down","startCol":12,"startRow":3,"endCol":12,"endRow":6,"question":"OOO과는 사람의 영양 상태를 정상으로 유지하거나 개선하는데 필요한 지식을 배우는 곳으로 식품과 영양에 대한 전반을 배워요.","answer":"식품영양"},
+    {"id":14,"type":"down","startCol":6,"startRow":5,"endCol":6,"endRow":6,"question":"OO학과는 체육 및 스포츠 활동에 대한 전문적인 지식과 기술을 기르고, 스포츠와 여가를 포함한 인간의 행동에 대한 지식과 이해를 연구해요.","answer":"체육"},
+    {"id":16,"type":"down","startCol":3,"startRow":6,"endCol":3,"endRow":7,"question":"OO학과에서는 인간의 행동과 정신과정을 과학적으로 공부하며 학과필요능력은 논리판단, 수리활용이에요.","answer":"심리"},
+    {"id":17,"type":"down","startCol":1,"startRow":5,"endCol":1,"endRow":10,"question":"OOOOOO과는 전자와 정보(컴퓨터)의 응용분야에 관한 여러가지 문제를 해결하고 정보통신공학의 기본이 되는 내용을 배우는 학과예요.","answer":"전기전자공학"},
+    {"id":20,"type":"down","startCol":6,"startRow":9,"endCol":6,"endRow":10,"question":"OO학과는 좁게는 우리가 먹고 사는 문제부터 넓게는 소득불균형 문제, 실업 문제, 환경 문제 등을 연구해요.","answer":"경제"},
+    {"id":"21B","no":21,"type":"down","startCol":7,"startRow":7,"endCol":7,"endRow":8,"question":"OO계열은 교사와 교육지도자를 양성하며 교육일반과 교과교육원리의 교수 및 연구에 종사할 학자를 배출함을 목표로 해요.","answer":"사범"},
+    {"id":22,"type":"down","startCol":11,"startRow":7,"endCol":11,"endRow":8,"question":"제2외국어학과는 OO를 제외한 각 나라의 언어에 대해 연구해요.","answer":"영어"},
+    {"id":24,"type":"down","startCol":12,"startRow":9,"endCol":12,"endRow":10,"question":"OO과는 옛 철학가들의 사상을 연구하고 바람직한 인간상과 세계관의 모색을 목적으로 하는 학과예요.","answer":"철학"},
+    {"id":26,"type":"down","startCol":9,"startRow":9,"endCol":9,"endRow":12,"question":"OO(OO)학과는 급변하는 국내외 정세에 대한 연구를 통해 정치외교 분야에서 활동할 수 있는 전문인력을 양성해요.","answer":"정치외교"},
+    {"id":28,"type":"down","startCol":5,"startRow":11,"endCol":5,"endRow":12,"question":"OO학과는 연구 목적에 필요한 자료를 수집, 정리, 요약하고 제안된 자료에서 합리적인 판단을 내릴 수 있게 자료를 분석해요.","answer":"통계"}
+  ];
+
+  const ROWS = 12;
+  const COLS = 12;
+
+  const idToClue = {};
+  const cellToClues = {};
+  let currentClueId = null;
+
+  CLUES.forEach(clue => {
+    idToClue[clue.id] = clue;
+    const cells = [];
+    if (clue.type === "across") {
+      for (let col = clue.startCol; col <= clue.endCol; col++) {
+        const key = `${clue.startRow}-${col}`;
+        cells.push(key);
+        (cellToClues[key] ??= []).push(clue.id);
+      }
+    } else {
+      for (let row = clue.startRow; row <= clue.endRow; row++) {
+        const key = `${row}-${clue.startCol}`;
+        cells.push(key);
+        (cellToClues[key] ??= []).push(clue.id);
+      }
+    }
+    clue.cells = cells;
+  });
+
+  function buildGrid() {
+    const tbody = document.getElementById("puzzle-body");
+    for (let row = 1; row <= ROWS; row++) {
+      const tr = document.createElement("tr");
+
+      for (let col = 1; col <= COLS; col++) {
+        const key = `${row}-${col}`;
+        const td = document.createElement("td");
+        td.classList.add("cell");
+        td.dataset.key = key;
+
+        const active = !!cellToClues[key];
+        if (active) {
+          td.classList.add("active");
+
+          const tile = document.createElement("div");
+          tile.className = "tile";
+
+          const input = document.createElement("input");
+          input.type = "text";
+          input.maxLength = 1;
+          input.className = "cell-input";
+          input.autocomplete = "off";
+
+          tile.appendChild(input);
+          td.appendChild(tile);
+
+          td.addEventListener("click", () => openClueFromCell(key));
+          td.addEventListener("contextmenu", e => {
+            e.preventDefault();
+            openClueFromCell(key);
+            revealCurrentAnswer();
+          });
+        } else {
+          td.classList.add("inactive");
+        }
+
+        tr.appendChild(td);
+      }
+
+      tbody.appendChild(tr);
+    }
+  }
+
+  function buildClueLists() {
+    const acrossList = document.getElementById("across-list");
+    const downList = document.getElementById("down-list");
+
+    CLUES.filter(c => c.type === "across").forEach(clue => {
+      const btn = document.createElement("button");
+      btn.className = "clue-button";
+      const labelNo = clue.no ?? clue.id;
+      btn.textContent = `가로 ${labelNo}번 문제`;
+      btn.dataset.id = clue.id;
+      btn.addEventListener("click", () => openClue(clue.id));
+      btn.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        openClue(clue.id);
+        revealCurrentAnswer();
+      });
+      acrossList.appendChild(btn);
+    });
+
+    CLUES.filter(c => c.type === "down").forEach(clue => {
+      const btn = document.createElement("button");
+      btn.className = "clue-button";
+      const labelNo = clue.no ?? clue.id;
+      btn.textContent = `세로 ${labelNo}번 문제`;
+      btn.dataset.id = clue.id;
+      btn.addEventListener("click", () => openClue(clue.id));
+      btn.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        openClue(clue.id);
+        revealCurrentAnswer();
+      });
+      downList.appendChild(btn);
+    });
+  }
+
+  function openClue(id) {
+    const clue = idToClue[id];
+    if (!clue) return;
+    currentClueId = id;
+
+    document
+      .querySelectorAll(".clue-button")
+      .forEach(btn => {
+        if (btn.dataset.id === String(id)) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+
+    document
+      .querySelectorAll("td.cell.highlight")
+      .forEach(td => td.classList.remove("highlight"));
+
+    clue.cells.forEach(key => {
+      const td = document.querySelector(`td[data-key='${key}']`);
+      if (td) td.classList.add("highlight");
+    });
+
+    const title = document.getElementById("current-clue-title");
+    const text = document.getElementById("current-clue-text");
+    const ans = document.getElementById("current-answer-text");
+
+    const labelNo = clue.no ?? clue.id;
+    const dirText = clue.type === "across" ? "가로" : "세로";
+
+    title.textContent = `${dirText} ${labelNo}번 문제`;
+    text.textContent = clue.question;
+    ans.textContent = "";
+    ans.classList.remove("show");
+
+    const popup = document.getElementById("popup");
+    const pTitle = document.getElementById("popup-clue-title");
+    const pText = document.getElementById("popup-clue-text");
+    const pInput = document.getElementById("popup-answer-input");
+
+    pTitle.textContent = `${dirText} ${labelNo}번 문제`;
+    pText.textContent = clue.question;
+    pInput.value = "";
+    pInput.placeholder = clue.answer ? `${Array.from(clue.answer).length} 글자` : "";
+    popup.classList.add("show");
+    pInput.focus();
+  }
+
+  function openClueFromCell(key) {
+    const ids = cellToClues[key];
+    if (!ids || ids.length === 0) return;
+    let chosen = ids[0];
+    const acrossId = ids.find(id => idToClue[id].type === "across");
+    if (acrossId) chosen = acrossId;
+    openClue(chosen);
+  }
+
+  function revealCurrentAnswer() {
+    if (!currentClueId) return;
+    const clue = idToClue[currentClueId];
+    const chars = Array.from(clue.answer || "");
+
+    clue.cells.forEach((key, idx) => {
+      const td = document.querySelector(`td[data-key='${key}']`);
+      if (!td) return;
+      const input = td.querySelector("input");
+      if (input) {
+        input.value = chars[idx] || "";
+      }
+    });
+
+    if (clue.answer) {
+      const ans = document.getElementById("current-answer-text");
+      ans.textContent = `정답: ${clue.answer}`;
+      ans.classList.add("show");
+      const pInput = document.getElementById("popup-answer-input");
+      if (pInput) pInput.value = clue.answer;
+    }
+  }
+
+  document.getElementById("popup-close").addEventListener("click", () => {
+    document.getElementById("popup").classList.remove("show");
+  });
+
+  document.getElementById("popup").addEventListener("click", e => {
+    if (e.target.id === "popup") {
+      document.getElementById("popup").classList.remove("show");
+    }
+  });
+
+  document.getElementById("popup-inner").addEventListener("contextmenu", e => {
+    e.preventDefault();
+    revealCurrentAnswer();
+  });
+
+  buildGrid();
+  buildClueLists();
+</script>
+</body>
+</html>
