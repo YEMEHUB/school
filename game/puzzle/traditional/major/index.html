@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>가로세로 낱말퍼즐 - 학과편 </title>
+  <style>
+    :root {
+      --blue-main: #54007C;
+      --blue-dark: #46005F;
+      --blue-light: #BC83BD;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #CFA7D3;
+      background-image: linear-gradient(180deg, #CFA7D3 0%, #BC83BD 40%, #A1589E 100%);
+    }
+    .hero {
+      padding: 18px 24px 10px;
+      background: linear-gradient(90deg, #54007C, #A1589E);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 900;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+    .hero-sub {
+      padding: 0 24px 14px;
+      font-size: 13px;
+      color: #F5E4F7;
+    }
+    .container {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .grid-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      padding: 14px;
+      border-radius: 18px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      border: 3px solid var(--blue-main);
+    }
+    table {
+      border-collapse: collapse;
+      user-select: none;
+    }
+    td.cell {
+      width: 38px;
+      height: 38px;
+      padding: 4px;
+      border: none;
+    }
+    td.cell.inactive {
+      background: transparent;
+    }
+    td.cell.inactive::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      background: var(--blue-light);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+    }
+    .tile {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffffff 0%, #f7fff9 45%, #edf7ee 100%);
+      box-shadow:
+        0 2px 0 rgba(129,199,132,0.9),
+        0 4px 6px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border: 1px solid #c8e6c9;
+    }
+    td.cell.active {
+      background: transparent;
+      cursor: pointer;
+    }
+    td.cell.highlight .tile {
+      box-shadow:
+        0 0 0 3px #ffeb3b,
+        0 2px 0 rgba(129,199,132,0.9),
+        0 4px 6px rgba(0,0,0,0.25);
+    }
+    .cell-input {
+      width: 80%;
+      height: 80%;
+      border-radius: 10px;
+      border: 2px solid #cfd8dc;
+      outline: none;
+      background: #ffffff;
+      color: #1b2554;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      caret-color: #54007C;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.08);
+    }
+    .sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .current-clue-box {
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    }
+    .current-clue-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+      font-size: 16px;
+      color: #46005F;
+    }
+    .current-clue-text {
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 4px 0;
+      color: #263238;
+    }
+    .current-answer {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #b71c1c;
+      font-weight: 700;
+      display: none;
+    }
+    .current-answer.show {
+      display: block;
+    }
+    .hint-text {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #546e7a;
+    }
+    .clue-lists-box {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 18px;
+      padding: 12px 14px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      max-height: 420px;
+      overflow: auto;
+    }
+    .clue-lists-box h3 {
+      margin: 4px 0 6px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #46005F;
+    }
+    .clue-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .clue-button {
+      border: none;
+      border-radius: 16px;
+      padding: 5px 12px;
+      font-size: 12px;
+      background: #54007C;
+      color: #ffffff;
+      cursor: pointer;
+      transition: transform 0.05s, box-shadow 0.1s, background 0.1s;
+      box-shadow: 0 3px 0 #46005F;
+    }
+    .clue-button:hover {
+      background: #388e3c;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 0 #46005F;
+    }
+    .clue-button.active {
+      background: #a5d6a7;
+      color: #46005F;
+      box-shadow: 0 3px 0 #81c784;
+    }
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .popup-backdrop.show {
+      display: flex;
+    }
+    .popup-inner {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px 20px 16px;
+      min-width: 320px;
+      max-width: 540px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+      position: relative;
+      border: 2px solid var(--blue-main);
+    }
+    .popup-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #46005F;
+    }
+    .popup-text {
+      font-size: 14px;
+      line-height: 1.5;
+      max-height: 150px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      color: #263238;
+    }
+    .popup-input-row {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    #popup-answer-input {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #c4cfe0;
+      margin-top: 4px;
+    }
+    .popup-hint {
+      font-size: 12px;
+      color: #546e7a;
+    }
+    .popup-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      cursor: pointer;
+      color: #60708a;
+    }
+    .popup-close:hover {
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    가로세로낱말퍼즐 - 학과편 (Purple)
+  </header>
+  <div class="hero-sub">
+  </div>
+  <div class="container">
+    <div class="grid-wrapper">
+      <table>
+        <tbody id="puzzle-body"></tbody>
+      </table>
+    </div>
+
+    <div class="sidebar">
+      <div class="current-clue-box">
+        <div class="current-clue-title" id="current-clue-title">문제를 선택해 주세요</div>
+        <div class="current-clue-text" id="current-clue-text">
+          
+        </div>
+        <div class="current-answer" id="current-answer-text"></div>
+        <div class="hint-text">
+        </div>
+      </div>
+
+      <div class="clue-lists-box">
+        <h3>가로 문제</h3>
+        <div class="clue-list" id="across-list"></div>
+        <h3>세로 문제</h3>
+        <div class="clue-list" id="down-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" id="popup">
+    <div class="popup-inner" id="popup-inner">
+      <button class="popup-close" id="popup-close" aria-label="닫기">✕</button>
+      <div class="popup-title" id="popup-clue-title"></div>
+      <div class="popup-text" id="popup-clue-text"></div>
+      <div class="popup-input-row">
+        정답 입력
+        <input type="text" id="popup-answer-input" autocomplete="off" />
+      </div>
+      <div class="popup-hint">
+      </div>
+    </div>
+  </div>
+
+<script>
+  const CLUES = [
+  {
+    "id": "1A",
+    "type": "across",
+    "no": 1,
+    "startCol": 1,
+    "startRow": 1,
+    "endCol": 2,
+    "endRow": 1,
+    "question": "사학과는 한국사, 서양사, OO사로 나누어 공부를 해요.",
+    "answer": "동양",
+    "len": 2
+  },
+  {
+    "id": 3,
+    "type": "across",
+    "startCol": 1,
+    "startRow": 4,
+    "endCol": 4,
+    "endRow": 4,
+    "question": "OOOO는 원예 분야에 관한 전문적 이론과 기술을 습득하고 원예 산업에 적극적으로 참여하여 원예 산업을 더욱 발전시킬 수 있는 전문가와 과학적 훈련과 탐구를 통하여 국가와 지역 농업의 특성화 및 선진화에 기여할 수 있는 유능한 과학자를 양성하는데 교육 목표를 두고 있습니다.",
+    "answer": "원예학과",
+    "len": 4
+  },
+  {
+    "id": 5,
+    "type": "across",
+    "startCol": 6,
+    "startRow": 2,
+    "endCol": 9,
+    "endRow": 2,
+    "question": "OOOO학과에서는 바이러스부터 미생물, 식물, 동물에 이르기까지 산업적으로 이용할 수 있는 생체 물질을 인식하고 이를 조절하거나 변환시켜 식품, 의약품, 임상 진단과 같은 분야에 응용할 수 있는 가능성과 방법을 모색합니다.",
+    "answer": "분자생물",
+    "len": 4
+  },
+  {
+    "id": 7,
+    "type": "across",
+    "startCol": 10,
+    "startRow": 1,
+    "endCol": 12,
+    "endRow": 1,
+    "question": "OOO공학과는 급속히 발전하는 현대 과학 기술 문명을 맞이하여, 신소재의 특성과 미세구조를 이해하고 실제 사용 조건에서 요구하는 성질을 만족하는 신소재를 개발 및 응용할 수 있는 지식을 배우는 학과입니다.",
+    "answer": "신소재",
+    "len": 3
+  },
+  {
+    "id": 9,
+    "type": "across",
+    "startCol": 10,
+    "startRow": 5,
+    "endCol": 12,
+    "endRow": 5,
+    "question": "OOO는 생물학, 화학, 물리학 등의 기초 과학을 근간으로 하여 의약품의 취급에 관련된 제반 분야를 다루기 위한 학술적 이론과 기술 중심의 교육과정을 제공합니다.",
+    "answer": "약학과",
+    "len": 3
+  },
+  {
+    "id": 11,
+    "type": "across",
+    "startCol": 6,
+    "startRow": 5,
+    "endCol": 8,
+    "endRow": 5,
+    "question": "OOO학과는 각종 첨단 의료 장비를 이용하여 환자 질병의 진단과 치료에 대한 영상 의학적 학문과 기술을 습득하고, 방사선을 이용한 다양한 암의 치료에 대한 방사선 종양 분야, 방사선 동위원소를 이용한 핵의학 검사를 수행하는 핵의학 기술 과학 등을 배우는 학과입니다.",
+    "answer": "방사선",
+    "len": 3
+  },
+  {
+    "id": 12,
+    "type": "across",
+    "startCol": 5,
+    "startRow": 7,
+    "endCol": 8,
+    "endRow": 7,
+    "question": "OOOO에서는 21세기 한반도 주변의 새로운 군사 안보 상황에서 국가를 지키고 대한민국의 군을 이끌어갈 장교 및 군사 전문가를 양성하기 위한 교육 프로그램을 운영하고 있습니다.",
+    "answer": "군사학과",
+    "len": 4
+  },
+  {
+    "id": 14,
+    "type": "across",
+    "startCol": 1,
+    "startRow": 6,
+    "endCol": 2,
+    "endRow": 6,
+    "question": "OO학과는 공공성과 창의성에 기반한 융합적 사고력과 글로벌 경쟁력을 갖춘 공공 인재를 양성하는 것을 교육 목표로 합니다. 일반적으로 정책, 인사, 조직, 재무, 지방행정, 정보체계론 등을 교육 과정으로 하지만 오늘날 행정이 요구되는 곳이 많아지면서 경영학만큼이나 그 세부 분야가 넓어지고 있습니다.",
+    "answer": "행정",
+    "len": 2
+  },
+  {
+    "id": 15,
+    "type": "across",
+    "startCol": 2,
+    "startRow": 9,
+    "endCol": 6,
+    "endRow": 9,
+    "question": "OOOOO는 교통사고 문제와 도로, 환경, 안전 등의 문제점을 해결하기 위해서 다양한 교통 이론 등에 대해 배우고, 교통 문제의 본질과 원인을 규명하여 그 해결 방안을 모색할 수 있도록 새로운 기법을 연구하며, 실무에의 적용을 통해 도시 교통 문제의 해결에 기여할 수 있는 방법을 배우는 학과입니다.",
+    "answer": "교통공학과",
+    "len": 5
+  },
+  {
+    "id": "16A",
+    "type": "across",
+    "no": 16,
+    "startCol": 9,
+    "startRow": 8,
+    "endCol": 12,
+    "endRow": 8,
+    "question": "OOOO학과는 이처럼 급속히 성장하는 커뮤니케이션과 미디어 현상에 대한 이론적·경험적 지식을 토대로, 우리 시대의 현실이 전개되는 역사적 진보의 정점에서 다양한 커뮤니케이션의 실천들을 선도하며 미디어의 변화와 발전을 주도해 갈 전문가를 육성하는 데 교육 목표를 두고 있습니다.",
+    "answer": "언론정보",
+    "len": 4
+  },
+  {
+    "id": 18,
+    "type": "across",
+    "startCol": 7,
+    "startRow": 10,
+    "endCol": 9,
+    "endRow": 10,
+    "question": "OOO과는 인간의 사고 과정과 행동에 대한 미시·거시적인 이해와 기초에서 응용에 이르는 역동적이고 통합적인 교육을 통해 학생들이 자신, 타인, 사회, 그리고 인류에 대한 이해를 증진시키는 것을 교육 목표로 합니다.",
+    "answer": "심리학",
+    "len": 3
+  },
+  {
+    "id": 19,
+    "type": "across",
+    "startCol": 1,
+    "startRow": 12,
+    "endCol": 2,
+    "endRow": 12,
+    "question": "OO은 학문 분야나 직업군을 큰 줄기로 묶어 분류한 집합체로, 주로 대학에서 인문, 사회, 자연과학, 공학, 의학, 예체능 등으로 나누어 집니다.",
+    "answer": "계열",
+    "len": 2
+  },
+  {
+    "id": 22,
+    "type": "across",
+    "startCol": 4,
+    "startRow": 12,
+    "endCol": 7,
+    "endRow": 12,
+    "question": "OOOO는 산업 시설 및 공공건물의 안전 관리와 국민의 생명과 재산을 보호하기 위한 안전 및 경호에 관련된 학문을 배우는 학과입니다.",
+    "answer": "경호학과",
+    "len": 4
+  },
+  {
+    "id": 23,
+    "type": "across",
+    "startCol": 9,
+    "startRow": 12,
+    "endCol": 12,
+    "endRow": 12,
+    "question": "노어노문학과는 미래의 한·러 관계에 중추적인 역할을 담당하게 될 고급 전문 인력의 양성을 목표로 합니다. 실제적으로 OOOO를 구사할 수 있는 능력을 키우면서, 동유럽 문화의 중심지인 러시아의 역사, 정치, 경제, 문화 등에 대하여 체계적으로 연구하는 학과입니다.",
+    "answer": "러시아어",
+    "len": 4
+  },
+  {
+    "id": "1B",
+    "type": "down",
+    "no": 1,
+    "startCol": 1,
+    "startRow": 1,
+    "endCol": 1,
+    "endRow": 4,
+    "question": "OOOO학과에서는 경제 동물의 효율적인 생산 및 이용을 위해 유전·육종, 번식\n생리, 영양·사양 등의 기초 학문과 동물 산업에 필수적인 사료 생산 및 동물 생산 이용에 관한 실용 응용 학문을 전문적으로 교육, 연구, 실습합니다.",
+    "answer": "동물자원",
+    "len": 4
+  },
+  {
+    "id": 2,
+    "type": "down",
+    "startCol": 3,
+    "startRow": 2,
+    "endCol": 3,
+    "endRow": 4,
+    "question": "OOO과에서는 우리 주위에서 일어나는 모든 자연 현상의 법칙을 연구합니다. 자연 현상의 기초를 이루고 있는 물질과 작용하는 힘에 대한 연구를 통해 우리 주변 세계에 대한 이해를 높이는 OOO을 공부합니다.",
+    "answer": "물리학",
+    "len": 3
+  },
+  {
+    "id": 4,
+    "type": "down",
+    "startCol": 8,
+    "startRow": 1,
+    "endCol": 8,
+    "endRow": 3,
+    "question": "OOO학과에서는 국내외 산업체, 학계, 연구소, 관공서 등의 현장에서 필요로 하는 우수 현장 전문 인력을 양성하기 위하여 OOO을 대상으로 면역학, 진균학, 바이러스학, 생화학, 분자생물학, 생태학 등 생명 현상의 진리를 밝혀내기 위한 기초 이론과 접근 방법에 대한 원리를 교육합니다.",
+    "answer": "미생물",
+    "len": 3
+  },
+  {
+    "id": 6,
+    "type": "down",
+    "startCol": 7,
+    "startRow": 5,
+    "endCol": 7,
+    "endRow": 7,
+    "question": "OOO과에서는 사진뿐만 아니라 다양한 디지털 영상 콘텐츠 제작을 위한 이론과 실습을 병행합니다. 최근에는 디지털카메라 사용의 증가와 다매체 다채널의 멀티미디어 시대가 본격화되면서, 사진과 영상을 함께 배우는 융합학과들도 생겨나고 있으며, 드론 관련 수업이 진행되기도 합니다.",
+    "answer": "사진학",
+    "len": 3
+  },
+  {
+    "id": 8,
+    "type": "down",
+    "startCol": 11,
+    "startRow": 3,
+    "endCol": 11,
+    "endRow": 6,
+    "question": "OOOO 에서는 개별 건물의 외부와 내부 공간 및 환경 등을 설계하는 것뿐만 아니라 건물과 건물, 건물과 도시, 건물과 자연 등의 관계도 배웁니다.",
+    "answer": "건축학과",
+    "len": 4
+  },
+  {
+    "id": 10,
+    "type": "down",
+    "startCol": 6,
+    "startRow": 7,
+    "endCol": 6,
+    "endRow": 8,
+    "question": "OOO는 인류 역사를 한국사, 동양사, 서양사로 분류하고 이들에 대한 체계적 이해에 역점을 두며, 아울러 각 분야의 역사를 비교 조명함으로써 학생들에게 올바른 역사의식을 고취시켜 사회발전과 문화 창조에 기여할 수 있도록 학습에 임하고 있습니다.",
+    "answer": "사학과",
+    "len": 3
+  },
+  {
+    "id": 13,
+    "type": "down",
+    "startCol": 2,
+    "startRow": 6,
+    "endCol": 2,
+    "endRow": 10,
+    "question": "OOOOO과의 교육 목표는 학생들이 정치 사회에 대한 예리한 분석력, 정확한 판단력, 냉철한 비판력을 갖추도록 하는 것입니다.",
+    "answer": "정치외교학",
+    "len": 5
+  },
+  {
+    "id": "16B",
+    "type": "down",
+    "no": 16,
+    "startCol": 9,
+    "startRow": 8,
+    "endCol": 9,
+    "endRow": 10,
+    "question": "OOO과에서는 현대 OOO의 주요 이론과 영역들을 포괄적으로 연구함과 동시에 다양한 응용 분야를 적극적으로 개발하는 데 주안점을 두고 있습니다. 따라서 이론언어학을 중심으로 전산언어학과 기호학, 실용언어학 분야를 특화시키고 있습니다.",
+    "answer": "언어학",
+    "len": 3
+  },
+  {
+    "id": 17,
+    "type": "down",
+    "startCol": 1,
+    "startRow": 11,
+    "endCol": 1,
+    "endRow": 12,
+    "question": "OO학과에서는 사회 각 분야에 OO학을 응용할 수 있도록 확률 및 OO 이론은 물론 자연과학, 사회과학, 경영 등의 각 학문 분야에서 발생하는 정보들을 수집·분석하는 OO적 방법도 연구 및 교육하고 있습니다.",
+    "answer": "통계",
+    "len": 2
+  },
+  {
+    "id": 20,
+    "type": "down",
+    "startCol": 12,
+    "startRow": 10,
+    "endCol": 12,
+    "endRow": 12,
+    "question": "OOO학부는 멀티미디어와 정보 통신 및 정보 보호를 포괄한 기본적인 이론을 바탕으로 하여 실용적인 교육을 제공하고, 멀티미디어를 위한, 정보통신에 의한, 신뢰할 수 있는 정보화 사회를 선도할 전문인을 양성합니다.",
+    "answer": "미디어",
+    "len": 3
+  },
+  {
+    "id": 21,
+    "type": "down",
+    "startCol": 5,
+    "startRow": 11,
+    "endCol": 5,
+    "endRow": 12,
+    "question": "OO학과에서는 건강의 회복, 질병의 예방, 건강의 유지 및 증진에 필요한 지식과 함께, 환자들을 회복시키고 재활을 돕는 OO 활동에 대한 이론을 배웁니다.",
+    "answer": "간호",
+    "len": 2
+  }
+];
+
+  const ROWS = 12;
+  const COLS = 12;
+
+  const idToClue = {};
+  const cellToClues = {};
+  let currentClueId = null;
+
+  CLUES.forEach(clue => {
+    idToClue[clue.id] = clue;
+    const cells = [];
+    if (clue.type === "across") {
+      for (let col = clue.startCol; col <= clue.endCol; col++) {
+        const key = `${clue.startRow}-${col}`;
+        cells.push(key);
+        (cellToClues[key] ??= []).push(clue.id);
+      }
+    } else {
+      for (let row = clue.startRow; row <= clue.endRow; row++) {
+        const key = `${row}-${clue.startCol}`;
+        cells.push(key);
+        (cellToClues[key] ??= []).push(clue.id);
+      }
+    }
+    clue.cells = cells;
+  });
+
+  function buildGrid() {
+    const tbody = document.getElementById("puzzle-body");
+    for (let row = 1; row <= ROWS; row++) {
+      const tr = document.createElement("tr");
+
+      for (let col = 1; col <= COLS; col++) {
+        const key = `${row}-${col}`;
+        const td = document.createElement("td");
+        td.classList.add("cell");
+        td.dataset.key = key;
+
+        const active = !!cellToClues[key];
+        if (active) {
+          td.classList.add("active");
+
+          const tile = document.createElement("div");
+          tile.className = "tile";
+
+          const input = document.createElement("input");
+          input.type = "text";
+          input.maxLength = 1;
+          input.className = "cell-input";
+          input.autocomplete = "off";
+
+          tile.appendChild(input);
+          td.appendChild(tile);
+
+          td.addEventListener("click", () => openClueFromCell(key));
+          td.addEventListener("contextmenu", e => {
+            e.preventDefault();
+            openClueFromCell(key);
+            revealCurrentAnswer();
+          });
+        } else {
+          td.classList.add("inactive");
+        }
+
+        tr.appendChild(td);
+      }
+
+      tbody.appendChild(tr);
+    }
+  }
+
+  function buildClueLists() {
+    const acrossList = document.getElementById("across-list");
+    const downList = document.getElementById("down-list");
+
+    CLUES.filter(c => c.type === "across").forEach(clue => {
+      const btn = document.createElement("button");
+      btn.className = "clue-button";
+      const labelNo = clue.no ?? clue.id;
+      btn.textContent = `가로 ${labelNo}번 문제`;
+      btn.dataset.id = clue.id;
+      btn.addEventListener("click", () => openClue(clue.id));
+      btn.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        openClue(clue.id);
+        revealCurrentAnswer();
+      });
+      acrossList.appendChild(btn);
+    });
+
+    CLUES.filter(c => c.type === "down").forEach(clue => {
+      const btn = document.createElement("button");
+      btn.className = "clue-button";
+      const labelNo = clue.no ?? clue.id;
+      btn.textContent = `세로 ${labelNo}번 문제`;
+      btn.dataset.id = clue.id;
+      btn.addEventListener("click", () => openClue(clue.id));
+      btn.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        openClue(clue.id);
+        revealCurrentAnswer();
+      });
+      downList.appendChild(btn);
+    });
+  }
+
+  function openClue(id) {
+    const clue = idToClue[id];
+    if (!clue) return;
+    currentClueId = id;
+
+    document
+      .querySelectorAll(".clue-button")
+      .forEach(btn => {
+        if (btn.dataset.id === String(id)) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+
+    document
+      .querySelectorAll("td.cell.highlight")
+      .forEach(td => td.classList.remove("highlight"));
+
+    clue.cells.forEach(key => {
+      const td = document.querySelector(`td[data-key='${key}']`);
+      if (td) td.classList.add("highlight");
+    });
+
+    const title = document.getElementById("current-clue-title");
+    const text = document.getElementById("current-clue-text");
+    const ans = document.getElementById("current-answer-text");
+
+    const labelNo = clue.no ?? clue.id;
+    const dirText = clue.type === "across" ? "가로" : "세로";
+
+    title.textContent = `${dirText} ${labelNo}번 문제`;
+    text.textContent = clue.question;
+    ans.textContent = "";
+    ans.classList.remove("show");
+
+    const popup = document.getElementById("popup");
+    const pTitle = document.getElementById("popup-clue-title");
+    const pText = document.getElementById("popup-clue-text");
+    const pInput = document.getElementById("popup-answer-input");
+
+    pTitle.textContent = `${dirText} ${labelNo}번 문제`;
+    pText.textContent = clue.question;
+    pInput.value = "";
+    const length = clue.answer ? Array.from(clue.answer).length : (clue.len || 0);
+    pInput.placeholder = length ? `${length} 글자` : "";
+    popup.classList.add("show");
+    pInput.focus();
+  }
+
+  function openClueFromCell(key) {
+    const ids = cellToClues[key];
+    if (!ids || ids.length === 0) return;
+    let chosen = ids[0];
+    const acrossId = ids.find(id => idToClue[id].type === "across");
+    if (acrossId) chosen = acrossId;
+    openClue(chosen);
+  }
+
+  function revealCurrentAnswer() {
+    if (!currentClueId) return;
+    const clue = idToClue[currentClueId];
+    const chars = Array.from(clue.answer || "");
+
+    clue.cells.forEach((key, idx) => {
+      const td = document.querySelector(`td[data-key='${key}']`);
+      if (!td) return;
+      const input = td.querySelector("input");
+      if (input) {
+        input.value = chars[idx] || "";
+      }
+    });
+
+    if (clue.answer) {
+      const ans = document.getElementById("current-answer-text");
+      ans.textContent = `정답: ${clue.answer}`;
+      ans.classList.add("show");
+      const pInput = document.getElementById("popup-answer-input");
+      if (pInput) pInput.value = clue.answer;
+    }
+  }
+
+  document.getElementById("popup-close").addEventListener("click", () => {
+    document.getElementById("popup").classList.remove("show");
+  });
+
+  document.getElementById("popup").addEventListener("click", e => {
+    if (e.target.id === "popup") {
+      document.getElementById("popup").classList.remove("show");
+    }
+  });
+
+  document.getElementById("popup-inner").addEventListener("contextmenu", e => {
+    e.preventDefault();
+    revealCurrentAnswer();
+  });
+
+  buildGrid();
+  buildClueLists();
+</script>
+</body>
+</html>
