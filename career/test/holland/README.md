@@ -1,2 +1,2 @@
 # 직업선택
-> 나의 진로 선택 보드 
+>https://yemehub.github.io/school/career/test/holland/
