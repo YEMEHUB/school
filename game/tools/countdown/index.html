@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>카운트 다운 타이머</title>
+  <style>
+    :root{
+      --bg:#ffffff; --text:#111; --muted:#666; --border:#d9d9d9;
+      --panel:#efefef; --blue:#1a73e8; --shadow: 0 8px 24px rgba(0,0,0,.10);
+    }
+    *{ box-sizing:border-box; font-family: system-ui, -apple-system, "Apple SD Gothic Neo","Malgun Gothic", Segoe UI, Roboto, Arial, sans-serif; }
+    body{ margin:0; background:var(--bg); color:var(--text); display:flex; justify-content:center; padding:22px 14px 40px; }
+    .wrap{ width:min(720px, 100%); }
+    h1{ text-align:center; font-weight:700; margin:8px 0 14px; letter-spacing:-.2px; }
+    .rule{ height:2px; background:var(--border); border:0; margin:0 0 18px; }
+
+    .timerPanel{
+      background:var(--panel);
+      border:1px solid #d0d0d0;
+      border-radius:12px;
+      padding:18px 18px 16px;
+      box-shadow: var(--shadow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      position:relative;
+    }
+    .block{ width:150px; position:relative; }
+    .label{
+      position:absolute; top:-28px; left:50%; transform:translateX(-50%);
+      background:#111; color:#fff; font-size:12px; padding:4px 10px; border-radius:6px; line-height:1;
+    }
+    .label::after{
+      content:""; position:absolute; left:50%; bottom:-6px; transform:translateX(-50%);
+      border:6px solid transparent; border-top-color:#111;
+    }
+    input.time{
+      width:100%; height:86px;
+      border:2px solid #bfbfbf; background:#fff; border-radius:8px;
+      font-size:56px; font-weight:700; text-align:center; outline:none;
+    }
+    input.time:focus{ border-color: var(--blue); box-shadow: 0 0 0 4px rgba(26,115,232,.15); }
+    .colon{ font-size:56px; font-weight:800; color:#999; margin-top:20px; user-select:none; }
+
+    .btnRow{ display:flex; justify-content:center; gap:12px; margin:14px 0 10px; }
+    button{ border:0; border-radius:6px; padding:12px 26px; font-size:16px; font-weight:700; cursor:pointer; }
+    .start{ background:var(--blue); color:#fff; min-width:160px; }
+    .cancel{ background:#aeb0b4; color:#fff; min-width:160px; }
+
+    .miniRow{ display:flex; justify-content:center; gap:10px; margin:8px 0 18px; flex-wrap:wrap; }
+    .mini{ background:#fff; border:1px solid #cfcfcf; color:#222; padding:7px 12px; border-radius:6px; font-size:13px; font-weight:700; }
+
+    .hint{ color:#333; font-size:14px; margin-top:10px; line-height:1.55; }
+    .hint ul{ margin:10px 0 0 18px; }
+    .hint li{ margin:6px 0; }
+    .muted{ color:var(--muted); }
+
+    .titleEdit{ text-align:center; margin:8px 0 0; font-size:13px; }
+    .titleEdit input{ width:min(360px, 100%); padding:9px 12px; border-radius:8px; border:1px solid #cfcfcf; font-size:14px; }
+    .status{ text-align:center; margin-top:8px; font-weight:700; color:#444; min-height:22px; }
+
+    body.fullscreen .hint,
+    body.fullscreen .titleEdit,
+    body.fullscreen .miniRow{ display:none; }
+    body.fullscreen{ padding-top:10px; }
+
+    @media (max-width:540px){
+      .block{ width:110px; }
+      input.time{ height:70px; font-size:44px; }
+      .colon{ font-size:44px; }
+      .start,.cancel{ min-width:140px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 id="mainTitle">카운트 다운 타이머</h1>
+    <hr class="rule"/>
+
+    <div class="timerPanel" aria-label="카운트다운 타이머">
+      <div class="block">
+        <div class="label">시</div>
+        <input class="time" id="hh" inputmode="numeric" maxlength="2" value="00" aria-label="시간">
+      </div>
+      <div class="colon">:</div>
+      <div class="block">
+        <div class="label">분</div>
+        <input class="time" id="mm" inputmode="numeric" maxlength="2" value="00" aria-label="분">
+      </div>
+      <div class="colon">:</div>
+      <div class="block">
+        <div class="label">초</div>
+        <input class="time" id="ss" inputmode="numeric" maxlength="2" value="10" aria-label="초">
+      </div>
+    </div>
+
+    <div class="btnRow">
+      <button class="start" id="btnStart">시작</button>
+      <button class="cancel" id="btnCancel">취소</button>
+    </div>
+
+    <div class="miniRow">
+      <button class="mini" id="btnFull">전체화면</button>
+      <button class="mini" id="btnTitle">제목 수정</button>
+      <button class="mini" id="btnPlus">+1:00</button>
+    </div>
+
+    <div class="titleEdit" id="titleEdit" style="display:none">
+      <input id="titleInput" placeholder="제목을 입력하세요 (예: 2분 발표 타이머)" />
+      <div class="muted" style="margin-top:6px;">제목은 이 브라우저에 저장됩니다.</div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="hint">
+      <ul>
+        <li>숫자칸에서 <b>↑/↓</b> 키로 1씩 조정됩니다.</li>
+        <li><b>Enter</b> : 시작 / 일시정지 토글</li>
+        <li>끝나면 알림음이 울립니다. (브라우저 정책상 첫 클릭 이후 재생됨)</li>
+      </ul>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const hh = document.getElementById('hh');
+  const mm = document.getElementById('mm');
+  const ss = document.getElementById('ss');
+  const status = document.getElementById('status');
+  const mainTitle = document.getElementById('mainTitle');
+
+  const btnStart = document.getElementById('btnStart');
+  const btnCancel = document.getElementById('btnCancel');
+  const btnFull = document.getElementById('btnFull');
+  const btnTitle = document.getElementById('btnTitle');
+  const btnPlus = document.getElementById('btnPlus');
+
+  const titleEdit = document.getElementById('titleEdit');
+  const titleInput = document.getElementById('titleInput');
+
+  let timerId = null;
+  let remainingMs = 0;
+  let running = false;
+  let lastTick = 0;
+
+  // ===== 알림음 제어(핵심 수정) =====
+  let audioCtx = null;
+  let alarmSession = 0;          // 알림 세션 토큰
+  let alarmTimeouts = [];        // 예약된 timeout들 저장(즉시 중단용)
+
+  function ensureAudio(){
+    if(!audioCtx){
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+  }
+
+  function clearAlarmTimers(){
+    alarmTimeouts.forEach(id => clearTimeout(id));
+    alarmTimeouts = [];
+  }
+
+  function stopAlarm(){
+    alarmSession++;   // 토큰 증가 => 기존 루프는 자동으로 무효
+    clearAlarmTimers();
+  }
+
+  // 더 시끄럽게: square + 볼륨 상향 + 짧은 트릴
+  function loudBeep(freq=880, ms=180, vol=0.55){
+    ensureAudio();
+    try{ audioCtx.resume?.(); }catch(e){}
+    const t0 = audioCtx.currentTime;
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'square';           // ✅ 더 날카롭고 크게 들림
+    osc.frequency.value = freq;
+
+    // 클릭 소리 방지: 빠른 fade in/out
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(vol, t0 + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + ms/1000);
+
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(t0);
+    osc.stop(t0 + ms/1000 + 0.02);
+  }
+
+  // 최대 90초까지 울리되, start/cancel 시 즉시 중단
+  function startAlarm(){
+    stopAlarm();                 // ✅ 시작 전에 기존 알림 완전 정리
+    const mySession = ++alarmSession;
+
+    const stopAt = Date.now() + 90_000;
+
+    const ring = () => {
+      if(mySession !== alarmSession) return;     // ✅ 세션 바뀌면 중단
+      if(Date.now() > stopAt) return;
+
+      // 더 시끄러운 "삐삐삐-삐삐삐" 패턴
+      loudBeep(1100, 140, 0.60);
+      alarmTimeouts.push(setTimeout(()=> {
+        if(mySession !== alarmSession) return;
+        loudBeep(1300, 140, 0.60);
+      }, 160));
+      alarmTimeouts.push(setTimeout(()=> {
+        if(mySession !== alarmSession) return;
+        loudBeep(900,  160, 0.60);
+      }, 320));
+
+      alarmTimeouts.push(setTimeout(()=> {
+        if(mySession !== alarmSession) return;
+        ring();
+      }, 820));
+    };
+
+    ring();
+  }
+
+  // ---- Utils
+  const pad2 = (n) => String(n).padStart(2,'0');
+  const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+
+  function readHMS() {
+    const H = clamp(parseInt(hh.value || '0',10) || 0, 0, 99);
+    const M = clamp(parseInt(mm.value || '0',10) || 0, 0, 59);
+    const S = clamp(parseInt(ss.value || '0',10) || 0, 0, 59);
+    return {H,M,S};
+  }
+  function setHMS(H,M,S) {
+    hh.value = pad2(clamp(H,0,99));
+    mm.value = pad2(clamp(M,0,59));
+    ss.value = pad2(clamp(S,0,59));
+  }
+  function hmsToMs({H,M,S}) { return ((H*3600 + M*60 + S) * 1000); }
+  function msToHms(ms) {
+    ms = Math.max(0, ms);
+    const total = Math.floor(ms/1000);
+    const H = Math.floor(total/3600);
+    const M = Math.floor((total%3600)/60);
+    const S = total%60;
+    return {H,M,S};
+  }
+  function sanitize2Digits(el, max){
+    let v = (el.value || '').replace(/\D/g,'').slice(0,2);
+    if(v === '') v = '0';
+    let n = clamp(parseInt(v,10)||0,0,max);
+    el.value = pad2(n);
+  }
+
+  // ---- title
+  function setTitle(t){
+    if(t){
+      mainTitle.textContent = t;
+      document.title = t;
+    }else{
+      mainTitle.textContent = '카운트 다운 타이머';
+      document.title = '카운트 다운 타이머';
+    }
+    localStorage.setItem('cd_title', t || '');
+  }
+  // init title
+  const saved = localStorage.getItem('cd_title') || '';
+  if(saved){ titleInput.value = saved; setTitle(saved); }
+
+  // ---- timer
+  function renderRemaining(){
+    const {H,M,S} = msToHms(remainingMs);
+    setHMS(H,M,S);
+  }
+  function setStatus(msg){ status.textContent = msg || ''; }
+
+  function start(){
+    stopAlarm(); // ✅ 새 카운트다운 시작하면 알림음 즉시 중단
+
+    remainingMs = hmsToMs(readHMS());
+    if(remainingMs <= 0){
+      setStatus('시간을 설정해 주세요.');
+      return;
+    }
+    running = true;
+    btnStart.textContent = '일시정지';
+    setStatus('진행 중… (Enter로 일시정지)');
+    lastTick = performance.now();
+    tick();
+  }
+
+  function pause(){
+    running = false;
+    btnStart.textContent = '시작';
+    setStatus('일시정지됨 (Enter로 재개)');
+    if(timerId) cancelAnimationFrame(timerId);
+    timerId = null;
+  }
+
+  function cancel(){
+    pause();
+    stopAlarm();     // ✅ 취소하면 알림도 중단
+    remainingMs = 0;
+    setHMS(0,0,0);
+    setStatus('');
+  }
+
+  function finish(){
+    running = false;
+    btnStart.textContent = '시작';
+    setHMS(0,0,0);
+    setStatus('끝! (알림음)');
+    startAlarm();
+  }
+
+  function tick(){
+    if(!running) return;
+    const now = performance.now();
+    const dt = now - lastTick;
+    lastTick = now;
+    remainingMs -= dt;
+
+    if(remainingMs <= 0){
+      remainingMs = 0;
+      renderRemaining();
+      finish();
+      return;
+    }
+    renderRemaining();
+    timerId = requestAnimationFrame(tick);
+  }
+
+  // ---- input behavior
+  [hh,mm,ss].forEach((el) => {
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(/\D/g,'').slice(0,2);
+    });
+    el.addEventListener('blur', () => {
+      const max = el === hh ? 99 : 59;
+      sanitize2Digits(el, max);
+    });
+    el.addEventListener('keydown', (e) => {
+      const max = el === hh ? 99 : 59;
+      if(e.key === 'ArrowUp' || e.key === 'ArrowDown'){
+        e.preventDefault();
+        let n = parseInt(el.value||'0',10) || 0;
+        n += (e.key === 'ArrowUp') ? 1 : -1;
+        n = clamp(n, 0, max);
+        el.value = pad2(n);
+        return;
+      }
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        toggleStartPause();
+      }
+    });
+  });
+
+  // ---- buttons
+  function toggleStartPause(){
+    if(running) pause();
+    else start();
+  }
+  btnStart.addEventListener('click', toggleStartPause);
+  btnCancel.addEventListener('click', cancel);
+
+  btnPlus.addEventListener('click', () => {
+    const {H,M,S} = readHMS();
+    let total = H*3600 + M*60 + S + 60;
+    total = clamp(total, 0, 99*3600 + 59*60 + 59);
+    const nH = Math.floor(total/3600);
+    const nM = Math.floor((total%3600)/60);
+    const nS = total%60;
+    setHMS(nH,nM,nS);
+  });
+
+  btnTitle.addEventListener('click', () => {
+    const visible = titleEdit.style.display !== 'none';
+    titleEdit.style.display = visible ? 'none' : 'block';
+    if(!visible) titleInput.focus();
+  });
+
+  titleInput.addEventListener('input', () => setTitle(titleInput.value.trim()));
+
+  btnFull.addEventListener('click', async () => {
+    try{
+      if(!document.fullscreenElement){
+        await document.documentElement.requestFullscreen();
+      }else{
+        await document.exitFullscreen();
+      }
+    }catch(e){
+      alert('이 브라우저에서는 전체화면이 제한될 수 있어요.');
+    }
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    document.body.classList.toggle('fullscreen', !!document.fullscreenElement);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName || '')){
+      toggleStartPause();
+    }
+  });
+})();
+</script>
+</body>
+</html>
