@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>로또 룰렛 → 4팀 배정 + 팀장 뽑기</title>
+<style>
+:root{
+  --bg:#0b1020;
+  --txt:#e9ecff;
+  --muted:rgba(233,236,255,0.82);
+  --card:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.14);
+
+  --A:#2f368f;
+  --A2:#4b7fbe;
+  --B:#5a8a33;
+
+  --accent1:#6b7cff;
+  --accent2:#ff6bd6;
+
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);}
+.wrap{max-width:1320px;margin:0 auto;padding:10px;}
+h1{margin:4px 0 8px;font-size:16px;}
+
+.top{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+label{font-size:12px;color:var(--muted)}
+input,select{
+  height:38px;
+  border-radius:12px;border:1px solid rgba(255,255,255,0.18);
+  background:rgba(0,0,0,0.25);color:#fff;
+  padding:8px 10px;outline:none;
+}
+button{
+  height:38px;border:0;border-radius:12px;padding:10px 12px;cursor:pointer;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  color:#0b1020;font-weight:900;letter-spacing:0.2px;
+}
+button.secondary{
+  background:rgba(255,255,255,0.10);color:#fff;
+  border:1px solid rgba(255,255,255,0.18);font-weight:850;
+}
+button:disabled{opacity:0.55;cursor:not-allowed}
+.pill{
+  display:inline-block;padding:6px 10px;border-radius:999px;
+  background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.14);
+  font-size:12px;
+}
+.smallInfo{
+  flex:1 1 260px;min-width:240px;
+  color:var(--muted);font-size:12px;line-height:1.35;
+}
+.kbd{
+  padding:2px 6px;border-radius:8px;border:1px solid rgba(255,255,255,0.16);
+  background:rgba(0,0,0,0.25);font-weight:850;font-size:11px;color:#fff;
+}
+
+/* Main layout: stage + board (fit one screen) */
+.main{
+  display:grid;
+  grid-template-columns: 360px 1fr;
+  gap:10px;
+  margin-top:10px;
+  align-items:start;
+}
+@media (max-width: 1020px){ .main{ grid-template-columns:1fr; } }
+
+/* Stage card */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+.stage{
+  position:relative;height:210px;border-radius:14px;
+  border:1px dashed rgba(255,255,255,0.22);
+  background:
+    radial-gradient(740px 240px at 50% 40%, rgba(107,124,255,0.14), transparent 55%),
+    radial-gradient(680px 220px at 60% 60%, rgba(255,107,214,0.12), transparent 55%),
+    rgba(0,0,0,0.22);
+  overflow:hidden;
+}
+.bigBall{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:132px;height:132px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:1000;font-size:46px;color:#0b1020;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.78));
+  box-shadow:0 24px 50px rgba(0,0,0,0.35);
+  border:1px solid rgba(255,255,255,0.45);
+  user-select:none;
+}
+.ball{
+  position:absolute;width:36px;height:36px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:13px;color:rgba(0,0,0,0.85);
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.90), rgba(255,255,255,0.65));
+  border:1px solid rgba(255,255,255,0.35);
+  box-shadow:0 10px 18px rgba(0,0,0,0.25);
+  opacity:0.9;user-select:none;pointer-events:none;
+}
+.rolling .bigBall{ animation:pulse 0.55s ease-in-out infinite alternate; }
+@keyframes pulse{
+  from{ transform:translate(-50%,-50%) scale(0.98); }
+  to{ transform:translate(-50%,-50%) scale(1.03); }
+}
+.muted{color:var(--muted);font-size:12px;line-height:1.45;}
+.progress{margin-top:8px}
+
+/* Board: always two columns (A/B) */
+.board{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.panel{
+  border-radius:22px;padding:8px;background:#ffffff10;border:4px solid #ffffff30;
+  min-height: 500px;
+}
+.panel.A{ border-color: var(--A); }
+.panel.B{ border-color: var(--B); }
+.panelHead{
+  text-align:center;font-size:44px;font-weight:1000;color:#fff;
+  padding:10px;border-radius:18px;letter-spacing:2px;user-select:none;
+}
+.panel.A .panelHead{ background:var(--A); }
+.panel.B .panelHead{ background:var(--B); }
+.inner{ background:#fff; border-radius:16px; padding:8px; color:#0b1020; }
+
+/* Team boxes */
+.teamBox{ border:2px solid #000; margin-bottom:8px; overflow:hidden; background:#f7f7f7; }
+.teamTitle{
+  text-align:center;color:#fff;font-weight:900;font-size:24px;padding:6px;letter-spacing:1px;
+}
+.teamTitle.t1{ background:var(--A); }
+.teamTitle.t2{ background:var(--A2); }
+.teamTitle.t3{ background:var(--B); }
+.teamTitle.t4{ background: rgba(90,138,51,0.85); }
+
+.teamBody{ padding:10px; background:#f3f3f3; }
+.nums{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:8px;
+  justify-items:center;
+  align-items:center;
+  min-height: 92px;
+}
+
+/* smaller, random-colored balls */
+.numBall{
+  width:52px;height:52px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:1000;font-size:19px;color:#fff;
+  box-shadow: 0 10px 16px rgba(0,0,0,0.22);
+  border: 2px solid rgba(255,255,255,0.28);
+  animation: pop 180ms ease-out;
+  user-select:none;
+  position: relative;
+}
+@keyframes pop{ from{ transform:scale(0.55);opacity:0.4;} to{ transform:scale(1);opacity:1;} }
+
+.numBall.leader{
+  outline: 4px solid rgba(255, 215, 0, 0.95);
+  box-shadow: 0 0 0 5px rgba(255,215,0,0.18), 0 12px 18px rgba(0,0,0,0.26);
+}
+.numBall.leader::after{
+  content: "👑";
+  position:absolute;
+  top:-18px;
+  right:-10px;
+  font-size:20px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35));
+}
+
+/* toast */
+.assignToast{
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  font-weight:900;
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+}
+.assignToast span{ color:var(--txt); }
+.assignTeam{ color:#7CFFB2; }
+.assignNum{ color:#FFD27C; }
+
+/* leader controls */
+.leaderBox{
+  margin-top:10px;
+  padding:10px;
+  border-radius:14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.leaderTitle{ font-weight:1000; margin-bottom:8px; }
+.leaderBtns{ display:flex; gap:8px; flex-wrap:wrap; }
+.leaderBtns button{ height:36px; padding:8px 10px; }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <h1>🎱 로또 룰렛 → 두근두근! 난 어느팀? </h1>
+
+  <div class="top">
+    <label>인원(N)</label>
+    <input id="n" type="number" min="1" max="60" value="28" style="width:92px">
+
+    <label>애니메이션</label>
+    <select id="speed">
+      <option value="fast">빠르게</option>
+      <option value="normal" selected>보통</option>
+      <option value="slow">느리게</option>
+    </select>
+
+    <span class="pill" id="pill">대기 중</span>
+
+    <button id="auto">🎲 자동 배정 시작</button>
+    <button id="step" class="secondary">1명만 뽑기</button>
+    <button id="reset" class="secondary">초기화</button>
+    <button id="copy" class="secondary" disabled>결과 복사</button>
+
+    <div class="smallInfo">
+      단축키: <span class="kbd">Space</span> 자동시작 · <span class="kbd">Enter</span> 1명뽑기 · <span class="kbd">R</span> 초기화<br>
+      팀장 뽑기: 팀 구성 완료 후 버튼 활성화(각 팀 1명).
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <div class="muted"></div>
+      <div style="height:8px"></div>
+      <div class="stage" id="stage">
+        <div class="bigBall" id="big">READY</div>
+      </div>
+
+      <div class="assignToast" id="toast" style="display:none;">
+        <span>✅ <span class="assignNum" id="toastNum"></span>번 → <span class="assignTeam" id="toastTeam"></span></span>
+        <span class="muted" id="toastLeft"></span>
+      </div>
+
+      <div class="muted progress" id="progress">0 / 0 배정</div>
+
+      <div class="leaderBox">
+        <div class="leaderTitle">👑 팀장 뽑기(각 팀 1명)</div>
+        <div class="leaderBtns">
+          <button class="secondary" id="lead1" disabled>1팀 팀장</button>
+          <button class="secondary" id="lead2" disabled>2팀 팀장</button>
+          <button class="secondary" id="lead3" disabled>3팀 팀장</button>
+          <button class="secondary" id="lead4" disabled>4팀 팀장</button>
+          <button class="secondary" id="clearLeaders" disabled>팀장 초기화</button>
+        </div>
+        <div class="muted" style="margin-top:6px;">* 팀장도 룰렛처럼 굴러가다 “확정!”되며, 해당 번호 공에 👑 표시가 붙습니다.</div>
+      </div>
+    </div>
+
+    <div class="board">
+      <!-- A -->
+      <div class="panel A">
+        <div class="panelHead">A</div>
+        <div class="inner">
+          <div class="teamBox">
+            <div class="teamTitle t1">1팀</div>
+            <div class="teamBody"><div class="nums" id="team1"></div></div>
+          </div>
+          <div class="teamBox">
+            <div class="teamTitle t2">2팀</div>
+            <div class="teamBody"><div class="nums" id="team2"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="panel B">
+        <div class="panelHead">B</div>
+        <div class="inner">
+          <div class="teamBox">
+            <div class="teamTitle t3">3팀</div>
+            <div class="teamBody"><div class="nums" id="team3"></div></div>
+          </div>
+          <div class="teamBox">
+            <div class="teamTitle t4">4팀</div>
+            <div class="teamBody"><div class="nums" id="team4"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const nEl = $("n");
+  const speedEl = $("speed");
+  const pill = $("pill");
+
+  const autoBtn = $("auto");
+  const stepBtn = $("step");
+  const resetBtn = $("reset");
+  const copyBtn = $("copy");
+
+  const stage = $("stage");
+  const big = $("big");
+  const progress = $("progress");
+
+  const toast = $("toast");
+  const toastNum = $("toastNum");
+  const toastTeam = $("toastTeam");
+  const toastLeft = $("toastLeft");
+
+  const leadBtns = [null, $("lead1"), $("lead2"), $("lead3"), $("lead4")];
+  const clearLeadersBtn = $("clearLeaders");
+
+  const teamEls = [null, $("team1"), $("team2"), $("team3"), $("team4")];
+
+  // random color palette (projector-friendly)
+  const palette = [
+    "#ff6b6b","#feca57","#48dbfb","#1dd1a1",
+    "#5f27cd","#54a0ff","#ff9ff3","#00d2d3",
+    "#10ac84","#ee5253","#ff9f43","#576574"
+  ];
+
+  let rolling = false;
+  let rollInterval = null;
+  let floatTimer = null;
+  let floatBalls = [];
+  const FLOAT_BALLS = 12;
+
+  let candidates = [];
+  let teams = {1:[],2:[],3:[],4:[]};
+  let limits = {1:0,2:0,3:0,4:0};
+  let totalToAssign = 0;
+
+  let ballColor = new Map(); // number -> color (consistent across UI)
+  let leaders = {1:null,2:null,3:null,4:null};
+
+  function setPill(txt){ pill.textContent = txt; }
+
+  function clampInt(v, min, max, fallback){
+    const x = Number(v);
+    if (!Number.isFinite(x)) return fallback;
+    return Math.min(max, Math.max(min, Math.round(x)));
+  }
+
+  function makeRange(n){ return Array.from({length:n}, (_,i)=>i+1); }
+
+  function shuffle(arr){
+    for (let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function calcLimits(n){
+    // 4팀 균형 (6~7명)
+    const base = Math.floor(n / 4);
+    const extra = n % 4;
+    let arr = Array.from({length:4}, (_,i)=> base + (i < extra ? 1 : 0));
+    arr = shuffle(arr);
+    limits = {1:arr[0],2:arr[1],3:arr[2],4:arr[3]};
+    totalToAssign = n;
+  }
+
+  function clearUI(){
+    for (let i=1;i<=4;i++) teamEls[i].innerHTML = "";
+    big.textContent = "READY";
+    toast.style.display = "none";
+    copyBtn.disabled = true;
+  }
+
+  function stopRolling(){
+    rolling = false;
+    if (rollInterval){ clearInterval(rollInterval); rollInterval = null; }
+    stage.classList.remove("rolling");
+  }
+
+  function setLeaderButtonsEnabled(enabled){
+    for (let i=1;i<=4;i++) leadBtns[i].disabled = !enabled;
+    clearLeadersBtn.disabled = !enabled;
+  }
+
+  function clearLeaders(){
+    leaders = {1:null,2:null,3:null,4:null};
+    // remove leader class
+    document.querySelectorAll(".numBall.leader").forEach(el => el.classList.remove("leader"));
+  }
+
+  function resetAll(){
+    stopRolling();
+    const n = clampInt(nEl.value, 1, 60, 28);
+    candidates = shuffle(makeRange(n));
+    teams = {1:[],2:[],3:[],4:[]};
+    calcLimits(n);
+
+    ballColor = new Map();
+    clearLeaders();
+    setLeaderButtonsEnabled(false);
+
+    clearUI();
+    setPill("대기 중");
+    autoBtn.disabled = false;
+    stepBtn.disabled = false;
+    autoBtn.textContent = "🎲 자동 배정 시작";
+    progress.textContent = `0 / ${totalToAssign} 배정 (정원: 1팀 ${limits[1]}, 2팀 ${limits[2]}, 3팀 ${limits[3]}, 4팀 ${limits[4]})`;
+  }
+
+  function initFloatBalls(){
+    floatBalls.forEach(b => b.remove());
+    floatBalls = [];
+
+    const rect = stage.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+
+    for (let i=0;i<FLOAT_BALLS;i++){
+      const b = document.createElement("div");
+      b.className = "ball";
+      b.textContent = String(Math.floor(Math.random()*Math.max(10, clampInt(nEl.value,1,60,28)))+1);
+
+      const x = Math.random()*(W-36);
+      const y = Math.random()*(H-36);
+      b.style.left = x+"px";
+      b.style.top  = y+"px";
+
+      b.dataset.vx = (Math.random()*2.0 + 0.9) * (Math.random()<0.5 ? -1 : 1);
+      b.dataset.vy = (Math.random()*2.0 + 0.9) * (Math.random()<0.5 ? -1 : 1);
+
+      stage.appendChild(b);
+      floatBalls.push(b);
+    }
+
+    if (floatTimer) clearInterval(floatTimer);
+    floatTimer = setInterval(() => {
+      const rect2 = stage.getBoundingClientRect();
+      const W2 = rect2.width, H2 = rect2.height;
+      floatBalls.forEach(b => {
+        let x = parseFloat(b.style.left);
+        let y = parseFloat(b.style.top);
+        let vx = parseFloat(b.dataset.vx);
+        let vy = parseFloat(b.dataset.vy);
+
+        x += vx; y += vy;
+
+        if (x <= 0){ x = 0; vx *= -1; }
+        if (y <= 0){ y = 0; vy *= -1; }
+        if (x >= W2-36){ x = W2-36; vx *= -1; }
+        if (y >= H2-36){ y = H2-36; vy *= -1; }
+
+        b.style.left = x+"px";
+        b.style.top  = y+"px";
+        b.dataset.vx = vx;
+        b.dataset.vy = vy;
+
+        if (Math.random() < 0.06){
+          const n = clampInt(nEl.value, 1, 60, 28);
+          b.textContent = String(Math.floor(Math.random()*n)+1);
+        }
+      });
+    }, 30);
+  }
+
+  function popRandomCandidate(){
+    if (!candidates.length) return null;
+    const idx = Math.floor(Math.random()*candidates.length);
+    return candidates.splice(idx, 1)[0];
+  }
+
+  function nextTeamIndex(){
+    const arr = [1,2,3,4].map(i => ({i, size: teams[i].length, limit: limits[i]}))
+      .filter(x => x.size < x.limit);
+    if (!arr.length) return -1;
+    arr.sort((a,b)=>a.size - b.size);
+    const min = arr[0].size;
+    const tied = arr.filter(x=>x.size===min);
+    return tied[Math.floor(Math.random()*tied.length)].i;
+  }
+
+  function colorForNumber(num){
+    if (ballColor.has(num)) return ballColor.get(num);
+    const c = palette[Math.floor(Math.random()*palette.length)];
+    ballColor.set(num, c);
+    return c;
+  }
+
+  function addToTeam(teamIdx, num){
+    teams[teamIdx].push(num);
+
+    const ball = document.createElement("div");
+    ball.className = "numBall";
+    ball.textContent = String(num);
+    ball.style.background = colorForNumber(num);
+    ball.dataset.num = String(num);
+    teamEls[teamIdx].appendChild(ball);
+
+    const assigned = teams[1].length + teams[2].length + teams[3].length + teams[4].length;
+    const left = totalToAssign - assigned;
+
+    progress.textContent = `${assigned} / ${totalToAssign} 배정 (정원: 1팀 ${limits[1]}, 2팀 ${limits[2]}, 3팀 ${limits[3]}, 4팀 ${limits[4]})`;
+
+    toastNum.textContent = num;
+    toastTeam.textContent = `${teamIdx}팀`;
+    toastLeft.textContent = `남은 인원: ${left}`;
+    toast.style.display = "flex";
+
+    if (assigned >= totalToAssign){
+      setPill("완료!");
+      copyBtn.disabled = false;
+      autoBtn.disabled = true;
+      stepBtn.disabled = true;
+      stage.classList.remove("rolling");
+      big.textContent = "DONE";
+      rolling = false;
+
+      // enable leader draw now
+      setLeaderButtonsEnabled(true);
+      return true;
+    }
+    return false;
+  }
+
+  // --- BUG-FIXED roulette: interval + timeout (no performance dependency)
+  function rollFor(durationMs, tickMs, poolFn){
+    return new Promise(res => {
+      const update = () => {
+        const show = poolFn();
+        big.textContent = String(show);
+      };
+      update();
+      rollInterval = setInterval(update, tickMs);
+      setTimeout(() => {
+        if (rollInterval){ clearInterval(rollInterval); rollInterval = null; }
+        res();
+      }, durationMs);
+    });
+  }
+
+  function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+  function speedParams(){
+    return {
+      tickMs: { fast: 28, normal: 44, slow: 64 }[speedEl.value] ?? 44,
+      rollDuration: { fast: 1400, normal: 1800, slow: 2400 }[speedEl.value] ?? 1800,
+      pauseBetween: { fast: 220, normal: 300, slow: 420 }[speedEl.value] ?? 300
+    };
+  }
+
+  async function stepOne(){
+    if (rolling) return;
+    const assigned = teams[1].length + teams[2].length + teams[3].length + teams[4].length;
+    if (assigned >= totalToAssign){
+      setPill("이미 완료!");
+      return;
+    }
+
+    setPill("굴리는 중…");
+    stage.classList.add("rolling");
+    initFloatBalls();
+
+    const {tickMs, rollDuration} = speedParams();
+    await rollFor(rollDuration, tickMs, () => {
+      if (candidates.length) return candidates[Math.floor(Math.random()*candidates.length)];
+      const n = clampInt(nEl.value, 1, 60, 28);
+      return Math.floor(Math.random()*n)+1;
+    });
+
+    const chosen = popRandomCandidate();
+    const teamIdx = nextTeamIndex();
+    if (chosen == null || teamIdx === -1){
+      setPill("완료!");
+      stage.classList.remove("rolling");
+      copyBtn.disabled = false;
+      return;
+    }
+
+    big.textContent = String(chosen);
+    addToTeam(teamIdx, chosen);
+
+    stage.classList.remove("rolling");
+    if (!autoBtn.disabled) setPill("대기 중");
+  }
+
+  async function startAuto(){
+    if (rolling) return;
+
+    resetAll(); // clean start
+    rolling = true;
+
+    autoBtn.disabled = true;
+    stepBtn.disabled = true;
+    autoBtn.textContent = "⏸️ 진행 중…";
+    setPill("자동 배정 중…");
+
+    stage.classList.add("rolling");
+    initFloatBalls();
+
+    const {tickMs, rollDuration, pauseBetween} = speedParams();
+
+    // deterministic loop count = totalToAssign
+    for (let i=0; i<totalToAssign; i++){
+      await rollFor(rollDuration, tickMs, () => candidates[Math.floor(Math.random()*candidates.length)]);
+      const chosen = popRandomCandidate();
+      const teamIdx = nextTeamIndex();
+      if (chosen == null || teamIdx === -1) break;
+
+      big.textContent = String(chosen);
+      const done = addToTeam(teamIdx, chosen);
+      if (done) break;
+
+      await sleep(pauseBetween);
+    }
+
+    rolling = false;
+    stage.classList.remove("rolling");
+    if (!copyBtn.disabled) setPill("완료!");
+  }
+
+  // ---- Leader draw ----
+  function findBallEl(teamIdx, num){
+    return teamEls[teamIdx].querySelector(`.numBall[data-num="${num}"]`);
+  }
+
+  async function pickLeader(teamIdx){
+    if (rolling) return;
+    if (leaders[teamIdx] != null){
+      // already picked
+      toastNum.textContent = leaders[teamIdx];
+      toastTeam.textContent = `${teamIdx}팀 팀장(이미 선택됨)`;
+      toastLeft.textContent = "";
+      toast.style.display = "flex";
+      return;
+    }
+    const pool = teams[teamIdx].slice();
+    if (!pool.length){
+      setPill("팀 구성이 먼저!");
+      return;
+    }
+
+    setPill(`팀장 뽑는 중… (${teamIdx}팀)`);
+    stage.classList.add("rolling");
+    initFloatBalls();
+
+    const {tickMs} = speedParams();
+    const leaderRollDuration = { fast: 1300, normal: 1600, slow: 2100 }[speedEl.value] ?? 1600;
+
+    await rollFor(leaderRollDuration, tickMs, () => pool[Math.floor(Math.random()*pool.length)]);
+
+    const chosen = pool[Math.floor(Math.random()*pool.length)];
+    leaders[teamIdx] = chosen;
+    big.textContent = String(chosen);
+
+    const el = findBallEl(teamIdx, chosen);
+    if (el) el.classList.add("leader");
+
+    toastNum.textContent = chosen;
+    toastTeam.textContent = `${teamIdx}팀 팀장 👑`;
+    toastLeft.textContent = "";
+    toast.style.display = "flex";
+
+    stage.classList.remove("rolling");
+    setPill("대기 중");
+  }
+
+  async function copyResult(){
+    const lines = [];
+    for (let i=1;i<=4;i++){
+      const leaderTxt = leaders[i] ? ` (팀장: ${leaders[i]})` : "";
+      lines.push(`${i}팀: ${teams[i].join(", ")}${leaderTxt}`);
+    }
+    const txt = lines.join("\n");
+    try{
+      await navigator.clipboard.writeText(txt);
+      setPill("복사 완료!");
+      setTimeout(()=> setPill("완료!"), 800);
+    }catch(e){
+      const ta = document.createElement("textarea");
+      ta.value = txt;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      setPill("복사 완료!");
+      setTimeout(()=> setPill("완료!"), 800);
+    }
+  }
+
+  // wiring
+  autoBtn.addEventListener("click", startAuto);
+  stepBtn.addEventListener("click", stepOne);
+  resetBtn.addEventListener("click", resetAll);
+  copyBtn.addEventListener("click", copyResult);
+
+  leadBtns[1].addEventListener("click", ()=>pickLeader(1));
+  leadBtns[2].addEventListener("click", ()=>pickLeader(2));
+  leadBtns[3].addEventListener("click", ()=>pickLeader(3));
+  leadBtns[4].addEventListener("click", ()=>pickLeader(4));
+  clearLeadersBtn.addEventListener("click", ()=>{ clearLeaders(); });
+
+  nEl.addEventListener("change", resetAll);
+
+  window.addEventListener("keydown", (e) => {
+    if (e.code === "Space"){
+      e.preventDefault();
+      if (!rolling) startAuto();
+    }
+    if (e.key === "Enter"){
+      e.preventDefault();
+      stepOne();
+    }
+    if (e.key.toLowerCase() === "r"){
+      resetAll();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (rolling) initFloatBalls();
+  });
+
+  // init
+  resetAll();
+})();
+</script>
+</body>
+</html>
