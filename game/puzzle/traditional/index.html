@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>가로세로 낱말퍼즐 - 한국전통 (그린)</title>
+  <title>가로세로 낱말퍼즐 - 학과편 (그린)</title>
   <style>
     :root {
       --blue-main: #54007C;
@@ -269,7 +269,7 @@
         <div class="current-clue-text" id="current-clue-text">
           
         </div>
-        <div class="current-answer" id="current-answer-text" style="display:none;"></div>
+        <div class="current-answer" id="current-answer-text"></div>
         <div class="hint-text">
         </div>
       </div>
@@ -291,15 +291,6 @@
       <div class="popup-input-row">
         정답 입력
         <input type="text" id="popup-answer-input" autocomplete="off" />
-      </div>
-      <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
-        <button id="check-answer-btn" style="border:none; border-radius:12px; padding:10px 14px; font-weight:800; cursor:pointer; background: var(--blue-main); color:#fff; box-shadow:0 3px 0 var(--blue-dark);">
-          정답 확인
-        </button>
-        <div id="feedback" style="font-size:13px; font-weight:800;"></div>
-      </div>
-      <div style="margin-top:8px; font-size:12px; color:#546e7a;">
-        💡 정답을 입력하고 <b>정답 확인</b>을 누르세요. 맞으면 퍼즐 칸에 자동으로 들어가요!
       </div>
       <div class="popup-hint">
       </div>
@@ -653,7 +644,6 @@
   const cellToClues = {};
   let currentClueId = null;
 
-  // Build indices
   CLUES.forEach(clue => {
     idToClue[clue.id] = clue;
     const cells = [];
@@ -697,14 +687,15 @@
           input.className = "cell-input";
           input.autocomplete = "off";
 
-          input.addEventListener("input", () => {
-            input.value = (input.value || "").slice(0, 1);
-          });
-
           tile.appendChild(input);
           td.appendChild(tile);
 
           td.addEventListener("click", () => openClueFromCell(key));
+          td.addEventListener("contextmenu", e => {
+            e.preventDefault();
+            openClueFromCell(key);
+            revealCurrentAnswer();
+          });
         } else {
           td.classList.add("inactive");
         }
@@ -727,6 +718,11 @@
       btn.textContent = `가로 ${labelNo}번 문제`;
       btn.dataset.id = clue.id;
       btn.addEventListener("click", () => openClue(clue.id));
+      btn.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        openClue(clue.id);
+        revealCurrentAnswer();
+      });
       acrossList.appendChild(btn);
     });
 
@@ -737,18 +733,12 @@
       btn.textContent = `세로 ${labelNo}번 문제`;
       btn.dataset.id = clue.id;
       btn.addEventListener("click", () => openClue(clue.id));
+      btn.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        openClue(clue.id);
+        revealCurrentAnswer();
+      });
       downList.appendChild(btn);
-    });
-  }
-
-  function highlightCells(clue) {
-    document
-      .querySelectorAll("td.cell.highlight")
-      .forEach(td => td.classList.remove("highlight"));
-
-    clue.cells.forEach(key => {
-      const td = document.querySelector(`td[data-key='${key}']`);
-      if (td) td.classList.add("highlight");
     });
   }
 
@@ -764,29 +754,37 @@
         else btn.classList.remove("active");
       });
 
-    highlightCells(clue);
+    document
+      .querySelectorAll("td.cell.highlight")
+      .forEach(td => td.classList.remove("highlight"));
+
+    clue.cells.forEach(key => {
+      const td = document.querySelector(`td[data-key='${key}']`);
+      if (td) td.classList.add("highlight");
+    });
 
     const title = document.getElementById("current-clue-title");
     const text = document.getElementById("current-clue-text");
+    const ans = document.getElementById("current-answer-text");
 
     const labelNo = clue.no ?? clue.id;
     const dirText = clue.type === "across" ? "가로" : "세로";
 
     title.textContent = `${dirText} ${labelNo}번 문제`;
     text.textContent = clue.question;
+    ans.textContent = "";
+    ans.classList.remove("show");
 
     const popup = document.getElementById("popup");
     const pTitle = document.getElementById("popup-clue-title");
     const pText = document.getElementById("popup-clue-text");
     const pInput = document.getElementById("popup-answer-input");
-    const feedback = document.getElementById("feedback");
 
     pTitle.textContent = `${dirText} ${labelNo}번 문제`;
     pText.textContent = clue.question;
     pInput.value = "";
-    const length = clue.len || (clue.answer ? Array.from(clue.answer).length : 0);
+    const length = clue.answer ? Array.from(clue.answer).length : (clue.len || 0);
     pInput.placeholder = length ? `${length} 글자` : "";
-    if (feedback) feedback.textContent = "";
     popup.classList.add("show");
     pInput.focus();
   }
@@ -794,75 +792,32 @@
   function openClueFromCell(key) {
     const ids = cellToClues[key];
     if (!ids || ids.length === 0) return;
-
     let chosen = ids[0];
-
-    const startsHere = ids.find(id => {
-      const c = idToClue[id];
-      return c && (c.startRow + "-" + c.startCol) === key;
-    });
-    if (startsHere) {
-      chosen = startsHere;
-    } else {
-      const acrossId = ids.find(id => idToClue[id].type === "across");
-      if (acrossId) chosen = acrossId;
-    }
-
+    const acrossId = ids.find(id => idToClue[id].type === "across");
+    if (acrossId) chosen = acrossId;
     openClue(chosen);
   }
 
-  function normalizeAnswer(s) {
-    return (s || "").replace(/\s+/g, "").trim();
-  }
-
-  function fillClueCells(clue) {
+  function revealCurrentAnswer() {
+    if (!currentClueId) return;
+    const clue = idToClue[currentClueId];
     const chars = Array.from(clue.answer || "");
+
     clue.cells.forEach((key, idx) => {
       const td = document.querySelector(`td[data-key='${key}']`);
       if (!td) return;
       const input = td.querySelector("input");
-      if (input) input.value = chars[idx] || "";
+      if (input) {
+        input.value = chars[idx] || "";
+      }
     });
-  }
 
-  function checkCurrentAnswer() {
-    if (!currentClueId) return;
-    const clue = idToClue[currentClueId];
-    const user = normalizeAnswer(document.getElementById("popup-answer-input").value);
-    const correct = normalizeAnswer(clue.answer);
-
-    const feedback = document.getElementById("feedback");
-    if (!user) {
-      if (feedback) {
-        feedback.style.color = "#d32f2f";
-        feedback.textContent = "정답을 입력해 주세요!";
-      }
-      return;
-    }
-
-    if (user === correct) {
-      fillClueCells(clue);
-      if (feedback) {
-        feedback.style.color = "#2e7d32";
-        feedback.textContent = "정답! 🎉";
-      }
-      window.setTimeout(() => {
-        document.getElementById("popup").classList.remove("show");
-      }, 450);
-    } else {
-      if (feedback) {
-        feedback.style.color = "#d32f2f";
-        feedback.textContent = "틀렸어요. 다시 생각해봐!";
-      }
-      const inner = document.getElementById("popup-inner");
-      inner.animate([
-        { transform: "translateX(0px)" },
-        { transform: "translateX(-8px)" },
-        { transform: "translateX(8px)" },
-        { transform: "translateX(-6px)" },
-        { transform: "translateX(6px)" },
-        { transform: "translateX(0px)" }
-      ], { duration: 320 });
+    if (clue.answer) {
+      const ans = document.getElementById("current-answer-text");
+      ans.textContent = `정답: ${clue.answer}`;
+      ans.classList.add("show");
+      const pInput = document.getElementById("popup-answer-input");
+      if (pInput) pInput.value = clue.answer;
     }
   }
 
@@ -876,18 +831,10 @@
     }
   });
 
-  const checkBtn = document.getElementById("check-answer-btn");
-  if (checkBtn) checkBtn.addEventListener("click", checkCurrentAnswer);
-
-  const ansInput = document.getElementById("popup-answer-input");
-  if (ansInput) {
-    ansInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        checkCurrentAnswer();
-      }
-    });
-  }
+  document.getElementById("popup-inner").addEventListener("contextmenu", e => {
+    e.preventDefault();
+    revealCurrentAnswer();
+  });
 
   buildGrid();
   buildClueLists();
