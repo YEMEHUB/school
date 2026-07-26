@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인 정보</title>
+  <style>
+    body {
+      background-color: white;
+      font-family: Arial, sans-serif;
+    }
+    .banner {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .container {
+      width: 80%;
+      margin: auto;
+      text-align: center;
+    }
+    .title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .instructions {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .account-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    .account-box {
+      width: 200px;
+      margin: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: left;
+    }
+    .account-box label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .account-box input {
+      width: calc(100% - 80px);
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+    .copy-btn {
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-left: 5px;
+      display: inline-block;
+      vertical-align: top;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://www.droit-technologie.org/wp-content/uploads/2019/03/google-images-143148_1280.png" alt="배너" class="banner">
+    <div class="title">구글 아이디와 비밀번호</div>
+    <div class="instructions">아이디와 비밀번호를 각각 복사해서 <a href="https://accounts.google.com/signin" target="_blank">Google_Login 페이지로 이동</a> 링크를 눌러 접속해 주세요!</div>
+    <div class="account-container">
+  
+      <div class="account-box">
+        <label>이름: 예미_01</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00111@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00111@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_02</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00112@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00112@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_03</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00113@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00113@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_04</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme01114@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme01114@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_05</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00115@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00115@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_06</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00116@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00116@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_07</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00117@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00117@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_08</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00118@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00118@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_09</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00119@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00119@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_10</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00120@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00120@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_11</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00121@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00121@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_12</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00122@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00122@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_13</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00123@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00123@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_14</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00124@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00124@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_15</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00125@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00125@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_16</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00126@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00126@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_17</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00127@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00127@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_18</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00128@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00128@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_19</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00129@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00129@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_20</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00130@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00130@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_21</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00220@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00220@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_22</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00221@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00221@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_23</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00222@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00222@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_24</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00223@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00223@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_25</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00224@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00224@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_26</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00225@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00225@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+      <div class="account-box">
+        <label>이름: 예미_27</label>
+        <label>아이디:</label>
+        <input type="text" value="yeme00471@gmail.com" readonly>
+        <button class="copy-btn" onclick="copyText('yeme00471@gmail.com')">복사</button>
+        <label>비밀번호:</label>
+        <input type="text" value="qlalfqjsgh1234" readonly>
+        <button class="copy-btn" onclick="copyText('qlalfqjsgh1234')">복사</button>
+      </div>
+        
+    
+    </div>
+  </div>
+
+  <script>
+    function copyText(value) {
+      const tempInput = document.createElement('input');
+      tempInput.value = value;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      alert("복사되었습니다: " + value);
+    }
+  </script>
+</body>
+</html>
+    
