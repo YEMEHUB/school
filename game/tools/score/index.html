@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>스코어보드</title>
+  <style>
+    :root{
+      --bg:#2f2f2f;
+      --panel:#5f5f5f;
+      --panel2:#4f4f4f;
+      --box:#6a6a6a;
+      --text:#f2f2f2;
+      --muted:#cfcfcf;
+      --accent:#ffe600; /* 노란 점수 */
+      --btn:#e7e7e7;
+      --btnText:#1b1b1b;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius:28px;
+    }
+    .light{
+      --bg:#f3f3f3;
+      --panel:#d8d8d8;
+      --panel2:#cfcfcf;
+      --box:#e3e3e3;
+      --text:#111;
+      --muted:#555;
+      --btn:#111;
+      --btnText:#fff;
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+    *{ box-sizing:border-box; font-family: system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",Segoe UI,Roboto,Arial,sans-serif; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:18px;
+    }
+    .wrap{
+      width:min(1200px, 100%);
+      aspect-ratio: 16/9;
+      background:rgba(255,255,255,.04);
+      border-radius: 18px;
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .board{
+      flex:1;
+      display:grid;
+      grid-template-columns: 1fr 420px 1fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .big{
+      background:var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 26px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .teamName{
+      font-size: 74px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      text-align:center;
+      margin-top: 6px;
+    }
+    .score{
+      font-size: 260px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: .9;
+      text-align:center;
+      margin: 8px 0 0;
+      text-shadow: 0 6px 0 rgba(0,0,0,.25);
+      user-select:none;
+    }
+    .sub{
+      text-align:center;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .mid{
+      background: rgba(0,0,0,.10);
+      border-radius: 18px;
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap: 16px;
+    }
+    .grid4{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      justify-items:stretch;
+      align-items:stretch;
+    }
+    .miniCard{
+      background: var(--panel2);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
+      cursor:pointer;
+      border: 3px solid transparent;
+      user-select:none;
+    }
+    .miniCard.selected{
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .miniLabel{
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--text);
+      opacity: .95;
+      margin-top: 2px;
+    }
+    .miniNum{
+      width: 132px;
+      height: 132px;
+      border-radius: 22px;
+      background: var(--box);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 88px;
+      font-weight: 900;
+      color: #f7f7f7;
+      text-shadow: 0 4px 0 rgba(0,0,0,.25);
+    }
+    .midHint{
+      text-align:center;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .controls{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .ctrl{
+      background: var(--btn);
+      color: var(--btnText);
+      border:0;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 900;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+      font-size: 16px;
+    }
+    .ctrl:active{ transform: translateY(1px); }
+
+    select.ctrl, input.ctrl{
+      padding: 10px 12px;
+      font-weight: 900;
+      border:0;
+      outline:none;
+    }
+    .pill{
+      background: rgba(255,255,255,.12);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 980px){
+      .board{ grid-template-columns: 1fr; }
+      .wrap{ aspect-ratio:auto; }
+      .teamName{ font-size: 54px; }
+      .score{ font-size: 200px; }
+      .mid{ order:3; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <div class="board">
+      <!-- A -->
+      <div class="big" id="leftPanel">
+        <div class="teamName" id="nameA">A팀</div>
+        <div class="score" id="scoreA">0</div>
+        <div class="sub">1팀 + 2팀 합산</div>
+      </div>
+
+      <!-- MID -->
+      <div class="mid">
+        <div class="grid4">
+          <div class="miniCard selected" data-team="1" id="card1">
+            <div class="miniLabel">1팀</div>
+            <div class="miniNum" id="t1">0</div>
+          </div>
+          <div class="miniCard" data-team="3" id="card3">
+            <div class="miniLabel">3팀</div>
+            <div class="miniNum" id="t3">0</div>
+          </div>
+          <div class="miniCard" data-team="2" id="card2">
+            <div class="miniLabel">2팀</div>
+            <div class="miniNum" id="t2">0</div>
+          </div>
+          <div class="miniCard" data-team="4" id="card4">
+            <div class="miniLabel">4팀</div>
+            <div class="miniNum" id="t4">0</div>
+          </div>
+        </div>
+        <div class="midHint">선택된 팀 카드를 누르면 +1 / 아래 -1로 차감</div>
+      </div>
+
+      <!-- B -->
+      <div class="big" id="rightPanel">
+        <div class="teamName" id="nameB">B팀</div>
+        <div class="score" id="scoreB">0</div>
+        <div class="sub">3팀 + 4팀 합산</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <span class="pill">선택팀: <span id="selectedText">1팀</span></span>
+
+      <select class="ctrl" id="preset">
+        <option value="custom">세트</option>
+        <option value="reset0">새 게임(0점)</option>
+        <option value="preset5">예시(5점 시작)</option>
+      </select>
+
+      <button class="ctrl" id="btnNames">팀 이름</button>
+      <button class="ctrl" id="btnMinus">-1</button>
+      <button class="ctrl" id="btnReset">초기화</button>
+      <button class="ctrl" id="btnTheme">테마</button>
+      <button class="ctrl" id="btnFull">전체화면</button>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const app = document.getElementById('app');
+
+  // 점수(팀별)
+  const state = {
+    t1: 0, t2: 0, t3: 0, t4: 0,
+    selected: 1,
+    nameA: 'A팀',
+    nameB: 'B팀',
+    theme: 'dark'
+  };
+
+  // 요소
+  const el = {
+    t1: document.getElementById('t1'),
+    t2: document.getElementById('t2'),
+    t3: document.getElementById('t3'),
+    t4: document.getElementById('t4'),
+    scoreA: document.getElementById('scoreA'),
+    scoreB: document.getElementById('scoreB'),
+    nameA: document.getElementById('nameA'),
+    nameB: document.getElementById('nameB'),
+    selectedText: document.getElementById('selectedText'),
+    cards: {
+      1: document.getElementById('card1'),
+      2: document.getElementById('card2'),
+      3: document.getElementById('card3'),
+      4: document.getElementById('card4'),
+    },
+    preset: document.getElementById('preset'),
+    btnNames: document.getElementById('btnNames'),
+    btnMinus: document.getElementById('btnMinus'),
+    btnReset: document.getElementById('btnReset'),
+    btnTheme: document.getElementById('btnTheme'),
+    btnFull: document.getElementById('btnFull'),
+  };
+
+  // 저장/불러오기
+  function save(){
+    localStorage.setItem('scoreboard_v1', JSON.stringify(state));
+  }
+  function load(){
+    try{
+      const raw = localStorage.getItem('scoreboard_v1');
+      if(!raw) return;
+      const s = JSON.parse(raw);
+      Object.assign(state, s);
+    }catch(e){}
+  }
+
+  // 합산
+  function sumA(){ return state.t1 + state.t2; }
+  function sumB(){ return state.t3 + state.t4; }
+
+  function render(){
+    el.t1.textContent = state.t1;
+    el.t2.textContent = state.t2;
+    el.t3.textContent = state.t3;
+    el.t4.textContent = state.t4;
+
+    el.scoreA.textContent = sumA();
+    el.scoreB.textContent = sumB();
+
+    el.nameA.textContent = state.nameA;
+    el.nameB.textContent = state.nameB;
+
+    el.selectedText.textContent = `${state.selected}팀`;
+
+    // 선택 표시
+    Object.values(el.cards).forEach(c => c.classList.remove('selected'));
+    el.cards[state.selected].classList.add('selected');
+
+    // 테마
+    if(state.theme === 'light') app.classList.add('light');
+    else app.classList.remove('light');
+
+    save();
+  }
+
+  function setSelected(n){
+    state.selected = n;
+    render();
+  }
+
+  function addPoint(team, delta){
+    const key = `t${team}`;
+    const next = state[key] + delta;
+    state[key] = Math.max(0, next); // 0 아래로는 금지
+    render();
+  }
+
+  // 카드 클릭: 선택 +1
+  Object.values(el.cards).forEach(card => {
+    card.addEventListener('click', () => {
+      const team = Number(card.dataset.team);
+      setSelected(team);
+      addPoint(team, +1);
+    });
+  });
+
+  // -1 버튼: 선택팀 차감
+  el.btnMinus.addEventListener('click', () => addPoint(state.selected, -1));
+
+  // 초기화
+  el.btnReset.addEventListener('click', () => {
+    state.t1 = state.t2 = state.t3 = state.t4 = 0;
+    render();
+  });
+
+  // 팀 이름
+  el.btnNames.addEventListener('click', () => {
+    const a = prompt('A팀 이름을 입력하세요:', state.nameA);
+    if(a !== null) state.nameA = a.trim() || state.nameA;
+
+    const b = prompt('B팀 이름을 입력하세요:', state.nameB);
+    if(b !== null) state.nameB = b.trim() || state.nameB;
+
+    render();
+  });
+
+  // 프리셋(세트)
+  el.preset.addEventListener('change', () => {
+    const v = el.preset.value;
+    if(v === 'reset0'){
+      state.t1 = state.t2 = state.t3 = state.t4 = 0;
+    }else if(v === 'preset5'){
+      state.t1 = 3; state.t2 = 2; state.t3 = 2; state.t4 = 3; // 예시 느낌
+    }
+    el.preset.value = 'custom';
+    render();
+  });
+
+  // 테마
+  el.btnTheme.addEventListener('click', () => {
+    state.theme = (state.theme === 'light') ? 'dark' : 'light';
+    render();
+  });
+
+  // 전체화면
+  el.btnFull.addEventListener('click', async () => {
+    try{
+      if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
+      else await document.exitFullscreen();
+    }catch(e){
+      alert('이 브라우저에서는 전체화면이 제한될 수 있어요.');
+    }
+  });
+
+  // 키보드 단축키
+  document.addEventListener('keydown', (e) => {
+    if(e.key === '1') setSelected(1);
+    if(e.key === '2') setSelected(2);
+    if(e.key === '3') setSelected(3);
+    if(e.key === '4') setSelected(4);
+
+    if(e.key === 'ArrowUp' || e.key === '+') addPoint(state.selected, +1);
+    if(e.key === 'ArrowDown' || e.key === '-') addPoint(state.selected, -1);
+    if(e.key.toLowerCase() === 'r') { state.t1=state.t2=state.t3=state.t4=0; render(); }
+  });
+
+  // 시작
+  load();
+  render();
+})();
+</script>
+</body>
+</html>
