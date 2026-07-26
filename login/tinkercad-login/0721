@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영주고 1학년 4반 학생코드</title>
+<style>
+:root{--main:#2563eb;--main-dark:#1d4ed8;--bg:#f4f7fb;--text:#182230;--muted:#64748b;}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;background:linear-gradient(135deg,#eef5ff,#f8fafc 45%,#edf9f5);color:var(--text);}
+.wrap{max-width:1180px;margin:0 auto;padding:38px 22px 60px;}
+.hero{background:#fff;border-radius:26px;padding:30px;box-shadow:0 16px 50px rgba(37,99,235,.10);border:1px solid #e8eef8;}
+.hero-top{display:flex;gap:22px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.kicker{display:inline-block;padding:7px 12px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:13px;font-weight:800;letter-spacing:.04em}
+h1{font-size:clamp(28px,4vw,46px);margin:14px 0 8px;line-height:1.15}
+.desc{margin:0;color:var(--muted);font-size:16px;line-height:1.7}
+.goto{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;background:var(--main);color:#fff;text-decoration:none;border-radius:14px;font-weight:800;box-shadow:0 8px 22px rgba(37,99,235,.24);white-space:nowrap}
+.goto:hover{background:var(--main-dark);transform:translateY(-1px)}
+.common{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px;padding-top:24px;border-top:1px solid #e8eef8}
+.info-item{background:#f8fafc;border:1px solid #e5eaf2;border-radius:14px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start}
+.info-item span{min-width:90px;color:var(--muted);font-size:13px;font-weight:700}
+.info-item strong{font-size:14px;line-height:1.45}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:26px 2px 16px;flex-wrap:wrap}
+.count{font-weight:800;color:#334155}
+.search{width:min(360px,100%);padding:13px 16px;border:1px solid #d9e1ec;border-radius:13px;font-size:15px;outline:none;background:#fff}
+.search:focus{border-color:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.14)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:16px}
+.card{background:#fff;border:1px solid #e5eaf2;border-radius:20px;padding:19px;box-shadow:0 8px 24px rgba(15,23,42,.055);transition:.2s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,23,42,.09)}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.num{width:38px;height:38px;border-radius:12px;background:#e0edff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-weight:900}
+.name{font-size:20px;font-weight:900}
+.label{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:7px}
+.code-row{display:flex;gap:8px}
+.code{flex:1;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:12px;padding:12px 13px;font-size:19px;font-weight:900;letter-spacing:.08em;text-align:center;font-variant-numeric:tabular-nums}
+.copy{border:0;background:#0f172a;color:#fff;border-radius:12px;padding:0 14px;font-weight:800;cursor:pointer}
+.copy:hover{background:#334155}
+.card-link{display:block;text-align:center;margin-top:12px;padding:11px 12px;border-radius:12px;background:#eff6ff;color:#1d4ed8;text-decoration:none;font-weight:800;border:1px solid #dbeafe}
+.card-link:hover{background:#dbeafe}
+.empty{display:none;text-align:center;padding:40px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:12px 18px;border-radius:999px;font-weight:800;opacity:0;pointer-events:none;transition:.25s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:720px){.wrap{padding:20px 14px 40px}.hero{padding:22px}.common{grid-template-columns:1fr}.goto{width:100%}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <span class="kicker">영주고등학교 1학년 4반</span>
+        <h1>2026년 디지털새싹 핵심역량 진단 설문조사(고교_사후)</h1>
+        <p class="desc">자신의 이름을 확인하고 학생코드를 복사한 뒤 설문참여하기 버튼을 눌러 이동하세요.</p>
+      </div>
+      
+   
+    <div class="common"><div class="info-item"><span>유형</span><strong>방문형</strong></div><div class="info-item"><span>프로그램명</span><strong>LEAD Fream: 데이터로 읽는 미래탐구교실</strong></div><div class="info-item"><span>운영기관명</span><strong>국립목포대학교 산학협력단</strong></div><div class="info-item"><span>살고 있는 지역</span><strong>도서지역</strong></div></div>
+  </section>
+
+  <div class="toolbar">
+    <div class="count">총 <span id="count">27</span>명</div>
+    <input id="search" class="search" type="search" placeholder="번호 또는 이름 검색" autocomplete="off">
+  </div>
+  <main id="grid" class="grid"></main>
+  <div id="empty" class="empty">검색 결과가 없습니다.</div>
+</div>
+<div id="toast" class="toast">학생코드를 복사했습니다.</div>
+<script>
+const students = [{"number": 1, "name": "고은빈", "code": "377938"}, {"number": 2, "name": "김민효", "code": "270688"}, {"number": 3, "name": "김유주", "code": "829843"}, {"number": 4, "name": "김윤서", "code": "234767"}, {"number": 5, "name": "김효진", "code": "944568"}, {"number": 6, "name": "류하윤", "code": "105996"}, {"number": 7, "name": "박하은", "code": "946048"}, {"number": 8, "name": "방하윤", "code": "912253"}, {"number": 9, "name": "신주아", "code": "906244"}, {"number": 10, "name": "이하윤", "code": "170675"}, {"number": 11, "name": "조혜원", "code": "257269"}, {"number": 12, "name": "조홍진", "code": "476951"}, {"number": 13, "name": "한채원", "code": "682150"}, {"number": 14, "name": "현라경", "code": "671833"}, {"number": 15, "name": "강원준", "code": "939173"}, {"number": 16, "name": "강지우", "code": "003620"}, {"number": 17, "name": "고윤호", "code": "551662"}, {"number": 18, "name": "김성현", "code": "046195"}, {"number": 19, "name": "김태한", "code": "254501"}, {"number": 20, "name": "배의민", "code": "634062"}, {"number": 21, "name": "송승헌", "code": "258886"}, {"number": 22, "name": "오상용", "code": "058521"}, {"number": 23, "name": "우강민", "code": "166390"}, {"number": 24, "name": "이윤우", "code": "322638"}, {"number": 25, "name": "이은호", "code": "076781"}, {"number": 26, "name": "최율", "code": "094964"}, {"number": 27, "name": "최현동", "code": "763576"}];
+const siteUrl = "https://form.kosac.re.kr/v/LEgNDB9s3pXTlpqwUeKT";
+const grid = document.getElementById('grid');
+const empty = document.getElementById('empty');
+const count = document.getElementById('count');
+const search = document.getElementById('search');
+const toast = document.getElementById('toast');
+
+function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function render(list){
+  grid.innerHTML = list.map(s => `
+    <article class="card">
+      <div class="card-head"><div class="num">${s.number}</div><div class="name">${esc(s.name)}</div></div>
+      <div class="label">학생코드</div>
+      <div class="code-row">
+        <div class="code">${esc(s.code)}</div>
+        <button class="copy" onclick="copyCode('${esc(s.code)}')">복사</button>
+      </div>
+      <a class="card-link" href="${siteUrl}" target="_blank" rel="noopener">설문 참여하기</a>
+    </article>`).join('');
+  count.textContent = list.length;
+  empty.style.display = list.length ? 'none' : 'block';
+}
+async function copyCode(code){
+  try{await navigator.clipboard.writeText(code);}
+  catch(e){const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();}
+  toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1400);
+}
+search.addEventListener('input',()=>{
+  const q=search.value.trim().toLowerCase();
+  render(students.filter(s=>String(s.number).includes(q)||s.name.toLowerCase().includes(q)));
+});
+render(students);
+</script>
+</body>
+</html>
