@@ -1,3 +1,3 @@
-# 가로세로낱말퍼즐 - 학과편 (Purple)
-> https://yemehub.github.io/school/game/puzzle/major/
-<img width="956" height="547" alt="image" src="https://github.com/user-attachments/assets/12713e2d-52a9-4a6c-8ede-9029f688a8ff" />
+# 가로세로낱말퍼즐 - 학과편 (green)
+> https://yemehub.github.io/school/game/puzzle/major/green/
+<img width="967" height="547" alt="image" src="https://github.com/user-attachments/assets/96937eae-3ce4-44ba-9bc8-1ee63e52890f" />
