@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>가로세로 낱말퍼즐 - 한국전통 (그린)</title>
+  <style>
+    :root {
+      --blue-main: #54007C;
+      --blue-dark: #46005F;
+      --blue-light: #BC83BD;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #CFA7D3;
+      background-image: linear-gradient(180deg, #CFA7D3 0%, #BC83BD 40%, #A1589E 100%);
+    }
+    .hero {
+      padding: 18px 24px 10px;
+      background: linear-gradient(90deg, #54007C, #A1589E);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 900;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+    .hero-sub {
+      padding: 0 24px 14px;
+      font-size: 13px;
+      color: #F5E4F7;
+    }
+    .container {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .grid-wrapper {
+      background: rgba(255, 255, 255, 0.96);
+      padding: 14px;
+      border-radius: 18px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      border: 3px solid var(--blue-main);
+    }
+    table {
+      border-collapse: collapse;
+      user-select: none;
+    }
+    td.cell {
+      width: 38px;
+      height: 38px;
+      padding: 4px;
+      border: none;
+    }
+    td.cell.inactive {
+      background: transparent;
+    }
+    td.cell.inactive::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      background: var(--blue-light);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+    }
+    .tile {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffffff 0%, #f7fff9 45%, #edf7ee 100%);
+      box-shadow:
+        0 2px 0 rgba(129,199,132,0.9),
+        0 4px 6px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border: 1px solid #c8e6c9;
+    }
+    td.cell.active {
+      background: transparent;
+      cursor: pointer;
+    }
+    td.cell.highlight .tile {
+      box-shadow:
+        0 0 0 3px #ffeb3b,
+        0 2px 0 rgba(129,199,132,0.9),
+        0 4px 6px rgba(0,0,0,0.25);
+    }
+    .cell-input {
+      width: 80%;
+      height: 80%;
+      border-radius: 10px;
+      border: 2px solid #cfd8dc;
+      outline: none;
+      background: #ffffff;
+      color: #1b2554;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      caret-color: #54007C;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.08);
+    }
+    .sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .current-clue-box {
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    }
+    .current-clue-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+      font-size: 16px;
+      color: #46005F;
+    }
+    .current-clue-text {
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 4px 0;
+      color: #263238;
+    }
+    .current-answer {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #b71c1c;
+      font-weight: 700;
+      display: none;
+    }
+    .current-answer.show {
+      display: block;
+    }
+    .hint-text {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #546e7a;
+    }
+    .clue-lists-box {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 18px;
+      padding: 12px 14px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      max-height: 420px;
+      overflow: auto;
+    }
+    .clue-lists-box h3 {
+      margin: 4px 0 6px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #46005F;
+    }
+    .clue-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .clue-button {
+      border: none;
+      border-radius: 16px;
+      padding: 5px 12px;
+      font-size: 12px;
+      background: #54007C;
+      color: #ffffff;
+      cursor: pointer;
+      transition: transform 0.05s, box-shadow 0.1s, background 0.1s;
+      box-shadow: 0 3px 0 #46005F;
+    }
+    .clue-button:hover {
+      background: #388e3c;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 0 #46005F;
+    }
+    .clue-button.active {
+      background: #a5d6a7;
+      color: #46005F;
+      box-shadow: 0 3px 0 #81c784;
+    }
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .popup-backdrop.show {
+      display: flex;
+    }
+    .popup-inner {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 18px 20px 16px;
+      min-width: 320px;
+      max-width: 540px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+      position: relative;
+      border: 2px solid var(--blue-main);
+    }
+    .popup-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #46005F;
+    }
+    .popup-text {
+      font-size: 14px;
+      line-height: 1.5;
+      max-height: 150px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      color: #263238;
+    }
+    .popup-input-row {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    #popup-answer-input {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #c4cfe0;
+      margin-top: 4px;
+    }
+    .popup-hint {
+      font-size: 12px;
+      color: #546e7a;
+    }
+    .popup-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      cursor: pointer;
+      color: #60708a;
+    }
+    .popup-close:hover {
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    가로세로낱말퍼즐 - 전통문화편
+  </header>
+  <div class="hero-sub">
+  </div>
+  <div class="container">
+    <div class="grid-wrapper">
+      <table>
+        <tbody id="puzzle-body"></tbody>
+      </table>
+    </div>
+
+    <div class="sidebar">
+      <div class="current-clue-box">
+        <div class="current-clue-title" id="current-clue-title">문제를 선택해 주세요</div>
+        <div class="current-clue-text" id="current-clue-text">
+          
+        </div>
+        <div class="current-answer" id="current-answer-text" style="display:none;"></div>
+        <div class="hint-text">
+        </div>
+      </div>
+
+      <div class="clue-lists-box">
+        <h3>가로 문제</h3>
+        <div class="clue-list" id="across-list"></div>
+        <h3>세로 문제</h3>
+        <div class="clue-list" id="down-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" id="popup">
+    <div class="popup-inner" id="popup-inner">
+      <button class="popup-close" id="popup-close" aria-label="닫기">✕</button>
+      <div class="popup-title" id="popup-clue-title"></div>
+      <div class="popup-text" id="popup-clue-text"></div>
+      <div class="popup-input-row">
+        정답 입력
+        <input type="text" id="popup-answer-input" autocomplete="off" />
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+        <button id="check-answer-btn" style="border:none; border-radius:12px; padding:10px 14px; font-weight:800; cursor:pointer; background: var(--blue-main); color:#fff; box-shadow:0 3px 0 var(--blue-dark);">
+          정답 확인
+        </button>
+        <div id="feedback" style="font-size:13px; font-weight:800;"></div>
+      </div>
+      <div style="margin-top:8px; font-size:12px; color:#546e7a;">
+        💡 정답을 입력하고 <b>정답 확인</b>을 누르세요. 맞으면 퍼즐 칸에 자동으로 들어가요!
+      </div>
+      <div class="popup-hint">
+      </div>
+    </div>
+  </div>
+
+<script>
+  const CLUES = [
+  {
+    "id": "1A",
+    "no": 1,
+    "type": "across",
+    "startCol": 1,
+    "startRow": 1,
+    "endCol": 5,
+    "endRow": 1,
+    "question": "계모의 학대를 받은 두 자매의 이야기를 담은 우리나라 고전 소설",
+    "answer": "장화홍련전",
+    "len": 5
+  },
+  {
+    "id": "2A",
+    "no": 2,
+    "type": "across",
+    "startCol": 11,
+    "startRow": 1,
+    "endCol": 12,
+    "endRow": 1,
+    "question": "여자는 창포물에 머리를 감고 남자는 씨름을 즐기는 음력 5월 5일",
+    "answer": "단오",
+    "len": 2
+  },
+  {
+    "id": "3A",
+    "no": 3,
+    "type": "across",
+    "startCol": 3,
+    "startRow": 3,
+    "endCol": 5,
+    "endRow": 3,
+    "question": "서울에 있는 조선 시대의 대표적인 성문",
+    "answer": "동대문",
+    "len": 3
+  },
+  {
+    "id": "4A",
+    "no": 4,
+    "type": "across",
+    "startCol": 7,
+    "startRow": 3,
+    "endCol": 10,
+    "endRow": 3,
+    "question": "정월 대보름이나 명절에 즐기던 전통 놀이",
+    "answer": "연날리기",
+    "len": 4
+  },
+  {
+    "id": "5A",
+    "no": 5,
+    "type": "across",
+    "startCol": 2,
+    "startRow": 4,
+    "endCol": 3,
+    "endRow": 4,
+    "question": "조선 시대에 관청에서 실무를 담당하던 하급 관리",
+    "answer": "아전",
+    "len": 2
+  },
+  {
+    "id": "6A",
+    "no": 6,
+    "type": "across",
+    "startCol": 4,
+    "startRow": 6,
+    "endCol": 7,
+    "endRow": 6,
+    "question": "황해도 봉산 지역에서 전해 내려오는 대표적인 탈춤",
+    "answer": "봉산탈춤",
+    "len": 4
+  },
+  {
+    "id": "7A",
+    "no": 7,
+    "type": "across",
+    "startCol": 9,
+    "startRow": 6,
+    "endCol": 12,
+    "endRow": 6,
+    "question": "어머니 말씀을 거꾸로만 듣는 전래동화의 주인공",
+    "answer": "청개구리",
+    "len": 4
+  },
+  {
+    "id": "8A",
+    "no": 8,
+    "type": "across",
+    "startCol": 1,
+    "startRow": 8,
+    "endCol": 2,
+    "endRow": 8,
+    "question": "한복을 입을 때 머리를 고정하기 위해 사용한 장신구",
+    "answer": "비녀",
+    "len": 2
+  },
+  {
+    "id": "9A",
+    "no": 9,
+    "type": "across",
+    "startCol": 9,
+    "startRow": 9,
+    "endCol": 12,
+    "endRow": 9,
+    "question": "널리 인간을 이롭게 한다는 건국 이념",
+    "answer": "홍익인간",
+    "len": 4
+  },
+  {
+    "id": "10A",
+    "no": 10,
+    "type": "across",
+    "startCol": 3,
+    "startRow": 10,
+    "endCol": 7,
+    "endRow": 10,
+    "question": "착한 동생과 욕심 많은 형의 이야기",
+    "answer": "흥부와놀부",
+    "len": 5
+  },
+  {
+    "id": "11A",
+    "no": 11,
+    "type": "across",
+    "startCol": 8,
+    "startRow": 11,
+    "endCol": 12,
+    "endRow": 11,
+    "question": "쓰면 보이지 않게 되는 도깨비의 물건",
+    "answer": "도깨비감투",
+    "len": 5
+  },
+  {
+    "id": "1B",
+    "no": 1,
+    "type": "down",
+    "startCol": 3,
+    "startRow": 1,
+    "endCol": 3,
+    "endRow": 4,
+    "question": "허균이 지은 영웅 소설",
+    "answer": "홍길동전",
+    "len": 4
+  },
+  {
+    "id": "2B",
+    "no": 2,
+    "type": "down",
+    "startCol": 11,
+    "startRow": 1,
+    "endCol": 11,
+    "endRow": 2,
+    "question": "궁궐이나 사찰에 그려진 전통 무늬 장식",
+    "answer": "단청",
+    "len": 2
+  },
+  {
+    "id": "3B",
+    "no": 3,
+    "type": "down",
+    "startCol": 7,
+    "startRow": 1,
+    "endCol": 7,
+    "endRow": 3,
+    "question": "가운데 구멍이 있는 우리나라 전통 연",
+    "answer": "방패연",
+    "len": 3
+  },
+  {
+    "id": "4B",
+    "no": 4,
+    "type": "down",
+    "startCol": 9,
+    "startRow": 1,
+    "endCol": 9,
+    "endRow": 3,
+    "question": "소리꾼과 고수가 함께하는 전통 음악",
+    "answer": "판소리",
+    "len": 3
+  },
+  {
+    "id": "5B",
+    "no": 5,
+    "type": "down",
+    "startCol": 2,
+    "startRow": 4,
+    "endCol": 2,
+    "endRow": 6,
+    "question": "지역마다 가사가 다른 우리나라 민요",
+    "answer": "아리랑",
+    "len": 3
+  },
+  {
+    "id": "6B",
+    "no": 6,
+    "type": "down",
+    "startCol": 4,
+    "startRow": 6,
+    "endCol": 4,
+    "endRow": 7,
+    "question": "왕을 상징하는 상상의 새",
+    "answer": "봉황",
+    "len": 2
+  },
+  {
+    "id": "7B",
+    "no": 7,
+    "type": "down",
+    "startCol": 5,
+    "startRow": 3,
+    "endCol": 5,
+    "endRow": 6,
+    "question": "후손에게 물려줄 가치가 있는 문화",
+    "answer": "문화유산",
+    "len": 4
+  },
+  {
+    "id": "8B",
+    "no": 8,
+    "type": "down",
+    "startCol": 1,
+    "startRow": 8,
+    "endCol": 1,
+    "endRow": 11,
+    "question": "돌을 세워 놓고 다른 돌로 쓰러뜨리는 놀이",
+    "answer": "비석치기",
+    "len": 4
+  },
+  {
+    "id": "9B",
+    "no": 9,
+    "type": "down",
+    "startCol": 9,
+    "startRow": 9,
+    "endCol": 9,
+    "endRow": 11,
+    "question": "빨래나 떡을 칠 때 쓰는 도구",
+    "answer": "홍두깨",
+    "len": 3
+  },
+  {
+    "id": "10B",
+    "no": 10,
+    "type": "down",
+    "startCol": 12,
+    "startRow": 4,
+    "endCol": 12,
+    "endRow": 6,
+    "question": "판소리에서 말로 하는 부분",
+    "answer": "아니리",
+    "len": 3
+  },
+  {
+    "id": "11B",
+    "no": 11,
+    "type": "down",
+    "startCol": 7,
+    "startRow": 6,
+    "endCol": 7,
+    "endRow": 8,
+    "question": "전통 춤의 기본 동작",
+    "answer": "춤사위",
+    "len": 3
+  },
+  {
+    "id": "12B",
+    "no": 12,
+    "type": "down",
+    "startCol": 9,
+    "startRow": 5,
+    "endCol": 9,
+    "endRow": 7,
+    "question": "효녀 심청 이야기",
+    "answer": "심청전",
+    "len": 3
+  },
+  {
+    "id": "13B",
+    "no": 13,
+    "type": "down",
+    "startCol": 11,
+    "startRow": 6,
+    "endCol": 11,
+    "endRow": 7,
+    "question": "온돌의 옛말",
+    "answer": "구들",
+    "len": 2
+  },
+  {
+    "id": "14B",
+    "no": 14,
+    "type": "down",
+    "startCol": 4,
+    "startRow": 10,
+    "endCol": 4,
+    "endRow": 12,
+    "question": "부채를 이용한 전통 무용",
+    "answer": "부채춤",
+    "len": 3
+  },
+  {
+    "id": "15B",
+    "no": 15,
+    "type": "down",
+    "startCol": 6,
+    "startRow": 9,
+    "endCol": 6,
+    "endRow": 11,
+    "question": "설날에 즐기는 전통 놀이",
+    "answer": "윷놀이",
+    "len": 3
+  },
+  {
+    "id": "16B",
+    "no": 16,
+    "type": "down",
+    "startCol": 10,
+    "startRow": 11,
+    "endCol": 10,
+    "endRow": 12,
+    "question": "우리나라 전통 현악기",
+    "answer": "비파",
+    "len": 2
+  },
+  {
+    "id": "17B",
+    "no": 17,
+    "type": "down",
+    "startCol": 12,
+    "startRow": 11,
+    "endCol": 12,
+    "endRow": 12,
+    "question": "화살을 항아리에 던지는 놀이",
+    "answer": "투호",
+    "len": 2
+  }
+];
+
+  const ROWS = 12;
+  const COLS = 12;
+
+  const idToClue = {};
+  const cellToClues = {};
+  let currentClueId = null;
+
+  // Build indices
+  CLUES.forEach(clue => {
+    idToClue[clue.id] = clue;
+    const cells = [];
+    if (clue.type === "across") {
+      for (let col = clue.startCol; col <= clue.endCol; col++) {
+        const key = `${clue.startRow}-${col}`;
+        cells.push(key);
+        (cellToClues[key] ??= []).push(clue.id);
+      }
+    } else {
+      for (let row = clue.startRow; row <= clue.endRow; row++) {
+        const key = `${row}-${clue.startCol}`;
+        cells.push(key);
+        (cellToClues[key] ??= []).push(clue.id);
+      }
+    }
+    clue.cells = cells;
+  });
+
+  function buildGrid() {
+    const tbody = document.getElementById("puzzle-body");
+    for (let row = 1; row <= ROWS; row++) {
+      const tr = document.createElement("tr");
+
+      for (let col = 1; col <= COLS; col++) {
+        const key = `${row}-${col}`;
+        const td = document.createElement("td");
+        td.classList.add("cell");
+        td.dataset.key = key;
+
+        const active = !!cellToClues[key];
+        if (active) {
+          td.classList.add("active");
+
+          const tile = document.createElement("div");
+          tile.className = "tile";
+
+          const input = document.createElement("input");
+          input.type = "text";
+          input.maxLength = 1;
+          input.className = "cell-input";
+          input.autocomplete = "off";
+
+          input.addEventListener("input", () => {
+            input.value = (input.value || "").slice(0, 1);
+          });
+
+          tile.appendChild(input);
+          td.appendChild(tile);
+
+          td.addEventListener("click", () => openClueFromCell(key));
+        } else {
+          td.classList.add("inactive");
+        }
+
+        tr.appendChild(td);
+      }
+
+      tbody.appendChild(tr);
+    }
+  }
+
+  function buildClueLists() {
+    const acrossList = document.getElementById("across-list");
+    const downList = document.getElementById("down-list");
+
+    CLUES.filter(c => c.type === "across").forEach(clue => {
+      const btn = document.createElement("button");
+      btn.className = "clue-button";
+      const labelNo = clue.no ?? clue.id;
+      btn.textContent = `가로 ${labelNo}번 문제`;
+      btn.dataset.id = clue.id;
+      btn.addEventListener("click", () => openClue(clue.id));
+      acrossList.appendChild(btn);
+    });
+
+    CLUES.filter(c => c.type === "down").forEach(clue => {
+      const btn = document.createElement("button");
+      btn.className = "clue-button";
+      const labelNo = clue.no ?? clue.id;
+      btn.textContent = `세로 ${labelNo}번 문제`;
+      btn.dataset.id = clue.id;
+      btn.addEventListener("click", () => openClue(clue.id));
+      downList.appendChild(btn);
+    });
+  }
+
+  function highlightCells(clue) {
+    document
+      .querySelectorAll("td.cell.highlight")
+      .forEach(td => td.classList.remove("highlight"));
+
+    clue.cells.forEach(key => {
+      const td = document.querySelector(`td[data-key='${key}']`);
+      if (td) td.classList.add("highlight");
+    });
+  }
+
+  function openClue(id) {
+    const clue = idToClue[id];
+    if (!clue) return;
+    currentClueId = id;
+
+    document
+      .querySelectorAll(".clue-button")
+      .forEach(btn => {
+        if (btn.dataset.id === String(id)) btn.classList.add("active");
+        else btn.classList.remove("active");
+      });
+
+    highlightCells(clue);
+
+    const title = document.getElementById("current-clue-title");
+    const text = document.getElementById("current-clue-text");
+
+    const labelNo = clue.no ?? clue.id;
+    const dirText = clue.type === "across" ? "가로" : "세로";
+
+    title.textContent = `${dirText} ${labelNo}번 문제`;
+    text.textContent = clue.question;
+
+    const popup = document.getElementById("popup");
+    const pTitle = document.getElementById("popup-clue-title");
+    const pText = document.getElementById("popup-clue-text");
+    const pInput = document.getElementById("popup-answer-input");
+    const feedback = document.getElementById("feedback");
+
+    pTitle.textContent = `${dirText} ${labelNo}번 문제`;
+    pText.textContent = clue.question;
+    pInput.value = "";
+    const length = clue.len || (clue.answer ? Array.from(clue.answer).length : 0);
+    pInput.placeholder = length ? `${length} 글자` : "";
+    if (feedback) feedback.textContent = "";
+    popup.classList.add("show");
+    pInput.focus();
+  }
+
+  function openClueFromCell(key) {
+    const ids = cellToClues[key];
+    if (!ids || ids.length === 0) return;
+
+    let chosen = ids[0];
+
+    const startsHere = ids.find(id => {
+      const c = idToClue[id];
+      return c && (c.startRow + "-" + c.startCol) === key;
+    });
+    if (startsHere) {
+      chosen = startsHere;
+    } else {
+      const acrossId = ids.find(id => idToClue[id].type === "across");
+      if (acrossId) chosen = acrossId;
+    }
+
+    openClue(chosen);
+  }
+
+  function normalizeAnswer(s) {
+    return (s || "").replace(/\s+/g, "").trim();
+  }
+
+  function fillClueCells(clue) {
+    const chars = Array.from(clue.answer || "");
+    clue.cells.forEach((key, idx) => {
+      const td = document.querySelector(`td[data-key='${key}']`);
+      if (!td) return;
+      const input = td.querySelector("input");
+      if (input) input.value = chars[idx] || "";
+    });
+  }
+
+  function checkCurrentAnswer() {
+    if (!currentClueId) return;
+    const clue = idToClue[currentClueId];
+    const user = normalizeAnswer(document.getElementById("popup-answer-input").value);
+    const correct = normalizeAnswer(clue.answer);
+
+    const feedback = document.getElementById("feedback");
+    if (!user) {
+      if (feedback) {
+        feedback.style.color = "#d32f2f";
+        feedback.textContent = "정답을 입력해 주세요!";
+      }
+      return;
+    }
+
+    if (user === correct) {
+      fillClueCells(clue);
+      if (feedback) {
+        feedback.style.color = "#2e7d32";
+        feedback.textContent = "정답! 🎉";
+      }
+      window.setTimeout(() => {
+        document.getElementById("popup").classList.remove("show");
+      }, 450);
+    } else {
+      if (feedback) {
+        feedback.style.color = "#d32f2f";
+        feedback.textContent = "틀렸어요. 다시 생각해봐!";
+      }
+      const inner = document.getElementById("popup-inner");
+      inner.animate([
+        { transform: "translateX(0px)" },
+        { transform: "translateX(-8px)" },
+        { transform: "translateX(8px)" },
+        { transform: "translateX(-6px)" },
+        { transform: "translateX(6px)" },
+        { transform: "translateX(0px)" }
+      ], { duration: 320 });
+    }
+  }
+
+  document.getElementById("popup-close").addEventListener("click", () => {
+    document.getElementById("popup").classList.remove("show");
+  });
+
+  document.getElementById("popup").addEventListener("click", e => {
+    if (e.target.id === "popup") {
+      document.getElementById("popup").classList.remove("show");
+    }
+  });
+
+  const checkBtn = document.getElementById("check-answer-btn");
+  if (checkBtn) checkBtn.addEventListener("click", checkCurrentAnswer);
+
+  const ansInput = document.getElementById("popup-answer-input");
+  if (ansInput) {
+    ansInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        checkCurrentAnswer();
+      }
+    });
+  }
+
+  buildGrid();
+  buildClueLists();
+</script>
+</body>
+</html>
