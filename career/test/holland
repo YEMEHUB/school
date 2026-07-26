@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Holland 흥미유형 검사 (학생용 24문항)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f8;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 900px;
+      margin: 24px auto 40px;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+      padding: 24px 20px 32px;
+    }
+    @media (min-width: 768px) {
+      .container { padding: 32px 40px 40px; }
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+    h2 {
+      margin-top: 28px;
+      font-size: 1.2rem;
+    }
+    p {
+      line-height: 1.6;
+      margin: 6px 0;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      background: #eef2ff;
+      color: #3730a3;
+      margin-bottom: 6px;
+    }
+    .section {
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid #ececf3;
+    }
+    .question-group-title {
+      font-weight: 600;
+      margin: 20px 0 4px;
+    }
+    .question {
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+    .question strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 0.9rem;
+    }
+    .options label {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .options input[type="radio"] {
+      accent-color: #4f46e5;
+    }
+    .scale-help {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(79,70,229,0.25);
+      margin-top: 10px;
+    }
+    .btn:hover {
+      filter: brightness(1.03);
+    }
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+    }
+    .result {
+      margin-top: 24px;
+      padding: 18px 16px 16px;
+      border-radius: 14px;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      display: none;
+    }
+    .result h2 {
+      margin-top: 0;
+      margin-bottom: 6px;
+    }
+    .result-codes {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .scores-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 12px;
+      font-size: 0.86rem;
+    }
+    .scores-table th,
+    .scores-table td {
+      border: 1px solid #d4d4d8;
+      padding: 6px 8px;
+      text-align: center;
+    }
+    .scores-table th {
+      background: #f4f4ff;
+    }
+    .type-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin-right: 4px;
+      margin-bottom: 4px;
+      color: #111827;
+    }
+    .type-R { background: #fee2e2; }
+    .type-I { background: #dbeafe; }
+    .type-A { background: #ffedd5; }
+    .type-S { background: #dcfce7; }
+    .type-E { background: #e0f2fe; }
+    .type-C { background: #f3e8ff; }
+    .note {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 6px;
+    }
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.78rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge">학생용 · Holland RIASEC 간이검사 (24문항)</div>
+    <h1>Holland 흥미유형 검사</h1>
+    <p>
+      아래 문항을 읽고 <strong>나에게 얼마나 맞는지</strong> 1~5점으로 체크해 보세요.
+      결과는 RIASEC 6가지 흥미유형 점수와 상위 유형 조합으로 표시됩니다.
+    </p>
+    <p class="scale-help">
+      1점: 전혀 아니다 · 2점: 아니다 · 3점: 보통이다 · 4점: 그렇다 · 5점: 매우 그렇다
+    </p>
+
+    <div class="section" id="questions">
+      <h2>문항</h2>
+
+      <!-- R형 -->
+      <div class="question">
+        <strong>1. 손으로 만들기·조립하는 활동이 재미있다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q1" value="1">1</label>
+          <label><input type="radio" name="q1" value="2">2</label>
+          <label><input type="radio" name="q1" value="3">3</label>
+          <label><input type="radio" name="q1" value="4">4</label>
+          <label><input type="radio" name="q1" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>2. 몸을 움직이는 활동을 좋아한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q2" value="1">1</label>
+          <label><input type="radio" name="q2" value="2">2</label>
+          <label><input type="radio" name="q2" value="3">3</label>
+          <label><input type="radio" name="q2" value="4">4</label>
+          <label><input type="radio" name="q2" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>3. 기계나 도구를 만져보는 것이 어렵지 않다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q3" value="1">1</label>
+          <label><input type="radio" name="q3" value="2">2</label>
+          <label><input type="radio" name="q3" value="3">3</label>
+          <label><input type="radio" name="q3" value="4">4</label>
+          <label><input type="radio" name="q3" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>4. 실습이나 프로젝트 활동을 하면 집중이 잘 된다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q4" value="1">1</label>
+          <label><input type="radio" name="q4" value="2">2</label>
+          <label><input type="radio" name="q4" value="3">3</label>
+          <label><input type="radio" name="q4" value="4">4</label>
+          <label><input type="radio" name="q4" value="5">5</label>
+        </div>
+      </div>
+
+      <!-- I형 -->
+      <div class="question">
+        <strong>5. 궁금한 것이 생기면 이유를 찾아보고 싶다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q5" value="1">1</label>
+          <label><input type="radio" name="q5" value="2">2</label>
+          <label><input type="radio" name="q5" value="3">3</label>
+          <label><input type="radio" name="q5" value="4">4</label>
+          <label><input type="radio" name="q5" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>6. 문제 해결 과정을 분석하는 걸 좋아한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q6" value="1">1</label>
+          <label><input type="radio" name="q6" value="2">2</label>
+          <label><input type="radio" name="q6" value="3">3</label>
+          <label><input type="radio" name="q6" value="4">4</label>
+          <label><input type="radio" name="q6" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>7. 실험·관찰처럼 탐구하는 활동에 흥미가 있다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q7" value="1">1</label>
+          <label><input type="radio" name="q7" value="2">2</label>
+          <label><input type="radio" name="q7" value="3">3</label>
+          <label><input type="radio" name="q7" value="4">4</label>
+          <label><input type="radio" name="q7" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>8. 조용한 환경에서 혼자 공부하거나 조사하는 것이 편하다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q8" value="1">1</label>
+          <label><input type="radio" name="q8" value="2">2</label>
+          <label><input type="radio" name="q8" value="3">3</label>
+          <label><input type="radio" name="q8" value="4">4</label>
+          <label><input type="radio" name="q8" value="5">5</label>
+        </div>
+      </div>
+
+      <!-- A형 -->
+      <div class="question">
+        <strong>9. 그림, 음악, 글쓰기처럼 표현 활동을 좋아한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q9" value="1">1</label>
+          <label><input type="radio" name="q9" value="2">2</label>
+          <label><input type="radio" name="q9" value="3">3</label>
+          <label><input type="radio" name="q9" value="4">4</label>
+          <label><input type="radio" name="q9" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>10. 자유로운 분위기에서 활동하는 것이 더 잘 맞는다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q10" value="1">1</label>
+          <label><input type="radio" name="q10" value="2">2</label>
+          <label><input type="radio" name="q10" value="3">3</label>
+          <label><input type="radio" name="q10" value="4">4</label>
+          <label><input type="radio" name="q10" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>11. 색감·디자인·모양 같은 감각적인 요소에 관심 있다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q11" value="1">1</label>
+          <label><input type="radio" name="q11" value="2">2</label>
+          <label><input type="radio" name="q11" value="3">3</label>
+          <label><input type="radio" name="q11" value="4">4</label>
+          <label><input type="radio" name="q11" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>12. 규칙보다 창의적인 방식으로 해결하는 것을 선호한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q12" value="1">1</label>
+          <label><input type="radio" name="q12" value="2">2</label>
+          <label><input type="radio" name="q12" value="3">3</label>
+          <label><input type="radio" name="q12" value="4">4</label>
+          <label><input type="radio" name="q12" value="5">5</label>
+        </div>
+      </div>
+
+      <!-- S형 -->
+      <div class="question">
+        <strong>13. 누군가에게 설명하거나 도와주는 일을 좋아한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q13" value="1">1</label>
+          <label><input type="radio" name="q13" value="2">2</label>
+          <label><input type="radio" name="q13" value="3">3</label>
+          <label><input type="radio" name="q13" value="4">4</label>
+          <label><input type="radio" name="q13" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>14. 친구들의 고민을 잘 들어주는 편이다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q14" value="1">1</label>
+          <label><input type="radio" name="q14" value="2">2</label>
+          <label><input type="radio" name="q14" value="3">3</label>
+          <label><input type="radio" name="q14" value="4">4</label>
+          <label><input type="radio" name="q14" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>15. 팀 활동을 하면 에너지가 생긴다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q15" value="1">1</label>
+          <label><input type="radio" name="q15" value="2">2</label>
+          <label><input type="radio" name="q15" value="3">3</label>
+          <label><input type="radio" name="q15" value="4">4</label>
+          <label><input type="radio" name="q15" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>16. 사람들과 대화하거나 협력하는 환경을 선호한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q16" value="1">1</label>
+          <label><input type="radio" name="q16" value="2">2</label>
+          <label><input type="radio" name="q16" value="3">3</label>
+          <label><input type="radio" name="q16" value="4">4</label>
+          <label><input type="radio" name="q16" value="5">5</label>
+        </div>
+      </div>
+
+      <!-- E형 -->
+      <div class="question">
+        <strong>17. 목표를 세우고 계획을 세우는 것을 좋아한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q17" value="1">1</label>
+          <label><input type="radio" name="q17" value="2">2</label>
+          <label><input type="radio" name="q17" value="3">3</label>
+          <label><input type="radio" name="q17" value="4">4</label>
+          <label><input type="radio" name="q17" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>18. 사람들 앞에서 발표하거나 의견을 말하는 것이 어렵지 않다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q18" value="1">1</label>
+          <label><input type="radio" name="q18" value="2">2</label>
+          <label><input type="radio" name="q18" value="3">3</label>
+          <label><input type="radio" name="q18" value="4">4</label>
+          <label><input type="radio" name="q18" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>19. 새로운 활동이나 도전을 먼저 시도하는 편이다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q19" value="1">1</label>
+          <label><input type="radio" name="q19" value="2">2</label>
+          <label><input type="radio" name="q19" value="3">3</label>
+          <label><input type="radio" name="q19" value="4">4</label>
+          <label><input type="radio" name="q19" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>20. 친구들 사이에서 자연스럽게 리더 역할을 맡는 경우가 있다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q20" value="1">1</label>
+          <label><input type="radio" name="q20" value="2">2</label>
+          <label><input type="radio" name="q20" value="3">3</label>
+          <label><input type="radio" name="q20" value="4">4</label>
+          <label><input type="radio" name="q20" value="5">5</label>
+        </div>
+      </div>
+
+      <!-- C형 -->
+      <div class="question">
+        <strong>21. 정리·정돈을 잘하고 규칙적인 환경을 좋아한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q21" value="1">1</label>
+          <label><input type="radio" name="q21" value="2">2</label>
+          <label><input type="radio" name="q21" value="3">3</label>
+          <label><input type="radio" name="q21" value="4">4</label>
+          <label><input type="radio" name="q21" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>22. 자료를 체계적으로 정리하는 활동을 좋아한다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q22" value="1">1</label>
+          <label><input type="radio" name="q22" value="2">2</label>
+          <label><input type="radio" name="q22" value="3">3</label>
+          <label><input type="radio" name="q22" value="4">4</label>
+          <label><input type="radio" name="q22" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>23. 일정이나 계획표를 미리 만들어두면 마음이 편하다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q23" value="1">1</label>
+          <label><input type="radio" name="q23" value="2">2</label>
+          <label><input type="radio" name="q23" value="3">3</label>
+          <label><input type="radio" name="q23" value="4">4</label>
+          <label><input type="radio" name="q23" value="5">5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <strong>24. 정확하고 실수가 없도록 꼼꼼하게 처리하는 편이다.</strong>
+        <div class="options">
+          <label><input type="radio" name="q24" value="1">1</label>
+          <label><input type="radio" name="q24" value="2">2</label>
+          <label><input type="radio" name="q24" value="3">3</label>
+          <label><input type="radio" name="q24" value="4">4</label>
+          <label><input type="radio" name="q24" value="5">5</label>
+        </div>
+      </div>
+
+      <button class="btn" id="calcBtn">결과 보기</button>
+    </div>
+
+    <div class="result" id="resultBox">
+      <h2>검사 결과</h2>
+      <div class="result-codes" id="topTypes"></div>
+      <div id="typeTags"></div>
+
+      <table class="scores-table" id="scoresTable">
+        <thead>
+          <tr>
+            <th>유형</th>
+            <th>R</th>
+            <th>I</th>
+            <th>A</th>
+            <th>S</th>
+            <th>E</th>
+            <th>C</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="scoreRow">
+            <td>점수</td>
+            <td id="scoreR"></td>
+            <td id="scoreI"></td>
+            <td id="scoreA"></td>
+            <td id="scoreS"></td>
+            <td id="scoreE"></td>
+            <td id="scoreC"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div id="typeDescription"></div>
+      <p class="note">
+        • 상위 2개 유형 조합(예: <strong>RI, AS</strong>)으로 보는 것이 더 정확합니다.<br/>
+        • 이 검사는 수업용 간이 검사이며, 진로 탐색 참고 자료로 활용해 주세요.
+      </p>
+    </div>
+
+    <div class="footer-note">
+      ※ 이 페이지는 중·고등학생 수업용으로 제작된 비공식 Holland 흥미유형 간이검사입니다.
+    </div>
+  </div>
+
+  <script>
+    const typeInfo = {
+      R: {
+        name: "R형 현실형 (Realistic)",
+        tagClass: "type-R",
+        desc: "손으로 만들기, 조립, 실습, 기계·도구 다루기 등 실제 활동을 좋아하는 유형입니다. 공학, 기계, 전기·전자, 건설, 자동차, 항공, 농생명, 스포츠 관련 분야와 잘 어울리는 경우가 많습니다."
+      },
+      I: {
+        name: "I형 탐구형 (Investigative)",
+        tagClass: "type-I",
+        desc: "분석, 탐구, 연구, 실험, 문제 해결을 좋아하는 유형입니다. 과학, 수학, 데이터, 의·약학, 소프트웨어, AI·데이터사이언스, 통계 등과 잘 어울리는 경우가 많습니다."
+      },
+      A: {
+        name: "A형 예술형 (Artistic)",
+        tagClass: "type-A",
+        desc: "창의적 표현, 예술, 디자인, 글쓰기, 음악, 영상, 공연 등을 좋아하는 유형입니다. 미술·디자인, 음악, 영상·미디어, 문예창작, 콘텐츠 제작, 게임 그래픽 등과 잘 어울립니다."
+      },
+      S: {
+        name: "S형 사회형 (Social)",
+        tagClass: "type-S",
+        desc: "사람을 돕고, 가르치고, 상담하고, 함께 활동하는 것을 좋아하는 유형입니다. 교육, 상담·심리, 사회복지, 간호·보건, 코칭, 봉사 관련 진로와 잘 맞는 경우가 많습니다."
+      },
+      E: {
+        name: "E형 진취형 (Enterprising)",
+        tagClass: "type-E",
+        desc: "목표 설정, 기획, 리더십, 설득, 발표, 조직을 이끄는 일을 좋아하는 유형입니다. 경영·경제, 마케팅, 스타트업, 정치·행정, 홍보, 기획·PM 직무 등과 잘 어울립니다."
+      },
+      C: {
+        name: "C형 관습형 (Conventional)",
+        tagClass: "type-C",
+        desc: "체계적, 꼼꼼함, 정리·정돈, 규칙, 자료 관리, 문서 작업 등을 선호하는 유형입니다. 회계·재무, 사무·행정, 기록·문헌정보, 통계, 데이터 관리, 공공기관 사무 등과 잘 맞는 경우가 많습니다."
+      }
+    };
+
+    function calculateScores() {
+      const answers = {};
+      for (let i = 1; i <= 24; i++) {
+        const name = "q" + i;
+        const selected = document.querySelector(`input[name="${name}"]:checked`);
+        if (!selected) {
+          alert(i + "번 문항에 답을 선택해 주세요.");
+          return null;
+        }
+        answers[name] = Number(selected.value);
+      }
+
+      const scores = {
+        R: answers.q1 + answers.q2 + answers.q3 + answers.q4,
+        I: answers.q5 + answers.q6 + answers.q7 + answers.q8,
+        A: answers.q9 + answers.q10 + answers.q11 + answers.q12,
+        S: answers.q13 + answers.q14 + answers.q15 + answers.q16,
+        E: answers.q17 + answers.q18 + answers.q19 + answers.q20,
+        C: answers.q21 + answers.q22 + answers.q23 + answers.q24
+      };
+
+      return scores;
+    }
+
+    function showResult(scores) {
+      const resultBox = document.getElementById("resultBox");
+      const scoreR = document.getElementById("scoreR");
+      const scoreI = document.getElementById("scoreI");
+      const scoreA = document.getElementById("scoreA");
+      const scoreS = document.getElementById("scoreS");
+      const scoreE = document.getElementById("scoreE");
+      const scoreC = document.getElementById("scoreC");
+
+      scoreR.textContent = scores.R;
+      scoreI.textContent = scores.I;
+      scoreA.textContent = scores.A;
+      scoreS.textContent = scores.S;
+      scoreE.textContent = scores.E;
+      scoreC.textContent = scores.C;
+
+      const arr = Object.entries(scores).map(([code, score]) => ({ code, score }));
+      arr.sort((a, b) => b.score - a.score);
+
+      const top1 = arr[0];
+      const top2 = arr[1];
+
+      const topTypesText = document.getElementById("topTypes");
+      topTypesText.textContent = `당신의 상위 흥미 유형: ${top1.code} / ${top2.code} (예: ${top1.code}${top2.code}형)`;
+
+      const typeTagsDiv = document.getElementById("typeTags");
+      typeTagsDiv.innerHTML = "";
+      arr.forEach(item => {
+        const span = document.createElement("span");
+        span.className = "type-tag " + typeInfo[item.code].tagClass;
+        span.textContent = `${item.code}: ${item.score}점`;
+        typeTagsDiv.appendChild(span);
+      });
+
+      const descDiv = document.getElementById("typeDescription");
+      const info1 = typeInfo[top1.code];
+      const info2 = typeInfo[top2.code];
+
+      descDiv.innerHTML = `
+        <p><strong>상위 1유형: ${info1.name}</strong><br>${info1.desc}</p>
+        <p><strong>상위 2유형: ${info2.name}</strong><br>${info2.desc}</p>
+        <p style="font-size:0.85rem; margin-top:8px;">
+          👉 예를 들어, <strong>${top1.code}${top2.code}</strong> 조합이라면 두 유형의 특징을 함께 고려하여
+          진로 계열·학과를 탐색해 볼 수 있습니다.
+        </p>
+      `;
+
+      resultBox.style.display = "block";
+      resultBox.scrollIntoView({ behavior: "smooth" });
+    }
+
+    document.getElementById("calcBtn").addEventListener("click", function() {
+      const scores = calculateScores();
+      if (!scores) return;
+      showResult(scores);
+    });
+  </script>
+</body>
+</html>
