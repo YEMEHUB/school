@@ -1,0 +1,1 @@
+/* Project orbit control is implemented directly in index.html. This compatibility file is retained for the requested package structure. */

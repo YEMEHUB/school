@@ -1,0 +1,314 @@
+{
+  "project": "Apple Cube ERNO-style offline simulator",
+  "pieceCount": 27,
+  "masterPieces": [
+    "CORE",
+    "U",
+    "D",
+    "L",
+    "UL",
+    "BL",
+    "DL",
+    "UBL",
+    "DBL"
+  ],
+  "pieces": [
+    {
+      "name": "CORE",
+      "type": "core",
+      "sourceMaster": "CORE",
+      "file": "stl/pieces/CORE.stl",
+      "grid": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "name": "U",
+      "type": "center",
+      "sourceMaster": "U",
+      "file": "stl/pieces/U.stl",
+      "grid": {
+        "x": 0,
+        "y": 0,
+        "z": 1
+      }
+    },
+    {
+      "name": "D",
+      "type": "center",
+      "sourceMaster": "D",
+      "file": "stl/pieces/D.stl",
+      "grid": {
+        "x": 0,
+        "y": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "L",
+      "type": "center",
+      "sourceMaster": "L",
+      "file": "stl/pieces/L.stl",
+      "grid": {
+        "x": -1,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "name": "F",
+      "type": "center",
+      "sourceMaster": "L",
+      "file": "stl/pieces/F.stl",
+      "grid": {
+        "x": 0,
+        "y": -1,
+        "z": 0
+      }
+    },
+    {
+      "name": "R",
+      "type": "center",
+      "sourceMaster": "L",
+      "file": "stl/pieces/R.stl",
+      "grid": {
+        "x": 1,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "name": "B",
+      "type": "center",
+      "sourceMaster": "L",
+      "file": "stl/pieces/B.stl",
+      "grid": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      }
+    },
+    {
+      "name": "UL",
+      "type": "edge",
+      "sourceMaster": "UL",
+      "file": "stl/pieces/UL.stl",
+      "grid": {
+        "x": -1,
+        "y": 0,
+        "z": 1
+      }
+    },
+    {
+      "name": "UF",
+      "type": "edge",
+      "sourceMaster": "UL",
+      "file": "stl/pieces/UF.stl",
+      "grid": {
+        "x": 0,
+        "y": -1,
+        "z": 1
+      }
+    },
+    {
+      "name": "UR",
+      "type": "edge",
+      "sourceMaster": "UL",
+      "file": "stl/pieces/UR.stl",
+      "grid": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      }
+    },
+    {
+      "name": "UB",
+      "type": "edge",
+      "sourceMaster": "UL",
+      "file": "stl/pieces/UB.stl",
+      "grid": {
+        "x": 0,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "name": "BL",
+      "type": "edge",
+      "sourceMaster": "BL",
+      "file": "stl/pieces/BL.stl",
+      "grid": {
+        "x": -1,
+        "y": 1,
+        "z": 0
+      }
+    },
+    {
+      "name": "FL",
+      "type": "edge",
+      "sourceMaster": "BL",
+      "file": "stl/pieces/FL.stl",
+      "grid": {
+        "x": -1,
+        "y": -1,
+        "z": 0
+      }
+    },
+    {
+      "name": "FR",
+      "type": "edge",
+      "sourceMaster": "BL",
+      "file": "stl/pieces/FR.stl",
+      "grid": {
+        "x": 1,
+        "y": -1,
+        "z": 0
+      }
+    },
+    {
+      "name": "BR",
+      "type": "edge",
+      "sourceMaster": "BL",
+      "file": "stl/pieces/BR.stl",
+      "grid": {
+        "x": 1,
+        "y": 1,
+        "z": 0
+      }
+    },
+    {
+      "name": "DL",
+      "type": "edge",
+      "sourceMaster": "DL",
+      "file": "stl/pieces/DL.stl",
+      "grid": {
+        "x": -1,
+        "y": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "DF",
+      "type": "edge",
+      "sourceMaster": "DL",
+      "file": "stl/pieces/DF.stl",
+      "grid": {
+        "x": 0,
+        "y": -1,
+        "z": -1
+      }
+    },
+    {
+      "name": "DR",
+      "type": "edge",
+      "sourceMaster": "DL",
+      "file": "stl/pieces/DR.stl",
+      "grid": {
+        "x": 1,
+        "y": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "DB",
+      "type": "edge",
+      "sourceMaster": "DL",
+      "file": "stl/pieces/DB.stl",
+      "grid": {
+        "x": 0,
+        "y": 1,
+        "z": -1
+      }
+    },
+    {
+      "name": "UBL",
+      "type": "corner",
+      "sourceMaster": "UBL",
+      "file": "stl/pieces/UBL.stl",
+      "grid": {
+        "x": -1,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "name": "UFL",
+      "type": "corner",
+      "sourceMaster": "UBL",
+      "file": "stl/pieces/UFL.stl",
+      "grid": {
+        "x": -1,
+        "y": -1,
+        "z": 1
+      }
+    },
+    {
+      "name": "UFR",
+      "type": "corner",
+      "sourceMaster": "UBL",
+      "file": "stl/pieces/UFR.stl",
+      "grid": {
+        "x": 1,
+        "y": -1,
+        "z": 1
+      }
+    },
+    {
+      "name": "UBR",
+      "type": "corner",
+      "sourceMaster": "UBL",
+      "file": "stl/pieces/UBR.stl",
+      "grid": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      }
+    },
+    {
+      "name": "DBL",
+      "type": "corner",
+      "sourceMaster": "DBL",
+      "file": "stl/pieces/DBL.stl",
+      "grid": {
+        "x": -1,
+        "y": 1,
+        "z": -1
+      }
+    },
+    {
+      "name": "DFL",
+      "type": "corner",
+      "sourceMaster": "DBL",
+      "file": "stl/pieces/DFL.stl",
+      "grid": {
+        "x": -1,
+        "y": -1,
+        "z": -1
+      }
+    },
+    {
+      "name": "DFR",
+      "type": "corner",
+      "sourceMaster": "DBL",
+      "file": "stl/pieces/DFR.stl",
+      "grid": {
+        "x": 1,
+        "y": -1,
+        "z": -1
+      }
+    },
+    {
+      "name": "DBR",
+      "type": "corner",
+      "sourceMaster": "DBL",
+      "file": "stl/pieces/DBR.stl",
+      "grid": {
+        "x": 1,
+        "y": 1,
+        "z": -1
+      }
+    }
+  ]
+}
