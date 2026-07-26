@@ -1,2 +1,2 @@
-# 직업선택
-> 나의 진로 선택 보드 
+# 디지털새싹 학생코드첨부 로그인화면
+> https://yemehub.github.io/school/login/newsac-login/
