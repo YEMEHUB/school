@@ -1,2 +1,2 @@
-# 직업선택
-> 나의 진로 선택 보드 
+# 구글 로그인화면
+> https://yemehub.github.io/school/login/google_login/
