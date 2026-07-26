@@ -1,2 +1,3 @@
-# 직업선택
-> 나의 진로 선택 보드 
+# 고교학점제 학과선택 웹 시뮬레이터
+> 2026 제주대학교 사범대학부설고등학교
+https://yemehub.github.io/school/web_simulator/jnuh/
