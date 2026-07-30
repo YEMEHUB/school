@@ -1,5 +1,7 @@
 Apple Cube ERNO Final Fixed
 
+https://yemehub.github.io/school/cube/Apple_Cube/
+
 조작
 - 빈 공간 드래그: 큐브 시점 회전
 - 조각 드래그: 해당 층 회전 (가운데 조각 포함)
