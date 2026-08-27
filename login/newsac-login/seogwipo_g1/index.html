@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>서귀포여자중학교 1학년 1반 - 2026년 디지털 새싹 효과성 측정 설문</title>
+<style>
+:root {
+  --green:#1f9d66;
+  --green-dark:#147a4d;
+  --green-deep:#0f5f3c;
+  --mint:#eafaf2;
+  --mint2:#d8f5e7;
+  --bg:#f6fcf8;
+  --text:#20352b;
+  --muted:#6d8177;
+  --line:#cfe9db;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(139,226,181,.28), transparent 22%),
+    radial-gradient(circle at 92% 4%, rgba(196,244,217,.38), transparent 24%),
+    linear-gradient(135deg,#f2fbf6 0%,#fbfefc 48%,#eefaf4 100%);
+}
+.wrap{max-width:1180px;margin:0 auto;padding:38px 22px 65px}
+.hero{
+  position:relative;
+  overflow:hidden;
+  background:rgba(255,255,255,.96);
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:30px;
+  box-shadow:0 17px 48px rgba(21,122,77,.10);
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  width:190px;height:190px;
+  border-radius:50%;
+  right:-55px;top:-70px;
+  background:linear-gradient(135deg,#d9f7e8,#effcf5);
+}
+.kicker{
+  position:relative;z-index:1;
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:999px;
+  background:var(--mint2);
+  color:var(--green-dark);
+  font-size:13px;
+  font-weight:900;
+}
+h1{
+  position:relative;z-index:1;
+  font-size:clamp(28px,4vw,45px);
+  line-height:1.18;
+  margin:14px 0 10px;
+}
+h1 span{color:var(--green)}
+.desc{
+  position:relative;z-index:1;
+  margin:0;
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.7;
+}
+.steps{
+  position:relative;z-index:1;
+  display:flex;flex-wrap:wrap;gap:9px;
+  margin-top:20px;
+}
+.steps span{
+  padding:8px 12px;
+  border-radius:999px;
+  background:#f2fcf7;
+  border:1px solid #cfeada;
+  color:#426858;
+  font-size:13px;
+  font-weight:800;
+}
+
+.info-grid{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:24px;
+  padding-top:22px;
+  border-top:1px solid #dcefe4;
+}
+.info-item{
+  background:#f5fbf8;
+  border:1px solid #d4eadf;
+  border-radius:14px;
+  padding:14px 15px;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+.info-item span{
+  min-width:82px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:800;
+}
+.info-item strong{
+  font-size:14px;
+  line-height:1.45;
+}
+
+.toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin:27px 2px 16px;
+  flex-wrap:wrap;
+}
+.count{font-weight:900;color:#3e6555}
+.search{
+  width:min(360px,100%);
+  padding:13px 16px;
+  border:1px solid #c9e3d5;
+  border-radius:14px;
+  outline:none;
+  background:#fff;
+  font-size:15px;
+}
+.search:focus{
+  border-color:#5cc28c;
+  box-shadow:0 0 0 4px rgba(31,157,102,.12);
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(245px,1fr));
+  gap:16px;
+}
+.card{
+  background:#fff;
+  border:1px solid #d4eadd;
+  border-radius:21px;
+  padding:19px;
+  box-shadow:0 8px 24px rgba(22,86,58,.055);
+  transition:.2s ease;
+}
+.card:hover{
+  transform:translateY(-3px);
+  border-color:#a9d9c0;
+  box-shadow:0 14px 30px rgba(22,86,58,.10);
+}
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+.num{
+  width:39px;height:39px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#dff7eb,#c9efd9);
+  color:var(--green-dark);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:950;
+}
+.name{font-size:20px;font-weight:950}
+.label{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:800;
+  margin-bottom:7px;
+}
+.code-row{display:flex;gap:8px}
+.code{
+  flex:1;
+  background:#f3faf6;
+  border:1px solid #d6e9df;
+  border-radius:12px;
+  padding:12px 13px;
+  text-align:center;
+  font-size:19px;
+  font-weight:950;
+  letter-spacing:.06em;
+  font-variant-numeric:tabular-nums;
+}
+.copy{
+  border:0;
+  background:#344d42;
+  color:#fff;
+  border-radius:12px;
+  padding:0 14px;
+  font-weight:900;
+  cursor:pointer;
+}
+.copy:hover{background:#23372e}
+.links{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px;
+}
+.survey{
+  display:block;
+  text-align:center;
+  padding:11px 10px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:900;
+  transition:.18s ease;
+}
+.pre{
+  background:#eaf9f1;
+  border:1px solid #b9e3cb;
+  color:#17764d;
+}
+.pre:hover{background:#d9f3e5}
+.post{
+  background:linear-gradient(135deg,#269d69,#178553);
+  border:1px solid #178553;
+  color:#fff;
+  box-shadow:0 5px 13px rgba(31,157,102,.17);
+}
+.post:hover{background:linear-gradient(135deg,#1f8c5c,#126f45)}
+.empty{display:none;text-align:center;padding:42px;color:var(--muted)}
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translateX(-50%) translateY(18px);
+  background:#1e382d;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:999px;
+  font-weight:900;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:30;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:720px){
+  .info-grid{grid-template-columns:1fr}
+  .wrap{padding:20px 14px 42px}
+  .hero{padding:23px 20px;border-radius:24px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <span class="kicker">서귀포여자중학교 1학년 1반</span>
+    <h1>2026년 디지털 새싹 <span>효과성 측정 설문</span></h1>
+    <p class="desc">자신의 이름을 확인하고 학생코드를 복사한 뒤, 수업 진행에 맞춰 사전설문 또는 사후설문을 선택하세요.</p>
+    <div class="steps">
+      <span>① 내 이름 찾기</span>
+      <span>② 학생코드 복사</span>
+      <span>③ 사전·사후 설문 선택</span>
+    </div>
+    <div class="info-grid">
+      <div class="info-item">
+        <span>프로그램명</span>
+        <strong>AI플레이그라운드:n8n에이전트메이커</strong>
+      </div>
+      <div class="info-item">
+        <span>운영기관명</span>
+        <strong>제주대학교 산학협력단</strong>
+      </div>
+      <div class="info-item">
+        <span>살고 있는 지역</span>
+        <strong>도서지역</strong>
+      </div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="count">총 <span id="count">29</span>명</div>
+    <input id="search" class="search" type="search" placeholder="번호 또는 이름 검색" autocomplete="off">
+  </div>
+
+  <main id="grid" class="grid"></main>
+  <div id="empty" class="empty">검색 결과가 없습니다.</div>
+</div>
+
+<div id="toast" class="toast">학생코드를 복사했습니다 ✓</div>
+
+<script>
+const students = [{"number": 1, "name": "가*서", "code": "404962"}, {"number": 2, "name": "강*주", "code": "718938"}, {"number": 3, "name": "강*희", "code": "7432"}, {"number": 4, "name": "고*윤", "code": "703739"}, {"number": 5, "name": "김*해림", "code": "159715"}, {"number": 6, "name": "김*온", "code": "466968"}, {"number": 7, "name": "김*채", "code": "7026"}, {"number": 8, "name": "김*연", "code": "831435"}, {"number": 9, "name": "김*리", "code": "574166"}, {"number": 10, "name": "김*서", "code": "201014"}, {"number": 11, "name": "김*형", "code": "110983"}, {"number": 12, "name": "문*원", "code": "639916"}, {"number": 13, "name": "박*론", "code": "100584"}, {"number": 14, "name": "송*은", "code": "220854"}, {"number": 15, "name": "양*현", "code": "907352"}, {"number": 16, "name": "양*은", "code": "404342"}, {"number": 17, "name": "오*주", "code": "304674"}, {"number": 18, "name": "오*은", "code": "707443"}, {"number": 19, "name": "이*인", "code": "813738"}, {"number": 20, "name": "이*빈", "code": "939709"}, {"number": 21, "name": "이*이", "code": "786296"}, {"number": 22, "name": "이*슬", "code": "389436"}, {"number": 23, "name": "이*아", "code": "322186"}, {"number": 24, "name": "이*영", "code": "114972"}, {"number": 25, "name": "정*은", "code": "768547"}, {"number": 26, "name": "조*아", "code": "393279"}, {"number": 27, "name": "허*민", "code": "45812"}, {"number": 28, "name": "현*희", "code": "621100"}, {"number": 29, "name": "김*빈", "code": "338475"}];
+const preUrl = "https://form.kosac.re.kr/v/ItXeheqZl2ZyLuRUTRtI";
+const postUrl = "https://form.kosac.re.kr/v/zKytKcBQ7HdphktBfbHh";
+
+const grid = document.getElementById('grid');
+const empty = document.getElementById('empty');
+const count = document.getElementById('count');
+const search = document.getElementById('search');
+const toast = document.getElementById('toast');
+
+function esc(s){
+  return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
+
+function render(list){
+  grid.innerHTML = list.map(s => `
+    <article class="card">
+      <div class="card-head">
+        <div class="num">${s.number}</div>
+        <div class="name">${esc(s.name)}</div>
+      </div>
+
+      <div class="label">학생코드</div>
+      <div class="code-row">
+        <div class="code">${esc(s.code)}</div>
+        <button class="copy" onclick='copyCode(${JSON.stringify(s.code)})'>복사</button>
+      </div>
+
+      <div class="links">
+        <a class="survey pre" href="${preUrl}" target="_blank" rel="noopener">사전설문</a>
+        <a class="survey post" href="${postUrl}" target="_blank" rel="noopener">사후설문</a>
+      </div>
+    </article>
+  `).join('');
+
+  count.textContent = list.length;
+  empty.style.display = list.length ? 'none' : 'block';
+}
+
+async function copyCode(code){
+  try{
+    await navigator.clipboard.writeText(code);
+  }catch(e){
+    const t=document.createElement('textarea');
+    t.value=code;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand('copy');
+    t.remove();
+  }
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),1400);
+}
+
+search.addEventListener('input',()=>{
+  const q=search.value.trim().toLowerCase();
+  render(students.filter(s=>
+    String(s.number).includes(q) ||
+    s.name.toLowerCase().includes(q)
+  ));
+});
+
+render(students);
+</script>
+</body>
+</html>
