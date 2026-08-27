@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>서귀포여자중학교 1학년 1반 n8n 계정 안내</title>
+<style>
+:root {
+  --pink:#e91e63;
+  --pink-dark:#c2185b;
+  --pink-soft:#fff0f6;
+  --pink-soft2:#ffe4ef;
+  --rose:#ff5c8a;
+  --text:#2f2430;
+  --muted:#7c6b75;
+  --line:#f3c6d6;
+  --white:#ffffff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 10% 10%, #ffd7e7 0 9%, transparent 25%),
+    radial-gradient(circle at 90% 5%, #ffe7f0 0 10%, transparent 24%),
+    linear-gradient(135deg,#fff7fb 0%,#fff0f6 45%,#fff9fc 100%);
+  min-height:100vh;
+}
+.wrap { max-width:1220px; margin:0 auto; padding:38px 22px 70px; }
+.hero {
+  background:rgba(255,255,255,.94);
+  border:1px solid #f7cada;
+  border-radius:30px;
+  padding:30px;
+  box-shadow:0 18px 55px rgba(214,51,108,.13);
+  position:relative;
+  overflow:hidden;
+}
+.hero::after {
+  content:"";
+  position:absolute;
+  right:-45px; top:-55px;
+  width:180px; height:180px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ffd4e4,#fff2f7);
+  opacity:.72;
+}
+.kicker {
+  display:inline-block;
+  position:relative;
+  z-index:1;
+  padding:8px 14px;
+  border-radius:999px;
+  background:var(--pink-soft2);
+  color:var(--pink-dark);
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.03em;
+}
+h1 {
+  position:relative;
+  z-index:1;
+  margin:14px 0 8px;
+  font-size:clamp(30px,4vw,48px);
+  line-height:1.15;
+}
+h1 .accent { color:var(--pink); }
+.desc {
+  position:relative;
+  z-index:1;
+  margin:0;
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.75;
+}
+.guide {
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:20px;
+}
+.guide span {
+  background:#fff6fa;
+  border:1px solid #f6c9d8;
+  color:#805267;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:13px;
+  font-weight:800;
+}
+.toolbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin:28px 2px 16px;
+  flex-wrap:wrap;
+}
+.count { font-weight:900; color:#73445a; }
+.search {
+  width:min(390px,100%);
+  padding:14px 17px;
+  border:1px solid #efbfd1;
+  border-radius:15px;
+  font-size:15px;
+  outline:none;
+  background:#fff;
+}
+.search:focus {
+  border-color:#ef6f9e;
+  box-shadow:0 0 0 4px rgba(233,30,99,.11);
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:17px;
+}
+.card {
+  background:rgba(255,255,255,.97);
+  border:1px solid #f3c7d6;
+  border-radius:23px;
+  padding:20px;
+  box-shadow:0 9px 28px rgba(106,40,67,.07);
+  transition:.2s ease;
+}
+.card:hover {
+  transform:translateY(-3px);
+  box-shadow:0 15px 34px rgba(187,52,101,.13);
+  border-color:#edaec5;
+}
+.card-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+.num {
+  width:40px; height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:13px;
+  background:linear-gradient(135deg,#ffdfeb,#ffd2e2);
+  color:var(--pink-dark);
+  font-weight:950;
+}
+.name { font-size:21px; font-weight:950; }
+.field { margin-top:11px; }
+.label {
+  margin:0 0 6px 2px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+.row {
+  display:flex;
+  gap:8px;
+  align-items:stretch;
+}
+.value {
+  min-width:0;
+  flex:1;
+  display:flex;
+  align-items:center;
+  background:#fff7fa;
+  border:1px solid #f2d3df;
+  border-radius:12px;
+  padding:11px 12px;
+  font-size:14px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.value.password {
+  letter-spacing:.03em;
+}
+.copy {
+  border:0;
+  border-radius:12px;
+  padding:0 13px;
+  min-width:58px;
+  background:#5b4752;
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+.copy:hover { background:#392d33; }
+.api-row {
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:1fr;
+}
+.api-copy {
+  width:100%;
+  border:1px solid #efafc6;
+  background:linear-gradient(135deg,#fff0f6,#ffe2ed);
+  color:#b51450;
+  border-radius:13px;
+  padding:12px;
+  font-weight:950;
+  cursor:pointer;
+}
+.api-copy:hover { background:#ffdbe9; }
+.api-copy.missing {
+  cursor:not-allowed;
+  color:#9a7a87;
+  border-style:dashed;
+  background:#faf3f6;
+}
+.login {
+  display:block;
+  text-align:center;
+  margin-top:11px;
+  padding:12px 13px;
+  border-radius:13px;
+  background:linear-gradient(135deg,var(--pink),var(--rose));
+  color:#fff;
+  text-decoration:none;
+  font-weight:950;
+  box-shadow:0 7px 18px rgba(233,30,99,.20);
+}
+.login:hover { background:linear-gradient(135deg,var(--pink-dark),var(--pink)); }
+.empty { display:none; text-align:center; padding:45px; color:var(--muted); }
+.toast {
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translateX(-50%) translateY(18px);
+  background:#38252f;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:999px;
+  font-weight:900;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:50;
+  box-shadow:0 8px 24px rgba(0,0,0,.15);
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+@media(max-width:720px) {
+  .wrap { padding:20px 13px 45px; }
+  .hero { padding:23px 20px; border-radius:24px; }
+  .grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <span class="kicker">서귀포여자중학교 1학년 1반</span>
+    <h1><span class="accent">n8n</span> 수업 계정 안내</h1>
+    <p class="desc">본인 이름을 찾은 뒤 필요한 정보를 복사해서 로그인하세요. API Key는 화면에 표시하지 않고 버튼을 누르면 바로 복사됩니다.</p>
+    <div class="guide">
+      <span>① 내 이름 찾기</span>
+      <span>② 이메일·비밀번호 복사</span>
+      <span>③ n8n 로그인</span>
+      <span>④ 필요할 때 API Key 복사</span>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="count">총 <span id="count">29</span>명</div>
+    <input id="search" class="search" type="search" placeholder="번호 · 이름 · 계정명 검색" autocomplete="off">
+  </div>
+
+  <main id="grid" class="grid"></main>
+  <div id="empty" class="empty">검색 결과가 없습니다.</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const students = [{"number": 1, "name": "가*서", "account": "sessac108", "email": "playn8n+s108@gmail.com", "password": "Student01", "apiKey": "sk-UJL5mV2suGwgF8VUZyxqCw"}, {"number": 2, "name": "강*주", "account": "sessac109", "email": "playn8n+s109@gmail.com", "password": "Student01", "apiKey": "sk-mZZ26BHdk9XVmKkdOMM8SA"}, {"number": 3, "name": "강*희", "account": "sessac110", "email": "playn8n+s110@gmail.com", "password": "Student01", "apiKey": "sk-L3lF-U81vIyTzB4ua4K-kg"}, {"number": 4, "name": "고*윤", "account": "sessac111", "email": "playn8n+s111@gmail.com", "password": "Student01", "apiKey": "sk-4OlSSBMfIvuMpsdSqn_XHA"}, {"number": 5, "name": "김*해림", "account": "sessac112", "email": "playn8n+s112@gmail.com", "password": "Student01", "apiKey": "sk-JgRdVLG4L8J3AQ9BHujj1w"}, {"number": 6, "name": "김*온", "account": "sessac113", "email": "playn8n+s113@gmail.com", "password": "Student01", "apiKey": "sk-Sk4SIDGxVhlUwYOjAPY8mw"}, {"number": 7, "name": "김*채", "account": "sessac114", "email": "playn8n+s114@gmail.com", "password": "Student01", "apiKey": "sk-NM4BlbhJFxH0XTWNtqGHtA"}, {"number": 8, "name": "김*연", "account": "sessac115", "email": "playn8n+s115@gmail.com", "password": "Student01", "apiKey": "sk-0JMu20lS86kUg0jHJT8bUQ"}, {"number": 9, "name": "김*리", "account": "sessac116", "email": "playn8n+s116@gmail.com", "password": "Student01", "apiKey": "sk-tLYTTZ96s2SLrpIm6QjQaw"}, {"number": 10, "name": "김*서", "account": "sessac117", "email": "playn8n+s117@gmail.com", "password": "Student01", "apiKey": "sk-nasAHIC028x79ncRO1v7hg"}, {"number": 11, "name": "김*형", "account": "sessac118", "email": "playn8n+s118@gmail.com", "password": "Student01", "apiKey": "sk-w0YeBF2wJb3_JTSmeNcIdg"}, {"number": 12, "name": "문*원", "account": "sessac119", "email": "playn8n+s119@gmail.com", "password": "Student01", "apiKey": "sk-4E4IHfNSK1HbCUdBmYETNw"}, {"number": 13, "name": "박*론", "account": "sessac120", "email": "playn8n+s120@gmail.com", "password": "Student01", "apiKey": "sk-RbX6L3vnLulOKoftvnTMZw"}, {"number": 14, "name": "송*은", "account": "sessac121", "email": "playn8n+s121@gmail.com", "password": "Student01", "apiKey": "sk-1PgbxGt3C8LtzhKQOVwIbg"}, {"number": 15, "name": "양*현", "account": "sessac122", "email": "playn8n+s122@gmail.com", "password": "Student01", "apiKey": "sk-TA87RXqFRGLO62LjnEZexg"}, {"number": 16, "name": "양*은", "account": "sessac123", "email": "playn8n+s123@gmail.com", "password": "Student01", "apiKey": "sk-DI49eZtUTD0XbDQghlWdRg"}, {"number": 17, "name": "오*주", "account": "sessac124", "email": "playn8n+s124@gmail.com", "password": "Student01", "apiKey": "sk-zMMZsk-Z3Ltknid7JLmoSw"}, {"number": 18, "name": "오*은", "account": "sessac125", "email": "playn8n+s125@gmail.com", "password": "Student01", "apiKey": "sk-7Lx1z31kwEyi15G63CoPuA"}, {"number": 19, "name": "이*인", "account": "sessac126", "email": "playn8n+s126@gmail.com", "password": "Student01", "apiKey": "sk-A2Xht5ZFK8DIvQitObkXRw"}, {"number": 20, "name": "이*빈", "account": "sessac127", "email": "playn8n+s127@gmail.com", "password": "Student01", "apiKey": "sk-tvtYXSG_GtEnjaJ5w_8K8w"}, {"number": 21, "name": "이*이", "account": "sessac128", "email": "playn8n+s128@gmail.com", "password": "Student01", "apiKey": "sk-F_7nVyfHPh7f85skK2Qf9g"}, {"number": 22, "name": "이*슬", "account": "sessac129", "email": "playn8n+s129@gmail.com", "password": "Student01", "apiKey": "sk-om7JzNjg6gIyQsxBv4HCmA"}, {"number": 23, "name": "이*아", "account": "sessac130", "email": "playn8n+s130@gmail.com", "password": "Student01", "apiKey": "sk-RNM42Apj3DUhysb2aYI-sQ"}, {"number": 24, "name": "이*영", "account": "sessac131", "email": "playn8n+s131@gmail.com", "password": "Student01", "apiKey": "sk-n-2x37eCaL3M8Eak_TnH5w"}, {"number": 25, "name": "정*은", "account": "sessac132", "email": "playn8n+s132@gmail.com", "password": "Student01", "apiKey": "sk-p2Ycefl4piLh1x6DFSzZuA"}, {"number": 26, "name": "조*아", "account": "sessac133", "email": "playn8n+s133@gmail.com", "password": "Student01", "apiKey": "sk-qRJ7E5CcqAuimR-yxNxmbw"}, {"number": 27, "name": "허*민", "account": "sessac134", "email": "playn8n+s134@gmail.com", "password": "Student01", "apiKey": "sk-j2K8ZpfLgRkupjOU71dg_w"}, {"number": 28, "name": "현*희", "account": "sessac135", "email": "playn8n+s135@gmail.com", "password": "Student01", "apiKey": "sk-gxxGlzTGB_4A1Hevmqkquw"}, {"number": 29, "name": "김*빈", "account": "sessac136", "email": "playn8n+s136@gmail.com", "password": "Student01", "apiKey": ""}];
+const loginUrl = "https://app.n8n.cloud/login";
+
+// ★ 29번 김*빈 학생의 API Key가 도착하면
+// 위 students 배열에서 "sessac136"을 찾아 apiKey: "" 부분의 빈 따옴표 안에 붙여넣으세요.
+
+const grid = document.getElementById('grid');
+const count = document.getElementById('count');
+const search = document.getElementById('search');
+const empty = document.getElementById('empty');
+const toast = document.getElementById('toast');
+
+function esc(s) {
+  return String(s).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1500);
+}
+
+async function copyText(text, label) {
+  if (!text) {
+    showToast('아직 등록되지 않은 정보입니다.');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch(e) {
+    const t = document.createElement('textarea');
+    t.value = text;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand('copy');
+    t.remove();
+  }
+  showToast(label + ' 복사 완료 ✓');
+}
+
+function render(list) {
+  grid.innerHTML = list.map(s => `
+    <article class="card">
+      <div class="card-head">
+        <div class="num">${s.number}</div>
+        <div class="name">${esc(s.name)}</div>
+      </div>
+
+      <div class="field">
+        <div class="label">n8n 계정명</div>
+        <div class="row">
+          <div class="value">${esc(s.account)}</div>
+          <button class="copy" onclick='copyText(${JSON.stringify(s.account)},"계정명")'>복사</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label">이메일</div>
+        <div class="row">
+          <div class="value">${esc(s.email)}</div>
+          <button class="copy" onclick='copyText(${JSON.stringify(s.email)},"이메일")'>복사</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label">비밀번호</div>
+        <div class="row">
+          <div class="value password">${esc(s.password)}</div>
+          <button class="copy" onclick='copyText(${JSON.stringify(s.password)},"비밀번호")'>복사</button>
+        </div>
+      </div>
+
+      <div class="api-row">
+        ${s.apiKey
+          ? `<button class="api-copy" onclick='copyText(${JSON.stringify(s.apiKey)},"API Key")'>🔑 API Key 복사</button>`
+          : `<button class="api-copy missing" disabled>🔑 API Key 준비중</button>`
+        }
+      </div>
+
+      <a class="login" href="${loginUrl}" target="_blank" rel="noopener">n8n 로그인하기 →</a>
+    </article>
+  `).join('');
+
+  count.textContent = list.length;
+  empty.style.display = list.length ? 'none' : 'block';
+}
+
+search.addEventListener('input', () => {
+  const q = search.value.trim().toLowerCase();
+  const filtered = students.filter(s =>
+    String(s.number).includes(q) ||
+    s.name.toLowerCase().includes(q) ||
+    s.account.toLowerCase().includes(q)
+  );
+  render(filtered);
+});
+
+render(students);
+</script>
+</body>
+</html>
