@@ -71,6 +71,33 @@ h1 {
     background: #eaf8f1;
     color: #176b46;
 }
+.add-btn {
+    background: #fff4df;
+    color: #8a5a00;
+}
+.manage-row {
+    display: flex;
+    gap: 8px;
+}
+.custom-copy-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+}
+.custom-copy-row .action-btn {
+    min-width: 0;
+}
+.delete-mini {
+    border: 0;
+    border-radius: 12px;
+    padding: 0 13px;
+    background: #fff0f0;
+    color: #b42318;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+.delete-mini:hover { filter: brightness(.98); }
 .label {
     font-weight: 700;
     font-size: 15px;
@@ -185,15 +212,29 @@ h1 {
                 <span class="action">복사</span>
             </button>
             
-            <button class="action-btn copy-btn" type="button"
-                    data-copy="c2stcHJvai1vZk1XeGwtZjZ5LXRCb19zcUkyb1BucWVsNk1YV0JDU0tRbUxoLTBvZmwxbXRFbkxUSGl2S00zYWRqa2w3eElrY1JETExMa2o2SVQzQmxia0ZKeFlxTXpIa2NpeVY3WjNIQ1NQd3MwZXA5VjQ4RUxFU1haNEFScjZ6T282YW4waExIcVdpeWRlRmdIb0VkMlFmQjQzY184ckJBa0E=" onclick="copyValue(this, 'API KEY 2')">
+            <button class="action-btn copy-btn" type="button" onclick="copyStoredApi2()">
                 <span class="label">API KEY 2</span>
                 <span class="action">복사</span>
+            </button>
+            <button class="action-btn copy-btn" type="button" onclick="setStoredApi2()">
+                <span class="label">API KEY 2 설정</span>
+                <span class="action">새 키 저장</span>
             </button>
             
         </div>
     </section>
     
+    <section class="service-card">
+        <h2>내 복사함</h2>
+        <div class="button-grid">
+            <div id="customCopyList" class="button-grid"></div>
+            <button class="action-btn add-btn" type="button" onclick="addCustomCopyItem()">
+                <span class="label">새 복사 버튼</span>
+                <span class="action">+ 만들기</span>
+            </button>
+        </div>
+    </section>
+
     <section class="service-card">
         <h2>패들렛</h2>
         <div class="button-grid">
@@ -233,7 +274,7 @@ h1 {
     </section>
     
 </main>
-<p class="note">실제 ID · 이메일 · 비밀번호 · API KEY · URL은 화면에 표시되지 않습니다.</p>
+<p class="note">실제 ID · 이메일 · 비밀번호 · API KEY · URL은 화면에 표시되지 않습니다. ‘내 복사함’과 API KEY 2에 새로 저장한 값은 이 브라우저에만 저장됩니다.</p>
 </div>
 
 <div id="toast" class="toast">복사되었습니다.</div>
@@ -270,10 +311,141 @@ async function copyValue(button, label) {
     showToast(label + " 복사 완료");
 }
 
+
+async function copyPlainText(value, label) {
+    try {
+        await navigator.clipboard.writeText(value);
+    } catch (e) {
+        const temp = document.createElement("textarea");
+        temp.value = value;
+        temp.style.position = "fixed";
+        temp.style.opacity = "0";
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+    }
+    showToast(label + " 복사 완료");
+}
+
+const CUSTOM_COPY_STORAGE_KEY = "teacher_custom_copy_items";
+
+function getCustomCopyItems() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(CUSTOM_COPY_STORAGE_KEY) || "[]");
+        return Array.isArray(saved) ? saved : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveCustomCopyItems(items) {
+    localStorage.setItem(CUSTOM_COPY_STORAGE_KEY, JSON.stringify(items));
+}
+
+function renderCustomCopyItems() {
+    const list = document.getElementById("customCopyList");
+    if (!list) return;
+
+    const items = getCustomCopyItems();
+    list.innerHTML = "";
+
+    if (items.length === 0) {
+        const empty = document.createElement("div");
+        empty.style.cssText = "padding:4px 2px 2px;color:#8b94a6;font-size:13px;";
+        empty.textContent = "아직 만든 복사 버튼이 없습니다.";
+        list.appendChild(empty);
+        return;
+    }
+
+    items.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "custom-copy-row";
+
+        const button = document.createElement("button");
+        button.className = "action-btn copy-btn";
+        button.type = "button";
+        button.innerHTML = '<span class="label"></span><span class="action">복사</span>';
+        button.querySelector(".label").textContent = item.label;
+        button.addEventListener("click", () => copyPlainText(item.value, item.label));
+        button.title = "클릭하면 저장된 내용이 복사됩니다.";
+
+        const del = document.createElement("button");
+        del.className = "delete-mini";
+        del.type = "button";
+        del.textContent = "삭제";
+        del.title = item.label + " 삭제";
+        del.addEventListener("click", () => deleteCustomCopyItem(index));
+
+        row.appendChild(button);
+        row.appendChild(del);
+        list.appendChild(row);
+    });
+}
+
+function addCustomCopyItem() {
+    const label = prompt("복사 버튼에 표시할 제목을 입력하세요.\n예: 수업 프롬프트, 사이트 코드, 학생 공지");
+    if (!label || !label.trim()) return;
+
+    const value = prompt("복사할 내용을 입력하세요.\n이 값은 HTML 파일이 아니라 이 브라우저에만 저장됩니다.");
+    if (value === null || !value.trim()) return;
+
+    const items = getCustomCopyItems();
+    items.push({
+        label: label.trim(),
+        value: value.trim()
+    });
+    saveCustomCopyItems(items);
+    renderCustomCopyItems();
+    showToast(label.trim() + " 버튼 생성 완료");
+}
+
+function deleteCustomCopyItem(index) {
+    const items = getCustomCopyItems();
+    const item = items[index];
+    if (!item) return;
+    if (!confirm("'" + item.label + "' 복사 버튼을 삭제할까요?")) return;
+
+    items.splice(index, 1);
+    saveCustomCopyItems(items);
+    renderCustomCopyItems();
+    showToast("삭제 완료");
+}
+
+function setStoredApi2() {
+    const value = prompt("새 API KEY 2를 입력하세요. 이 값은 이 브라우저에만 저장됩니다.");
+    if (!value) return;
+    localStorage.setItem("teacher_api_key_2", value.trim());
+    showToast("API KEY 2 저장 완료");
+}
+
+async function copyStoredApi2() {
+    const value = localStorage.getItem("teacher_api_key_2");
+    if (!value) {
+        setStoredApi2();
+        return;
+    }
+    try {
+        await navigator.clipboard.writeText(value);
+    } catch (e) {
+        const temp = document.createElement("textarea");
+        temp.value = value;
+        temp.style.position = "fixed";
+        temp.style.opacity = "0";
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+    }
+    showToast("API KEY 2 복사 완료");
+}
+
 function openLink(button) {
     const url = decode(button.dataset.url);
     window.open(url, "_blank", "noopener,noreferrer");
 }
+
+renderCustomCopyItems();
 </script>
 </body>
 </html>
