@@ -136,6 +136,20 @@ h1 {
     .cards { grid-template-columns: 1fr; }
     .wrap { width: min(100% - 20px, 920px); padding-top: 26px; }
 }
+
+.api-status-box{
+    margin-top:10px;padding:12px 14px;border:1px solid #e7eaf0;border-radius:14px;
+    background:#f7f9fc;font-size:13px;line-height:1.5
+}
+.api-status-main{font-weight:800}
+.api-status-ok{color:#176b46}
+.api-status-lock{color:#8a5a00}
+.api-status-sub{margin-top:3px;color:#7b8496;font-size:12px}
+.api2-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.secondary-btn{background:#f2f4f7;color:#344054}
+.danger-btn{background:#fff0f0;color:#b42318}
+@media(max-width:520px){.api2-actions{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -212,14 +226,28 @@ h1 {
                 <span class="action">복사</span>
             </button>
             
-            <button class="action-btn copy-btn" type="button" onclick="copyStoredApi2()">
+            
+            <button class="action-btn copy-btn" type="button" onclick="copyEncryptedApi2()">
                 <span class="label">API KEY 2</span>
                 <span class="action">복사</span>
             </button>
-            <button class="action-btn copy-btn" type="button" onclick="setStoredApi2()">
-                <span class="label">API KEY 2 설정</span>
-                <span class="action">새 키 저장</span>
-            </button>
+
+            <div class="api2-actions">
+                <button class="action-btn add-btn" type="button" onclick="setEncryptedApi2()">
+                    <span class="label">API KEY 2 설정</span>
+                    <span class="action">새 키 저장</span>
+                </button>
+                <button class="action-btn danger-btn" type="button" onclick="clearEncryptedApi2()">
+                    <span class="label">API KEY 2 초기화</span>
+                    <span class="action">삭제</span>
+                </button>
+            </div>
+
+            <div id="api2Status" class="api-status-box">
+                <div id="api2StatusMain" class="api-status-main api-status-lock">확인 중...</div>
+                <div id="api2StatusSub" class="api-status-sub"></div>
+            </div>
+
             
         </div>
     </section>
@@ -280,6 +308,154 @@ h1 {
 <div id="toast" class="toast">복사되었습니다.</div>
 
 <script>
+
+const API2_STORAGE_KEY = "teacher_api2_encrypted_v1";
+let __api2SessionKey = null;
+let __api2SessionPlain = null;
+
+function bytesToB64(bytes) {
+    let binary = "";
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+}
+function b64ToBytes(s) {
+    const binary = atob(s);
+    return Uint8Array.from(binary, c => c.charCodeAt(0));
+}
+async function deriveApi2Key(passphrase, salt) {
+    const enc = new TextEncoder();
+    const baseKey = await crypto.subtle.importKey(
+        "raw", enc.encode(passphrase), "PBKDF2", false, ["deriveKey"]
+    );
+    return crypto.subtle.deriveKey(
+        {name:"PBKDF2", salt, iterations:150000, hash:"SHA-256"},
+        baseKey,
+        {name:"AES-GCM", length:256},
+        false,
+        ["encrypt","decrypt"]
+    );
+}
+async function encryptApi2(plain, passphrase) {
+    const enc = new TextEncoder();
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await deriveApi2Key(passphrase, salt);
+    const cipher = new Uint8Array(await crypto.subtle.encrypt(
+        {name:"AES-GCM", iv}, key, enc.encode(plain)
+    ));
+    return {
+        v:1,
+        salt:bytesToB64(salt),
+        iv:bytesToB64(iv),
+        cipher:bytesToB64(cipher),
+        savedAt:new Date().toISOString()
+    };
+}
+async function decryptApi2(payload, passphrase) {
+    const key = await deriveApi2Key(passphrase, b64ToBytes(payload.salt));
+    const plainBuf = await crypto.subtle.decrypt(
+        {name:"AES-GCM", iv:b64ToBytes(payload.iv)},
+        key,
+        b64ToBytes(payload.cipher)
+    );
+    return new TextDecoder().decode(plainBuf);
+}
+function getEncryptedApi2Payload() {
+    try {
+        const raw = localStorage.getItem(API2_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch(e) {
+        return null;
+    }
+}
+function formatSavedAt(iso) {
+    try {
+        return new Date(iso).toLocaleString("ko-KR");
+    } catch(e) {
+        return iso || "";
+    }
+}
+function refreshApi2Status() {
+    const main = document.getElementById("api2StatusMain");
+    const sub = document.getElementById("api2StatusSub");
+    if (!main || !sub) return;
+    const p = getEncryptedApi2Payload();
+    if (!p) {
+        main.textContent = "API KEY 2 저장 안 됨";
+        main.className = "api-status-main api-status-lock";
+        sub.textContent = "‘새 키 저장’을 눌러 이 브라우저에 암호화 저장하세요.";
+        return;
+    }
+    if (__api2SessionPlain) {
+        main.textContent = "API KEY 2 저장됨 · 잠금 해제됨 ✅";
+        main.className = "api-status-main api-status-ok";
+        sub.textContent = "저장일: " + formatSavedAt(p.savedAt) + " · 이 탭을 닫으면 다시 잠깁니다.";
+    } else {
+        main.textContent = "API KEY 2 저장됨 · 잠김 🔒";
+        main.className = "api-status-main api-status-lock";
+        sub.textContent = "저장일: " + formatSavedAt(p.savedAt) + " · 복사할 때 비밀번호를 입력하세요.";
+    }
+}
+async function setEncryptedApi2() {
+    const apiKey = prompt("새 API KEY 2를 입력하세요.\n키는 HTML 파일에 저장되지 않고 이 브라우저에 암호화되어 저장됩니다.");
+    if (!apiKey || !apiKey.trim()) return;
+
+    const pass1 = prompt("API KEY 2를 잠글 비밀번호를 정하세요.\n※ 이 비밀번호는 저장되지 않습니다. 잊으면 키를 다시 저장해야 합니다.");
+    if (!pass1) return;
+    const pass2 = prompt("잠금 비밀번호를 한 번 더 입력하세요.");
+    if (pass1 !== pass2) {
+        alert("비밀번호가 서로 다릅니다. 다시 시도해 주세요.");
+        return;
+    }
+    if (pass1.length < 6) {
+        if (!confirm("비밀번호가 짧습니다. 그래도 저장할까요?")) return;
+    }
+
+    try {
+        const payload = await encryptApi2(apiKey.trim(), pass1);
+        localStorage.setItem(API2_STORAGE_KEY, JSON.stringify(payload));
+        __api2SessionPlain = apiKey.trim();
+        showToast("API KEY 2 암호화 저장 완료");
+        refreshApi2Status();
+    } catch(e) {
+        alert("암호화 저장 중 오류가 발생했습니다.");
+    }
+}
+async function copyEncryptedApi2() {
+    const payload = getEncryptedApi2Payload();
+    if (!payload) {
+        alert("먼저 ‘API KEY 2 설정 → 새 키 저장’을 눌러 키를 저장하세요.");
+        return;
+    }
+
+    let plain = __api2SessionPlain;
+    if (!plain) {
+        const pass = prompt("API KEY 2 잠금 비밀번호를 입력하세요.");
+        if (!pass) return;
+        try {
+            plain = await decryptApi2(payload, pass);
+            __api2SessionPlain = plain;
+        } catch(e) {
+            alert("비밀번호가 맞지 않거나 저장된 데이터가 손상되었습니다.");
+            return;
+        }
+    }
+    await copyPlainText(plain, "API KEY 2");
+    refreshApi2Status();
+}
+function clearEncryptedApi2() {
+    if (!getEncryptedApi2Payload()) {
+        showToast("삭제할 API KEY 2가 없습니다.");
+        return;
+    }
+    if (!confirm("이 브라우저에 저장된 API KEY 2를 완전히 삭제할까요?")) return;
+    localStorage.removeItem(API2_STORAGE_KEY);
+    __api2SessionKey = null;
+    __api2SessionPlain = null;
+    refreshApi2Status();
+    showToast("API KEY 2 삭제 완료");
+}
+
 function decode(encoded) {
     const binary = atob(encoded);
     const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
@@ -412,33 +588,8 @@ function deleteCustomCopyItem(index) {
     showToast("삭제 완료");
 }
 
-function setStoredApi2() {
-    const value = prompt("새 API KEY 2를 입력하세요. 이 값은 이 브라우저에만 저장됩니다.");
-    if (!value) return;
-    localStorage.setItem("teacher_api_key_2", value.trim());
-    showToast("API KEY 2 저장 완료");
-}
 
-async function copyStoredApi2() {
-    const value = localStorage.getItem("teacher_api_key_2");
-    if (!value) {
-        setStoredApi2();
-        return;
-    }
-    try {
-        await navigator.clipboard.writeText(value);
-    } catch (e) {
-        const temp = document.createElement("textarea");
-        temp.value = value;
-        temp.style.position = "fixed";
-        temp.style.opacity = "0";
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand("copy");
-        temp.remove();
-    }
-    showToast("API KEY 2 복사 완료");
-}
+async 
 
 function openLink(button) {
     const url = decode(button.dataset.url);
@@ -446,6 +597,8 @@ function openLink(button) {
 }
 
 renderCustomCopyItems();
+
+refreshApi2Status();
 </script>
 </body>
 </html>
