@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>강사용 빠른 복사</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+        background: #f5f7fb;
+        color: #172033;
+    }
+    .wrap {
+        width: min(920px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 42px 0 60px;
+    }
+    .top {
+        margin-bottom: 26px;
+    }
+    h1 {
+        margin: 0 0 8px;
+        font-size: clamp(28px, 4vw, 40px);
+        letter-spacing: -0.04em;
+    }
+    .subtitle {
+        margin: 0;
+        color: #667085;
+        font-size: 15px;
+    }
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+    .service-card {
+        background: white;
+        border: 1px solid #e8ebf2;
+        border-radius: 22px;
+        padding: 20px;
+        box-shadow: 0 10px 28px rgba(21, 32, 58, .06);
+    }
+    .service-card h2 {
+        margin: 0 0 15px;
+        font-size: 21px;
+        letter-spacing: -0.03em;
+    }
+    .button-grid {
+        display: grid;
+        gap: 10px;
+    }
+    .action-btn {
+        width: 100%;
+        border: 0;
+        border-radius: 14px;
+        padding: 14px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font: inherit;
+        cursor: pointer;
+        transition: transform .08s ease, filter .15s ease;
+    }
+    .action-btn:active {
+        transform: scale(.985);
+    }
+    .copy-btn {
+        background: #eef2ff;
+        color: #303b73;
+    }
+    .link-btn {
+        background: #eaf8f1;
+        color: #176b46;
+    }
+    .label {
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .action {
+        font-weight: 800;
+        font-size: 14px;
+        opacity: .9;
+    }
+    .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 28px;
+        transform: translateX(-50%) translateY(20px);
+        background: #172033;
+        color: white;
+        padding: 11px 16px;
+        border-radius: 999px;
+        opacity: 0;
+        pointer-events: none;
+        transition: .2s ease;
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: 0 10px 25px rgba(0,0,0,.18);
+    }
+    .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    .privacy-note {
+        margin-top: 20px;
+        text-align: center;
+        color: #8a93a6;
+        font-size: 12px;
+    }
+    @media (max-width: 680px) {
+        .cards { grid-template-columns: 1fr; }
+        .wrap { width: min(100% - 20px, 920px); padding-top: 26px; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <header class="top">
+        <h1>강사용 빠른 복사</h1>
+        <p class="subtitle">필요한 항목은 복사하고, 사이트는 바로 접속하세요.</p>
+    </header>
+
+    <main class="cards">
+        
+    <section class="service-card">
+        <h2>키즐콘</h2>
+        <div class="button-grid">
+            
+            <button class="action-btn copy-btn" type="button"
+                    data-copy="a29zYWMwMzM5QGtpemxpbmcuY29t" onclick="copyValue(this)">
+                <span class="label">ID</span>
+                <span class="action">복사</span>
+            </button>
+            
+            <button class="action-btn copy-btn" type="button"
+                    data-copy="YWE1NzY0MDkwOSEh" onclick="copyValue(this)">
+                <span class="label">PW</span>
+                <span class="action">복사</span>
+            </button>
+            
+            <button class="action-btn link-btn" type="button"
+                    data-url="aHR0cHM6Ly93d3cua2l6bGNvbi5jb20v" onclick="openLink(this)">
+                <span class="label">접속</span>
+                <span class="action">바로가기 ↗</span>
+            </button>
+            
+        </div>
+    </section>
+    
+    <section class="service-card">
+        <h2>n8n</h2>
+        <div class="button-grid">
+            
+            <button class="action-btn copy-btn" type="button"
+                    data-copy="aW5zdHJ1Y3RvcjE=" onclick="copyValue(this)">
+                <span class="label">ID</span>
+                <span class="action">복사</span>
+            </button>
+            
+            <button class="action-btn copy-btn" type="button"
+                    data-copy="cGxheW44bitpbnN0cnVjdG9yMUBnbWFpbC5jb20=" onclick="copyValue(this)">
+                <span class="label">이메일</span>
+                <span class="action">복사</span>
+            </button>
+            
+            <button class="action-btn copy-btn" type="button"
+                    data-copy="U3R1ZGVudDAx" onclick="copyValue(this)">
+                <span class="label">PW</span>
+                <span class="action">복사</span>
+            </button>
+            
+            <button class="action-btn link-btn" type="button"
+                    data-url="aHR0cHM6Ly9hcHAubjhuLmNsb3VkL2xvZ2lu" onclick="openLink(this)">
+                <span class="label">접속</span>
+                <span class="action">바로가기 ↗</span>
+            </button>
+            
+        </div>
+    </section>
+    
+    <section class="service-card">
+        <h2>API</h2>
+        <div class="button-grid">
+            
+            <button class="action-btn copy-btn" type="button"
+                    data-copy="c2sta20xZm01MGFBWkotNFdDOEo1WDAwUQ==" onclick="copyValue(this)">
+                <span class="label">API KEY</span>
+                <span class="action">복사</span>
+            </button>
+            
+        </div>
+    </section>
+    
+    <section class="service-card">
+        <h2>패들렛</h2>
+        <div class="button-grid">
+            
+            <button class="action-btn link-btn" type="button"
+                    data-url="aHR0cHM6Ly9wYWRsZXQuY29tL3llbWUvYWktbjhuLXpzbXZkYjV2cG82aGl5aWk=" onclick="openLink(this)">
+                <span class="label">접속</span>
+                <span class="action">바로가기 ↗</span>
+            </button>
+            
+        </div>
+    </section>
+    
+    <section class="service-card">
+        <h2>디싹</h2>
+        <div class="button-grid">
+            
+            <button class="action-btn copy-btn" type="button"
+                    data-copy="YmViZXRvMDk4N0BnbWFpbC5jb20=" onclick="copyValue(this)">
+                <span class="label">ID</span>
+                <span class="action">복사</span>
+            </button>
+            
+            <button class="action-btn copy-btn" type="button"
+                    data-copy="YWE1NzY0MDkwOSEh" onclick="copyValue(this)">
+                <span class="label">PW</span>
+                <span class="action">복사</span>
+            </button>
+            
+            <button class="action-btn link-btn" type="button"
+                    data-url="aHR0cHM6Ly9uZXdzYWMua29zYWMucmUua3Iv" onclick="openLink(this)">
+                <span class="label">접속</span>
+                <span class="action">바로가기 ↗</span>
+            </button>
+            
+        </div>
+    </section>
+    
+    </main>
+
+    <p class="privacy-note">실제 ID · 이메일 · 비밀번호 · API KEY · URL은 화면에 표시되지 않습니다.</p>
+</div>
+
+<div id="toast" class="toast">복사되었습니다.</div>
+
+<script>
+function decode(encoded) {
+    try {
+        const binary = atob(encoded);
+        const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+        return new TextDecoder("utf-8").decode(bytes);
+    } catch (e) {
+        return "";
+    }
+}
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1300);
+}
+
+async function copyValue(button) {
+    const value = decode(button.dataset.copy);
+    try {
+        await navigator.clipboard.writeText(value);
+    } catch (e) {
+        const temp = document.createElement("textarea");
+        temp.value = value;
+        temp.style.position = "fixed";
+        temp.style.opacity = "0";
+        document.body.appendChild(temp);
+        temp.focus();
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+    }
+    showToast("복사되었습니다.");
+}
+
+function openLink(button) {
+    const url = decode(button.dataset.url);
+    if (!url) return;
+    window.open(url, "_blank", "noopener,noreferrer");
+}
+</script>
+</body>
+</html>
