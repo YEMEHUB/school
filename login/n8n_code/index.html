@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>n8n 실습 자료 보관함</title>
+<style>
+body{font-family:Arial,'Malgun Gothic',sans-serif;background:#f5fbff;margin:0;color:#222}
+.wrap{max-width:900px;margin:auto;padding:40px 20px}
+h1{font-size:44px;margin:0 0 8px} .sub{color:#666;margin-bottom:28px}
+.card{background:white;border:2px solid #222;border-radius:20px;padding:24px;margin:24px 0;box-shadow:7px 7px 0 #222}
+.tag{font-weight:800;color:#6c5ce7} pre,.box{background:#17191d;color:#fff;padding:18px;border-radius:14px;white-space:pre-wrap;line-height:1.6;max-height:360px;overflow:auto}
+button{width:100%;padding:16px;border:0;border-radius:12px;background:#2ed7a5;font-size:18px;font-weight:800;cursor:pointer}
+.msg{text-align:center;color:#159873;font-weight:800;min-height:28px;margin-top:10px}
+.tip{background:#fff3b0;padding:12px 14px;border-radius:12px}
+</style>
+</head>
+<body><div class="wrap">
+<h1>🍋 n8n 실습 자료 보관함</h1>
+<div class="sub">필요한 코드는 물론, 실습용 긴 글도 버튼 한 번으로 복사!</div>
+
+<div class="card">
+<div class="tag">CODE 01</div><h2>🔢 소수 판별하기</h2>
+<pre id="prime">{{ (() => {
+  const n = $json.숫자;
+  if (n < 2) return false;
+  for (let i = 2; i <= Math.sqrt(n); i++) {
+    if (n % i === 0) return false;
+  }
+  return true;
+})() }}</pre>
+<button onclick="copyIt('prime','m1')">📋 소수 판별식 복사하기</button><div id="m1" class="msg"></div>
+</div>
+
+<div class="card">
+<div class="tag">TEXT 01</div><h2>🤖 AI 요약 실습 원문</h2>
+<div id="text1" class="box">인공지능 기술은 과거에는 인간이 직접 수행해야 한다고 여겨졌던 다양한 인지적 활동을 컴퓨터가 처리할 수 있도록 발전해 왔다. 초기의 인공지능은 개발자가 미리 정해 놓은 규칙에 따라 제한된 문제를 해결하는 방식이 중심이었지만, 컴퓨터의 연산 능력이 향상되고 대규모 데이터를 수집할 수 있는 환경이 만들어지면서 데이터로부터 일정한 패턴을 찾아내는 머신러닝 기술이 빠르게 발전하였다. 특히 딥러닝은 여러 층으로 구성된 인공신경망을 이용하여 복잡한 데이터의 특징을 단계적으로 학습하는 방법으로, 이미지 인식이나 음성 인식, 자연어 처리와 같은 분야에서 높은 성능을 보여 왔다. 최근에는 방대한 양의 텍스트를 학습한 생성형 인공지능이 등장하면서 단순히 정보를 분류하거나 예측하는 수준을 넘어 새로운 글과 이미지, 음악, 프로그램 코드 등을 생성하는 것도 가능해졌다.
+
+그러나 인공지능이 만들어 내는 결과가 항상 정확하거나 객관적인 것은 아니다. 인공지능은 학습 과정에서 사용된 데이터의 특징과 한계를 함께 반영할 수 있기 때문에 데이터에 편향된 정보가 포함되어 있다면 결과에도 그러한 편향이 나타날 가능성이 있다. 또한 생성형 인공지능은 질문에 대한 정확한 정보를 가지고 있지 않은 상황에서도 문맥상 자연스러워 보이는 내용을 만들어 낼 수 있는데, 이처럼 사실과 다른 정보를 마치 사실인 것처럼 생성하는 현상을 흔히 ‘환각(Hallucination)’이라고 부른다. 따라서 인공지능의 답변을 그대로 받아들이기보다는 출처를 확인하거나 다른 자료와 비교하면서 정보의 신뢰성을 판단하는 과정이 필요하다.
+
+인공지능의 확산은 인간의 직업과 역할에도 변화를 가져오고 있다. 반복적으로 처리해야 하는 업무나 많은 자료를 빠르게 분석해야 하는 작업은 인공지능을 활용하여 효율성을 높일 수 있지만, 이것이 반드시 특정 직업 전체가 사라진다는 의미는 아니다. 하나의 직업은 여러 종류의 업무로 구성되어 있으며, 그중 일부는 자동화하기 쉽지만 사람과의 의사소통, 새로운 문제의 정의, 상황에 따른 판단처럼 인간의 경험과 맥락 이해가 중요한 업무는 여전히 사람의 역할이 크게 요구될 수 있다.</div>
+<button onclick="copyIt('text1','m2')">📋 AI 요약 실습 원문 복사하기</button><div id="m2" class="msg"></div>
+<div class="tip">추천 프롬프트: 다음 글을 중학생이 이해하기 쉽도록 핵심 내용만 3문장으로 요약해줘.</div>
+</div>
+
+
+<div class="card">
+<div class="tag">CODE 02</div><h2>🔒 개인정보 가리기</h2>
+<pre id="privacy">const name = $json['이름'] || '';
+const phone = $json['전화번호'] || '';
+
+return {
+  json: {
+    가린이름: name.charAt(0) + '○'.repeat(Math.max(name.length - 1, 1)),
+    가린전화: phone.replace(/\d{4}$/, '****'),
+    안내: '개인정보는 일부를 가려서 보관해요'
+  }
+};</pre>
+<button onclick="copyIt('privacy','m3')">📋 개인정보 가리기 코드 복사하기</button><div id="m3" class="msg"></div>
+<div class="tip">사용 위치: n8n의 <b>Code</b> 노드에 그대로 붙여넣기<br>입력 필드 이름은 <b>이름</b>, <b>전화번호</b>로 맞춰주세요.</div>
+</div>
+
+
+<div class="card">
+<div class="tag">LINK 01</div><h2>📗 AI 예상문제 결과 시트</h2>
+<div class="box" id="sheeturl">https://docs.google.com/spreadsheets/d/1hyZZlKD-jWOm--CAviA-pgXDdj-hOj6xIdfrZ747xxg/edit?gid=0#gid=0</div>
+<button onclick="copyIt('sheeturl','m4')">📋 구글시트 URL 복사하기</button><div id="m4" class="msg"></div>
+<a href="https://docs.google.com/spreadsheets/d/1hyZZlKD-jWOm--CAviA-pgXDdj-hOj6xIdfrZ747xxg/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" style="display:block;margin-top:10px;text-decoration:none"><button type="button">🔗 AI 예상문제 결과 시트 열기</button></a>
+<div class="tip">n8n의 Google Sheets 노드에서 문서 선택 방식을 <b>URL을 통해</b>로 바꾼 뒤, 위 주소를 붙여넣으세요.</div>
+</div>
+
+<script>
+async function copyIt(id,msg){
+ const t=document.getElementById(id).innerText;
+ try{await navigator.clipboard.writeText(t);document.getElementById(msg).innerText='✨ 복사 완료!';}
+ catch(e){document.getElementById(msg).innerText='복사가 막히면 텍스트를 선택해 Ctrl+C 해주세요!';}
+ setTimeout(()=>document.getElementById(msg).innerText='',3000);
+}
+</script>
+</div></body></html>
