@@ -1,3 +1,3 @@
-# 디지털새싹 학생코드첨부 로그인화면
+# 강사용 빠른복사 로그인화면
 > https://yemehub.github.io/school/login/teacher/
-<img width="955" height="590" alt="image" src="https://github.com/user-attachments/assets/5a569250-1a67-4b13-bb4a-2a2d9899ec5c" />
+<img width="962" height="691" alt="image" src="https://github.com/user-attachments/assets/107795fe-2ba6-4368-8cbc-897744df50c4" />
