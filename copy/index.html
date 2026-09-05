@@ -5,114 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>복사 버튼 만들기</title>
 <style>
-  *{box-sizing:border-box}
-  [hidden]{display:none!important}
-  body{
-    margin:0;
-    padding:10px 16px;
-    background:#eef2f7;
-    font-family:Arial,"Noto Sans KR",sans-serif;
-    color:#17233a;
-  }
-  .wrap{
-    width:min(720px,100%);
-    margin:0 auto;
-  }
-  .create,
-  .copy-button{
-    width:100%;
-    min-height:52px;
-    border:0;
-    border-radius:18px;
-    background:#fff2d8;
-    color:#985900;
-    padding:14px 14px;
-    font-size:16px;
-    font-weight:800;
-    cursor:pointer;
-  }
-  .create{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-  .copy-button{text-align:left}
-  .copy-button:active{transform:scale(.995)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0;
+  padding:10px 16px;
+  background:#eef2f7;
+  font-family:Arial,"Noto Sans KR",sans-serif;
+  color:#17233a;
+}
+.wrap{
+  width:min(720px,100%);
+  margin:0 auto;
+}
+.create,.copy-button{
+  width:100%;
+  min-height:52px;
+  border:0;
+  border-radius:18px;
+  background:#fff2d8;
+  color:#985900;
+  padding:14px;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+.create{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.copy-button{text-align:left}
+.copy-button:active{transform:scale(.995)}
 
-  dialog{
-    width:min(560px,calc(100% - 28px));
-    border:0;
-    border-radius:20px;
-    padding:0;
-    box-shadow:0 18px 60px rgba(0,0,0,.18)
-  }
-  dialog::backdrop{background:rgba(15,23,42,.45)}
-  .modal{padding:22px}
-  .modal h2{margin:0 0 18px;font-size:22px}
-  .field{display:grid;gap:7px;margin-bottom:14px}
-  .field label{font-weight:800;font-size:14px}
-  input,textarea{
-    width:100%;
-    border:1px solid #cfd5df;
-    border-radius:12px;
-    padding:12px;
-    font:inherit;
-    font-size:16px
-  }
-  textarea{min-height:190px;resize:vertical}
-  .modal-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
-    margin-top:18px
-  }
-  .btn{
-    border:1px solid #e5e7eb;
-    background:#fff;
-    border-radius:10px;
-    padding:10px 12px;
-    font-weight:700;
-    cursor:pointer
-  }
-  .btn.primary{
-    background:#fff2d8;
-    color:#985900;
-    border:0
-  }
-  .toast{
-    position:fixed;
-    left:50%;
-    top:28px;
-    transform:translateX(-50%) translateY(-8px);
-    background:#17233a;
-    color:#fff;
-    padding:13px 20px;
-    border-radius:14px;
-    font-size:16px;
-    font-weight:800;
-    box-shadow:0 10px 28px rgba(0,0,0,.18);
-    opacity:0;
-    visibility:hidden;
-    transition:.18s ease;
-    z-index:9999;
-    pointer-events:none;
-  }
-  .toast.show{
-    opacity:1;
-    visibility:visible;
-    transform:translateX(-50%) translateY(0)
-  }
+dialog{
+  width:min(560px,calc(100% - 28px));
+  border:0;
+  border-radius:20px;
+  padding:0;
+  box-shadow:0 18px 60px rgba(0,0,0,.18)
+}
+dialog::backdrop{background:rgba(15,23,42,.45)}
+.modal{padding:22px}
+.modal h2{margin:0 0 18px;font-size:22px}
+.field{display:grid;gap:7px;margin-bottom:14px}
+.field label{font-weight:800;font-size:14px}
+input,textarea{
+  width:100%;
+  border:1px solid #cfd5df;
+  border-radius:12px;
+  padding:12px;
+  font:inherit;
+  font-size:16px
+}
+textarea{min-height:190px;resize:vertical}
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:18px
+}
+.btn{
+  border:1px solid #e5e7eb;
+  background:#fff;
+  border-radius:10px;
+  padding:10px 12px;
+  font-weight:700;
+  cursor:pointer
+}
+.btn.primary{
+  background:#fff2d8;
+  color:#985900;
+  border:0
+}
+.toast{
+  position:fixed;
+  left:50%;
+  top:28px;
+  transform:translateX(-50%) translateY(-8px);
+  background:#17233a;
+  color:#fff;
+  padding:13px 20px;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:800;
+  box-shadow:0 10px 28px rgba(0,0,0,.18);
+  opacity:0;
+  visibility:hidden;
+  transition:.18s ease;
+  z-index:9999;
+  pointer-events:none;
+}
+.toast.show{
+  opacity:1;
+  visibility:visible;
+  transform:translateX(-50%) translateY(0)
+}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <!-- 주소에 데이터가 없을 때만 보이는 '생성기' 화면 -->
   <button id="createBtn" class="create" type="button">
     <span>새 복사 버튼</span>
     <span>+ 만들기</span>
   </button>
 
-  <!-- 전용 링크로 접속했을 때 학생에게 보이는 버튼 -->
   <button id="copyBtn" class="copy-button" type="button" hidden></button>
 </main>
 
@@ -155,17 +152,14 @@ function showToast(text){
   toast.textContent = text;
   toast.classList.add("show");
   clearTimeout(showToast.timer);
-  showToast.timer = setTimeout(()=>toast.classList.remove("show"), 1700);
+  showToast.timer = setTimeout(()=>toast.classList.remove("show"),1700);
 }
 
 function utf8ToBase64Url(str){
   const bytes = new TextEncoder().encode(str);
   let binary = "";
   for(let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
-  return btoa(binary)
-    .replace(/\+/g,"-")
-    .replace(/\//g,"_")
-    .replace(/=+$/,"");
+  return btoa(binary).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 }
 
 function base64UrlToUtf8(str){
@@ -189,88 +183,100 @@ function decodePayload(encoded){
   }
 }
 
-function getHashData(){
-  const hash = location.hash.startsWith("#d=") ? location.hash.slice(3) : "";
-  if(!hash) return null;
-  const data = decodePayload(hash);
+/* 핵심 수정:
+   #d=... (해시)가 아니라 ?d=... (쿼리스트링)을 사용합니다.
+   Padlet/미리보기 서비스가 각각을 다른 주소로 인식합니다. */
+function getQueryData(){
+  const params = new URLSearchParams(location.search);
+  const encoded = params.get("d");
+  if(!encoded) return null;
+  const data = decodePayload(encoded);
   if(!data || !data.name || !data.content) return null;
   return data;
 }
 
 function render(){
-  currentData = getHashData();
+  currentData = getQueryData();
 
   if(currentData){
-    // 학생용 화면: 만든 버튼 하나만 표시
     createBtn.hidden = true;
     copyBtn.hidden = false;
     copyBtn.textContent = currentData.name;
     document.title = currentData.name;
   }else{
-    // 선생님용 생성기 화면
     createBtn.hidden = false;
     copyBtn.hidden = true;
     document.title = "복사 버튼 만들기";
   }
 }
 
+async function writeClipboard(text){
+  if(navigator.clipboard && window.isSecureContext){
+    await navigator.clipboard.writeText(text);
+  }else{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  }
+}
+
 async function copyText(text){
   try{
-    if(navigator.clipboard && window.isSecureContext){
-      await navigator.clipboard.writeText(text);
-    }else{
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      document.execCommand("copy");
-      ta.remove();
-    }
+    await writeClipboard(text);
     showToast("✓ 복사되었습니다.");
   }catch(e){
     showToast("복사에 실패했어요.");
   }
 }
 
-createBtn.addEventListener("click", ()=>{
-  nameEl.value = "";
-  contentEl.value = "";
+createBtn.addEventListener("click",()=>{
+  nameEl.value="";
+  contentEl.value="";
   dlg.showModal();
   setTimeout(()=>nameEl.focus(),20);
 });
 
-cancelBtn.addEventListener("click", ()=>dlg.close());
+cancelBtn.addEventListener("click",()=>dlg.close());
 
-form.addEventListener("submit", async (e)=>{
+form.addEventListener("submit",async(e)=>{
   e.preventDefault();
-  const name = nameEl.value.trim();
-  const content = contentEl.value.trim();
+
+  const name=nameEl.value.trim();
+  const content=contentEl.value.trim();
   if(!name || !content) return;
 
-  const payload = encodePayload({name, content});
+  const payload=encodePayload({name,content});
 
-  // 핵심: 버튼마다 서로 다른 URL을 만든다.
-  location.hash = "d=" + payload;
+  // 현재 /school/copy/ 주소를 기준으로 ?d=전용데이터 주소 생성
+  const url = new URL(location.href);
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set("d", payload);
+
+  // 생성된 전용 주소로 이동
+  history.replaceState(null,"",url.toString());
   dlg.close();
   render();
 
-  // 생성 직후 전용 링크도 자동 복사
   try{
-    await navigator.clipboard.writeText(location.href);
+    await writeClipboard(location.href);
     showToast("✓ 전용 링크가 만들어져 복사되었습니다.");
   }catch(e){
     showToast("✓ 전용 링크가 만들어졌습니다.");
   }
 });
 
-copyBtn.addEventListener("click", ()=>{
+copyBtn.addEventListener("click",()=>{
   if(currentData) copyText(currentData.content);
 });
 
-window.addEventListener("hashchange", render);
+window.addEventListener("popstate",render);
 render();
 </script>
 </body>
