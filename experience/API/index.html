@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="음식 이름으로 API 요청과 JSON 응답을 배우는 수업용 API 체험관. 회원가입 없이 예시를 검색하고 웹앱 제작 프롬프트를 복사하세요.">
+<title>수업용 API 체험관 · 식품영양성분DB</title>
+<style>
+:root{--blue:#1764b5;--navy:#173c68;--line:#d9dfe5;--muted:#596675;--pale:#f3f6f9;--ink:#202b38}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;color:var(--ink);background:#fff;font:16px/1.65 "Malgun Gothic","Apple SD Gothic Neo",Arial,sans-serif}a{color:inherit;text-decoration:none}button,input,textarea{font:inherit}button,a,input,summary,textarea{-webkit-tap-highlight-color:transparent}button{cursor:pointer}a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,textarea:focus-visible{outline:3px solid #e9a225;outline-offset:4px}.wrap{width:min(1200px,calc(100% - 48px));margin:auto}.skip{position:absolute;top:-80px;background:#fff;padding:10px;z-index:10}.skip:focus{top:8px}.notice{background:#edf2f6;border-bottom:1px solid var(--line);font-size:14px;padding:7px 0}.notice .wrap{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.notice b{color:#164e88}.notice span{color:#4b5766}.header{min-height:104px;display:flex;align-items:center;justify-content:space-between;gap:28px}.brand{display:flex;align-items:center;gap:13px}.brandmark{border-left:6px solid var(--blue);padding-left:13px;font-weight:900;font-size:24px;line-height:1.2;color:var(--navy);letter-spacing:-1px}.brandmark small{display:block;font-size:12px;letter-spacing:2px;color:var(--blue);margin-top:5px}.brandtitle{font-weight:700;font-size:20px}.brandtitle small{display:block;font-size:13px;font-weight:400;color:var(--muted)}.headernote{color:var(--muted);font-size:14px}.mainnav{border-top:1px solid var(--line);border-bottom:2px solid var(--blue)}.mainnav .wrap{display:flex}.mainnav a{flex:1;text-align:center;padding:15px 8px;font-weight:700}.mainnav a:hover{background:#edf5ff;color:var(--blue)}.crumb{font-size:14px;color:var(--muted);padding:22px 0}.layout{display:grid;grid-template-columns:198px minmax(0,1fr);gap:36px}.sidebar h2{background:var(--navy);color:#fff;font-size:22px;padding:25px 18px;margin:0}.sidebar a{display:block;padding:16px 18px;border:1px solid var(--line);border-top:0;font-size:15px}.sidebar a:first-of-type{color:var(--blue);font-weight:700;background:#f1f7fd;border-left:3px solid var(--blue)}.sidehelp{padding:18px;background:var(--pale);margin-top:22px;font-size:14px;color:var(--muted)}.sidehelp b{display:block;color:var(--ink);margin-bottom:8px}main{min-width:0;padding-bottom:56px}.titleline{border-bottom:2px solid #333e4b;padding-bottom:22px;margin-bottom:24px}.eyebrow{display:flex;gap:8px;margin-bottom:13px}.tag{display:inline-block;padding:2px 10px;font-size:13px;border:1px solid #aac6e4;color:#155597;background:#eff6fe;border-radius:3px}.tag.gray{border-color:#d3dbe3;color:#526170;background:#f5f7f9}h1{font-size:26px;line-height:1.5;margin:0;letter-spacing:-1px;overflow-wrap:anywhere}h1 small{font:inherit;color:var(--blue)}.intro{margin:12px 0 0;color:var(--muted);font-size:15px}h2{font-size:20px;margin:0 0 16px;letter-spacing:-.5px}h2 .n{color:var(--blue);margin-right:9px}section{margin-top:32px}section:first-of-type{margin-top:0}.overview{display:grid;grid-template-columns:130px 1fr 130px 1fr;border-top:1px solid #8190a0;border-left:1px solid var(--line);font-size:15px}.overview>*{margin:0;padding:12px 15px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.overview dt{background:var(--pale);font-weight:700}.flow{display:flex;align-items:center;justify-content:space-around;gap:10px;border:1px solid #cddff2;background:#f4f9ff;padding:17px;margin-top:18px;text-align:center;font-size:15px}.flow b{display:block;color:var(--navy)}.flow .arrow{color:var(--blue);font-size:22px}.tabs{display:flex;border-bottom:2px solid var(--blue);margin-top:30px}.tabs a{padding:12px 10px;text-align:center;flex:1;border:1px solid var(--line);border-bottom:0;font-size:15px}.tabs a:hover{background:#eef6ff}.tabs a:first-child{background:var(--blue);color:#fff;border-color:var(--blue)}.sectionhead{display:flex;justify-content:space-between;gap:12px;align-items:baseline}.sectionhead small,.hint{font-size:14px;color:var(--muted)}.tablewrap{overflow:auto;border-top:2px solid #596879}table{border-collapse:collapse;width:100%;text-align:left;font-size:15px}th,td{padding:13px 15px;border-bottom:1px solid var(--line);vertical-align:middle}thead{background:var(--pale)}th{font-weight:700}code{font-family:Consolas,monospace;font-size:.94em;color:#164d87;overflow-wrap:anywhere}.essential{color:#b03b27;font-size:13px}.auth{padding:14px 17px;border:1px solid var(--line);border-top:0;background:#fafbfd;font-size:15px}.auth strong{color:var(--navy)}.auth small{display:block;margin-left:0;color:var(--muted);font-size:14px}.testbox{border:1px solid #bdcfe2;background:#f5f8fc;padding:24px}.testtop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.testtop strong{color:var(--navy)}.samplelabel{font-size:13px;color:#875009;background:#fff4dc;border:1px solid #ebd5a9;border-radius:3px;padding:3px 9px;white-space:nowrap}label{display:block;font-weight:700;font-size:15px;margin-bottom:8px}.searchrow{display:flex;gap:10px}input{border:1px solid #899caf;border-radius:3px;padding:12px 14px;min-width:0;width:100%;background:#fff;color:var(--ink)}.btn{border:1px solid #afbdcb;background:#fff;color:#273e58;border-radius:3px;min-height:46px;padding:10px 17px;font-weight:700;font-size:15px}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn:hover{filter:brightness(.95)}.searchrow .btn{white-space:nowrap}.hint{margin:10px 0 0}.requestline{font-size:14px;background:#fff;border:1px solid var(--line);padding:9px 13px;margin-top:18px;overflow-wrap:anywhere}.resultstatus{font-size:14px;color:var(--muted);margin:18px 0 10px}.foodcard{background:#fff;border:1px solid #c6d4e2;padding:20px;border-top:3px solid var(--blue)}.foodhead{display:flex;justify-content:space-between;align-items:center;gap:18px}.foodhead h3{font-size:23px;margin:0}.foodhead p{margin:2px 0 0;font-size:14px;color:var(--muted)}.energy{font-size:30px;font-weight:800;color:var(--blue);white-space:nowrap}.energy small{font-size:15px;font-weight:400}.nutrients{display:grid;grid-template-columns:repeat(4,1fr);margin:17px 0 0;border-top:1px solid var(--line);padding-top:15px}.nutrients div{padding:0 12px;border-left:1px solid var(--line)}.nutrients div:first-child{padding-left:0;border:0}.nutrients dt{font-size:14px;color:var(--muted)}.nutrients dd{font-size:19px;font-weight:700;margin:3px 0 0}.empty{background:#fff;border:1px dashed #a7b7c8;padding:24px;text-align:center;color:var(--muted)}details{margin-top:15px}summary{cursor:pointer;font-size:14px;font-weight:700;color:var(--navy);padding:7px 0}pre{background:#172c44;color:#e3edf9;border-radius:3px;padding:18px;font:14px/1.7 Consolas,monospace;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}.copyarea{background:#f5f8fc;border:1px solid var(--line);padding:22px}.copyarea p{margin:0 0 17px;color:var(--muted);font-size:15px}.buttons{display:flex;gap:10px;flex-wrap:wrap}.buttons .btn{flex:1}.copyarea textarea{width:100%;min-height:250px;padding:14px;font-size:14px;border:1px solid #a9b8c8;border-radius:3px;resize:vertical;line-height:1.7}.guidance{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.guidance div{border-top:2px solid #9ebcdf;background:#f5f7fa;padding:17px;font-size:14px;color:var(--muted)}.guidance b{display:block;color:var(--navy);font-size:16px;margin-bottom:5px}footer{border-top:1px solid var(--line);background:#f5f6f8;color:var(--muted);font-size:13px;padding:26px 0}footer b{color:#354558;font-size:15px}footer p{margin:7px 0}#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#173c68;color:#fff;padding:13px 22px;border-radius:5px;box-shadow:0 5px 25px #0002;max-width:calc(100% - 32px);width:max-content;z-index:20;font-size:15px}#toast:empty{display:none}[hidden]{display:none!important}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}.sidebar{display:none}.headernote{display:none}}
+@media(max-width:620px){.wrap{width:calc(100% - 28px)}.notice .wrap{gap:2px}.notice span{font-size:12px}.header{min-height:90px}.brandmark{font-size:20px}.brandtitle{font-size:17px}.brandtitle small{font-size:12px}.mainnav a{font-size:14px;padding:12px 2px}h1{font-size:22px}.crumb{padding:16px 0;font-size:12px}.overview{grid-template-columns:115px 1fr}.overview>*{padding:10px 12px}.flow{font-size:13px;padding:13px 8px;gap:4px}.flow .arrow{font-size:17px}.tabs a{font-size:14px;padding:11px 3px}.sectionhead{display:block}.sectionhead small{display:block;margin:-9px 0 12px}.testbox{padding:16px}.testtop{align-items:flex-start;flex-direction:column}.searchrow{flex-direction:column}th,td{padding:11px 10px;font-size:14px}.tablewrap table{min-width:510px}.foodcard{padding:16px}.energy{font-size:26px}.nutrients{grid-template-columns:repeat(2,1fr);row-gap:16px}.nutrients div:nth-child(3){border:0;padding-left:0}.buttons{flex-direction:column}.guidance{grid-template-columns:1fr;gap:8px}.copyarea{padding:17px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}@media print{.sidebar,.mainnav,.buttons,#toast{display:none}.layout{display:block}.wrap{width:100%}section{break-inside:avoid}.notice{background:white}body{font-size:12px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="notice"><div class="wrap"><b>수업용 API 체험관 · 학습용 화면</b><span>공공데이터포털의 구성을 참고한 교육 자료이며, 정부 공식 사이트가 아닙니다.</span></div></div>
+<header class="wrap header"><a class="brand" href="#main" aria-label="수업용 API 체험관 본문"><div class="brandmark">DATA CLASS<small>OPEN API LAB</small></div><div class="brandtitle">수업용 API 체험관<small>식품영양성분DB API</small></div></a><div class="headernote">회원가입 없이 · 인증키 발급 없이</div></header>
+<nav class="mainnav" aria-label="주 메뉴"><div class="wrap"><a href="#overview">공공데이터</a><a href="#preview">데이터활용</a><a href="#copy">정보공유</a><a href="#guide">이용안내</a></div></nav>
+<div class="wrap"><div class="crumb">홈 &nbsp; › &nbsp; 공공데이터 &nbsp; › &nbsp; Open API &nbsp; › &nbsp; 학습용 상세정보</div>
+<div class="layout"><aside class="sidebar" aria-label="페이지 안내"><h2>공공데이터</h2><a href="#overview">Open API 상세정보</a><a href="#request">요청변수</a><a href="#response">출력결과</a><a href="#preview">미리보기</a><a href="#copy">내 웹앱에 활용하기</a><div class="sidehelp"><b>오늘의 활동</b>음식 이름을 보내고<br>영양정보를 확인한 뒤<br>내 앱에 활용해 보세요.</div></aside>
+<main id="main"><div class="titleline"><div class="eyebrow"><span class="tag">Open API</span><span class="tag gray">학습용</span></div><h1><small>[개발계정]</small> 식품의약품안전처_식품영양성분DB정보</h1><p class="intro">음식 이름을 보내면 영양정보를 돌려주는 API를 체험합니다.</p></div>
+<section id="overview"><h2>서비스 개요</h2><dl class="overview"><dt>제공기관</dt><dd>식품의약품안전처</dd><dt>서비스 유형</dt><dd><strong>REST</strong></dd><dt>데이터 형식</dt><dd><strong>JSON</strong> <small>수업에서 사용</small></dd><dt>체험 방식</dt><dd>저장된 가상 데이터</dd></dl><div class="flow" aria-label="요청과 응답 흐름"><div><b>① 요청 Request</b>음식 이름 보내기</div><span class="arrow" aria-hidden="true">→</span><div><b>② 응답 Response</b>JSON 데이터 받기</div><span class="arrow" aria-hidden="true">→</span><div><b>③ 내 앱에서 활용</b>영양정보 보여주기</div></div><p class="hint">API는 다른 서비스의 정보를 내 앱으로 가져오는 연결 통로입니다. 이 화면은 그 과정을 가상으로 체험합니다.</p></section>
+<nav class="tabs" aria-label="상세정보 바로가기"><a href="#request">요청변수</a><a href="#response">출력결과</a><a href="#preview">미리보기</a><a href="#copy">활용하기</a></nav>
+<section id="request"><div class="sectionhead"><h2><span class="n">01</span>요청변수 <small>Request Parameter</small></h2><small>학생이 입력할 값은 음식 이름 하나!</small></div><div class="tablewrap" tabindex="0" aria-label="요청변수 표, 좁은 화면에서는 좌우로 스크롤"><table><thead><tr><th scope="col">항목명</th><th scope="col">설명</th><th scope="col">입력 예시</th><th scope="col">수업에서 사용</th></tr></thead><tbody><tr><td><code>FOOD_NM_KR</code></td><td>검색할 음식 이름</td><td>김밥</td><td class="essential">직접 입력</td></tr><tr><td><code>type</code></td><td>응답 데이터 형식</td><td><code>json</code></td><td>자동 설정</td></tr></tbody></table></div><div class="auth">인증키 &nbsp; <strong>선생님이 준비했습니다.</strong><small>학생은 회원가입·활용신청·API 발급을 하지 않습니다. 이 파일의 가상 체험에는 인증키가 필요하지 않습니다.</small></div></section>
+<section id="response"><div class="sectionhead"><h2><span class="n">02</span>출력결과 <small>Response</small></h2><small>내 앱에서 사용할 7개 항목</small></div><div class="tablewrap" tabindex="0" aria-label="출력결과 표, 좁은 화면에서는 좌우로 스크롤"><table><thead><tr><th scope="col">항목명</th><th scope="col">학생용 이름</th><th scope="col">명세 설명</th><th scope="col">단위</th></tr></thead><tbody>
+<tr><td><code>FOOD_NM_KR</code></td><td>음식 이름</td><td>식품명</td><td>—</td></tr>
+<tr><td><code>SERVING_SIZE</code></td><td>영양성분 기준량</td><td>영양성분함량기준량</td><td>응답값 확인</td></tr>
+<tr><td><code>AMT_NUM1</code></td><td>열량</td><td>에너지(kcal)</td><td>kcal</td></tr>
+<tr><td><code>AMT_NUM3</code></td><td>단백질</td><td>단백질(g)</td><td>g</td></tr>
+<tr><td><code>AMT_NUM4</code></td><td>지방</td><td>지방(g)</td><td>g</td></tr>
+<tr><td><code>AMT_NUM6</code></td><td>탄수화물</td><td>탄수화물(g)</td><td>g</td></tr>
+<tr><td><code>AMT_NUM13</code></td><td>나트륨</td><td>나트륨(mg)</td><td>mg</td></tr>
+</tbody></table></div><p class="hint">출력명세의 자료형은 모두 문자열입니다. 영양정보는 기준량에 해당하며, 실제 데이터에서 값이 비어 있으면 ‘정보 없음’으로 표시합니다.</p></section>
+<section id="preview"><h2><span class="n">03</span>음식명 검색 테스트 · 미리보기</h2><div class="testbox"><div class="testtop"><strong>이름을 보내고, 결과를 확인해 보세요.</strong><span class="samplelabel">학습용 가상 데이터 · 실제 조회 아님</span></div><form id="searchForm" novalidate><label for="food">음식 이름 <code>FOOD_NM_KR</code></label><div class="searchrow"><input id="food" name="food" value="김밥" maxlength="60" autocomplete="off" placeholder="예: 김밥" aria-describedby="searchHelp"><button class="btn primary" type="submit">영양정보 찾아보기</button></div><p class="hint" id="searchHelp">‘김밥’ 또는 이름의 일부인 ‘김’을 입력해 보세요. 이 파일에는 김밥 예시 1개만 준비되어 있습니다.</p></form><div class="requestline">보내는 정보 &nbsp; <code id="requestText">FOOD_NM_KR=김밥 &amp; type=json</code></div><p class="resultstatus" id="resultStatus" role="status" aria-live="polite">아래는 김밥 결과 예시입니다. 검색 버튼을 눌러 체험해 보세요.</p><div id="result"><article class="foodcard"><div class="foodhead"><div><h3>김밥</h3><p>영양성분 기준량 100g</p></div><div class="energy">320 <small>kcal</small></div></div><dl class="nutrients"><div><dt>탄수화물</dt><dd>48 g</dd></div><div><dt>단백질</dt><dd>9 g</dd></div><div><dt>지방</dt><dd>10 g</dd></div><div><dt>나트륨</dt><dd>650 mg</dd></div></dl></article></div><div id="emptyResult" class="empty" hidden></div><p class="hint">※ 위 수치는 화면 학습을 위한 가상 예시이며, 실제 김밥의 영양정보가 아닙니다.</p><details><summary>JSON 응답 예시 펼쳐보기</summary><p class="hint">항목명과 값이 짝을 이루는 모습입니다. 실제 API의 전체 응답 중 필요한 항목만 보여주는 학습용 배열입니다.</p><pre id="jsonOutput"></pre></details></div></section>
+<section id="copy"><h2><span class="n">04</span>내 웹앱에 활용하기</h2><div class="copyarea"><p>복사한 내용을 Gemini에 붙여넣으세요. 이미 작성한 웹앱 제작 프롬프트가 있다면 맨 뒤에 추가하면 됩니다.</p><div class="buttons"><button class="btn" id="copyInfo" type="button">API 사용 정보 복사하기</button><button class="btn primary" id="copyPrompt" type="button">웹앱 제작용 프롬프트 복사하기</button></div><details id="infoDetails"><summary>API 사용 정보 내용 보기</summary><textarea id="infoText" readonly aria-label="복사할 API 사용 정보"></textarea></details><details id="promptDetails"><summary>웹앱 제작용 프롬프트 내용 보기</summary><textarea id="promptText" readonly aria-label="복사할 웹앱 제작용 프롬프트"></textarea></details><p class="hint" style="margin-top:14px">자동 복사가 차단되면 내용이 펼쳐집니다. 선택된 내용을 Ctrl+C 또는 길게 눌러 복사하세요.</p></div></section>
+<section id="guide"><h2>이용안내</h2><div class="guidance"><div><b>1. 요청과 응답 살펴보기</b>입력한 음식 이름이 요청변수에 어떻게 들어가는지, 결과가 JSON으로 어떻게 표현되는지 확인하세요.</div><div><b>2. 내 웹앱에 추가하기</b>제작 프롬프트를 복사해 음식 검색과 식단 추가·삭제, 영양소 합계 기능을 만들어 보세요.</div><div><b>3. 완성한 앱 확인하기</b>검색·추가·삭제가 되는지 확인하고, 데이터의 출처와 가상 데이터 사용 여부를 표시하세요.</div></div><details><summary>선생님용 안내 · 실제 데이터 연결</summary><p class="hint">이 HTML은 외부 연결 없이 동작하는 가상 체험용 파일입니다. 실제 검색을 사용하려면 인증키를 서버에 보관하는 교사용 중계 서비스가 별도로 필요합니다. 학생에게는 중계 주소와 요청·응답 규칙만 제공하고, HTML이나 제작 프롬프트에 실제 인증키를 넣지 마세요. 현재 파일에는 실제 API 연결이 구현되어 있지 않습니다.</p></details></section>
+</main></div></div>
+<footer><div class="wrap"><b>수업용 API 체험관 · 학습용 화면</b><p>정부 공식 사이트가 아닙니다. 원본 공공데이터포털의 정보 구조를 참고해 수업에 필요한 항목만 재구성했습니다.</p><p>참고 자료: 공공데이터포털 개발계정 HTML · 출력메세지_식품영양성분DB정보.xlsx · 2일차 강의안.pptx</p><p>필드 정의: 제공된 출력명세 기준 / 미리보기 수치: 학습용 가상 예시</p></div></footer>
+<div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<noscript><p class="wrap">검색과 복사 기능을 사용하려면 브라우저에서 JavaScript를 허용해 주세요. 요청변수와 출력결과 표는 그대로 읽을 수 있습니다.</p></noscript>
+<script>
+'use strict';
+// Intentionally offline. Never store a real API credential in this file.
+const sample = Object.freeze({FOOD_NM_KR:'김밥',SERVING_SIZE:'100g',AMT_NUM1:'320',AMT_NUM3:'9',AMT_NUM4:'10',AMT_NUM6:'48',AMT_NUM13:'650'});
+const el = id => document.getElementById(id);
+function searchSamples(value) {const q=value.normalize('NFC').trim();return q && sample.FOOD_NM_KR.includes(q) ? [sample] : [];}
+el('jsonOutput').textContent=JSON.stringify([sample],null,2);
+el('searchForm').addEventListener('submit',event=>{
+ event.preventDefault();const q=el('food').value.normalize('NFC').trim();const matches=searchSamples(q);
+ el('requestText').textContent=q ? 'FOOD_NM_KR='+q+' & type=json' : '음식 이름을 입력하면 요청변수가 표시됩니다.';
+ el('result').hidden=matches.length===0;el('emptyResult').hidden=matches.length>0;
+ el('food').setAttribute('aria-invalid',q?'false':'true');
+ el('emptyResult').textContent=q?'일치하는 가상 예시가 없습니다. ‘김밥’으로 다시 검색해 보세요.':'음식 이름을 입력해 주세요. 예: 김밥';
+ el('resultStatus').textContent=q ? '가상 데이터 검색 결과 '+matches.length+'건 · 실제 API를 호출하지 않았습니다.' : '검색할 음식 이름이 비어 있습니다.';
+ el('jsonOutput').textContent=JSON.stringify(matches,null,2);if(!q)el('food').focus();
+});
+const apiInfo=`식품의약품안전처_식품영양성분DB정보 API 사용 정보
+
+목적: 음식 이름으로 영양정보를 검색하는 웹앱을 만들어 주세요.
+서비스 유형: REST / 수업에서 사용할 응답 형식: JSON
+요청변수: FOOD_NM_KR = 검색할 음식 이름, type=json = JSON 응답
+
+사용할 출력 항목 (원본 명세의 자료형은 모두 문자열):
+FOOD_NM_KR = 음식 이름 (식품명)
+SERVING_SIZE = 영양성분 기준량 (영양성분함량기준량)
+AMT_NUM1 = 열량(kcal)
+AMT_NUM3 = 단백질(g)
+AMT_NUM4 = 지방(g)
+AMT_NUM6 = 탄수화물(g)
+AMT_NUM13 = 나트륨(mg)
+
+API 인증 및 연결은 선생님이 제공한 중계 서비스와 요청·응답 규칙을 사용하세요.
+현재 체험관은 실제 API 연결 없이 저장된 가상 예시를 검색합니다.
+선생님이 중계 주소를 아직 제공하지 않았다면 주소나 인증키를 추측하지 말고 아래 가상 데이터를 사용하세요. 화면에 '학습용 가상 데이터 · 실제 조회 아님'을 표시하세요.
+인증키는 HTML, 브라우저 코드, 저장소 또는 프롬프트에 넣지 마세요. 학생에게 회원가입이나 API 키 발급을 요청하지 마세요.
+
+학습용 가상 데이터 (실제 영양정보 아님):
+${JSON.stringify([sample],null,2)}`;
+const appPrompt=`내가 만들고 있는 웹앱에 음식 검색과 식단 관리 기능을 추가해줘. 기존 디자인과 기능은 최대한 유지해줘. 기존 앱이 없다면 휴대폰에서도 보기 좋은 단일 HTML로 만들어줘.
+
+1. 음식 검색
+- 사용자가 음식 이름을 입력하고 검색 버튼이나 Enter를 누르면 검색해줘.
+- 음식 이름, 영양성분 기준량, 열량(kcal), 탄수화물(g), 단백질(g), 지방(g), 나트륨(mg)을 카드로 보여줘.
+- 빈 검색어, 검색 중, 결과 없음, 연결 오류 상태를 이해하기 쉽게 표시해줘.
+- 사용자 입력과 외부 데이터는 안전한 텍스트로 표시해줘.
+
+2. 내 식단
+- 검색된 음식마다 '내 식단에 추가' 버튼을 만들어줘.
+- 추가 1회는 표시된 영양성분 기준량 1개 분량으로 계산하고 그 기준량을 식단에도 표시해줘. 100g을 한 줄 또는 한 끼로 간주하지 마.
+- 여러 음식을 추가하면 열량, 탄수화물, 단백질, 지방 합계를 계산해줘.
+- 같은 음식을 여러 번 추가할 수 있게 하고, 각 추가 항목을 개별 삭제할 수 있게 해줘. 삭제하면 합계도 즉시 갱신해줘.
+- 원본 숫자는 문자열이므로 유효한 숫자인지 확인한 뒤 변환해줘. 빈 값이나 알 수 없는 값은 0으로 오인하지 말고 '정보 없음'으로 표시해줘. 누락값이 있는 합계는 '확인된 값만 합산'이라고 알려줘.
+
+3. API 연결과 예시 모드
+- 아래의 필드 정의와 연결 규칙을 따라줘.
+- 교사용 중계 주소가 없다면 동작하는 가상 데이터 모드로 먼저 완성해줘. 실제 데이터라고 주장하지 마.
+- 실제 연결 주소는 임의로 만들지 말고, 선생님이 제공한 주소와 규칙이 있을 때만 연결해줘. API 키는 서버에서만 관리해줘.
+- 실제 연결에 실패했을 때 가상 결과를 실제 결과인 것처럼 대신 보여주지 마.
+
+4. 완성 후
+- 검색, 식단 추가, 같은 음식 두 번 추가, 개별 삭제, 합계 계산을 확인할 수 있게 해줘.
+- 학생이 회원가입이나 API 발급 없이 사용할 수 있게 해줘.
+- 화면에 데이터 출처와 가상 데이터 사용 여부를 표시해줘.
+
+${apiInfo}`;
+el('infoText').value=apiInfo;el('promptText').value=appPrompt;
+let toastTimer;
+function toast(message){clearTimeout(toastTimer);el('toast').textContent=message;toastTimer=setTimeout(()=>{el('toast').textContent='';},4200);}
+async function copyText(text,id,detailsId){
+ let copied=false;
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);copied=true;}}catch(_error){}
+ if(!copied){
+  const details=el(detailsId), field=el(id), prior=details.open, focus=document.activeElement;
+  details.open=true;field.focus();field.select();field.setSelectionRange(0,field.value.length);
+  try{copied=document.execCommand('copy');}catch(_error){}
+  if(copied){details.open=prior;if(focus)focus.focus();}
+ }
+ toast(copied?'복사했습니다. Gemini에 붙여넣어 보세요.':'자동 복사가 제한되었습니다. 선택된 내용을 직접 복사해 주세요.');
+}
+el('copyInfo').addEventListener('click',()=>copyText(apiInfo,'infoText','infoDetails'));
+el('copyPrompt').addEventListener('click',()=>copyText(appPrompt,'promptText','promptDetails'));
+</script>
+</body>
+</html>
