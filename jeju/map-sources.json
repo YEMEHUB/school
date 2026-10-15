@@ -1,0 +1,559 @@
+{
+  "coastline": "https://github.com/nvkelso/natural-earth-vector",
+  "note": "Natural Earth public domain coastline. Small islands drawn schematically. Position dots indicate approximate locations; id 57 indicates Seongsan area, not a verified venue coordinate.",
+  "coordinate_sources": [
+    {
+      "id": 0,
+      "name": "에코랜드 테마파크",
+      "latitude": 33.4617075,
+      "longitude": 126.6703845,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500438"
+    },
+    {
+      "id": 1,
+      "name": "비자림",
+      "latitude": 33.491318,
+      "longitude": 126.811386,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500270"
+    },
+    {
+      "id": 2,
+      "name": "만장굴",
+      "latitude": 33.5283774,
+      "longitude": 126.7716157,
+      "coordinateSource": "https://findby.co.kr/details/63348-501104847634-st-6592ed6a5104b6a40c008871"
+    },
+    {
+      "id": 3,
+      "name": "월정리해변",
+      "latitude": 33.5551118,
+      "longitude": 126.798641,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500496"
+    },
+    {
+      "id": 4,
+      "name": "세화해변",
+      "latitude": 33.52530490304795,
+      "longitude": 126.86127604404146,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500361"
+    },
+    {
+      "id": 5,
+      "name": "우도",
+      "latitude": 33.506439,
+      "longitude": 126.9534006,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500477"
+    },
+    {
+      "id": 6,
+      "name": "성산일출봉",
+      "latitude": 33.462147,
+      "longitude": 126.936424,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500349"
+    },
+    {
+      "id": 7,
+      "name": "섭지코지",
+      "latitude": 33.4236948,
+      "longitude": 126.9296022,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500343"
+    },
+    {
+      "id": 8,
+      "name": "아쿠아플라넷 제주",
+      "latitude": 33.4325283,
+      "longitude": 126.9272108,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500565"
+    },
+    {
+      "id": 9,
+      "name": "표선해수욕장",
+      "latitude": 33.32723069299215,
+      "longitude": 126.83810144720462,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000001196"
+    },
+    {
+      "id": 10,
+      "name": "제주민속촌",
+      "latitude": 33.3225098,
+      "longitude": 126.8418176,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500553"
+    },
+    {
+      "id": 11,
+      "name": "제주허브동산",
+      "latitude": 33.3225332,
+      "longitude": 126.8228665,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500582"
+    },
+    {
+      "id": 12,
+      "name": "남원큰엉해안경승지",
+      "latitude": 33.27338,
+      "longitude": 126.70375,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000019750"
+    },
+    {
+      "id": 13,
+      "name": "쇠소깍",
+      "latitude": 33.2540919,
+      "longitude": 126.6222974,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500384"
+    },
+    {
+      "id": 14,
+      "name": "김녕해수욕장",
+      "latitude": 33.5570238,
+      "longitude": 126.7598808,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500083"
+    },
+    {
+      "id": 15,
+      "name": "제주해녀박물관",
+      "latitude": 33.5242827,
+      "longitude": 126.8629097,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500580"
+    },
+    {
+      "id": 16,
+      "name": "동백동산",
+      "latitude": 33.512349655007505,
+      "longitude": 126.70726440206909,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500156"
+    },
+    {
+      "id": 17,
+      "name": "사려니숲길",
+      "latitude": 33.4180631,
+      "longitude": 126.6534847,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500281"
+    },
+    {
+      "id": 18,
+      "name": "곽지과물해변",
+      "latitude": 33.45122,
+      "longitude": 126.3058,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500056"
+    },
+    {
+      "id": 19,
+      "name": "새별오름",
+      "latitude": 33.36723,
+      "longitude": 126.35711,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500309"
+    },
+    {
+      "id": 20,
+      "name": "제주공룡랜드",
+      "latitude": 33.44299,
+      "longitude": 126.43244,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500536"
+    },
+    {
+      "id": 21,
+      "name": "한림공원",
+      "latitude": 33.3879944,
+      "longitude": 126.2397837,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500690"
+    },
+    {
+      "id": 22,
+      "name": "협재굴",
+      "latitude": 33.3894949,
+      "longitude": 126.2396825,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500696"
+    },
+    {
+      "id": 23,
+      "name": "비양도",
+      "latitude": 33.4059351,
+      "longitude": 126.222884,
+      "coordinateSource": "https://findby.co.kr/details/63033-501104849209-st-652b629a8c641f9e38a489a2"
+    },
+    {
+      "id": 24,
+      "name": "환상숲 곶자왈공원",
+      "latitude": 33.322342,
+      "longitude": 126.26323,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500702"
+    },
+    {
+      "id": 25,
+      "name": "저지문화예술인마을",
+      "latitude": 33.33264,
+      "longitude": 126.25599,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000022005"
+    },
+    {
+      "id": 26,
+      "name": "수월봉지질트레일",
+      "latitude": 33.293736,
+      "longitude": 126.16281,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500388"
+    },
+    {
+      "id": 27,
+      "name": "송악산",
+      "latitude": 33.2077419,
+      "longitude": 126.2909048,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500378"
+    },
+    {
+      "id": 28,
+      "name": "가파도",
+      "latitude": 33.170017,
+      "longitude": 126.271515,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000018432"
+    },
+    {
+      "id": 29,
+      "name": "마라도",
+      "latitude": 33.1170928491147,
+      "longitude": 126.26747322880556,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500171"
+    },
+    {
+      "id": 30,
+      "name": "오설록 티뮤지엄",
+      "latitude": 33.30601,
+      "longitude": 126.2901309,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500457"
+    },
+    {
+      "id": 31,
+      "name": "제주항공우주박물관",
+      "latitude": 33.30413,
+      "longitude": 126.299675,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500578"
+    },
+    {
+      "id": 32,
+      "name": "소인국테마파크",
+      "latitude": 33.28166,
+      "longitude": 126.3312397,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500372"
+    },
+    {
+      "id": 33,
+      "name": "세계자동차박물관",
+      "latitude": 33.283195,
+      "longitude": 126.34977,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500355"
+    },
+    {
+      "id": 34,
+      "name": "사계해변",
+      "latitude": 33.22811456446537,
+      "longitude": 126.3084815391785,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500274"
+    },
+    {
+      "id": 35,
+      "name": "천지연폭포",
+      "latitude": 33.2447173,
+      "longitude": 126.5598201,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500618"
+    },
+    {
+      "id": 36,
+      "name": "정방폭포",
+      "latitude": 33.244854,
+      "longitude": 126.5718,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500531"
+    },
+    {
+      "id": 37,
+      "name": "외돌개",
+      "latitude": 33.240063,
+      "longitude": 126.54573,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000018409"
+    },
+    {
+      "id": 38,
+      "name": "중문색달해변",
+      "latitude": 33.244972488701166,
+      "longitude": 126.41164624741248,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_200000000007158"
+    },
+    {
+      "id": 39,
+      "name": "대포주상절리",
+      "latitude": 33.23834,
+      "longitude": 126.42586,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000020476"
+    },
+    {
+      "id": 40,
+      "name": "천제연폭포",
+      "latitude": 33.252678,
+      "longitude": 126.41844,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000022879"
+    },
+    {
+      "id": 41,
+      "name": "제주월드컵경기장",
+      "latitude": 33.2464668,
+      "longitude": 126.5090074,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_300000000013152"
+    },
+    {
+      "id": 42,
+      "name": "약천사",
+      "latitude": 33.245766,
+      "longitude": 126.44933,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000018300"
+    },
+    {
+      "id": 43,
+      "name": "이중섭거리",
+      "latitude": 33.2455473,
+      "longitude": 126.5644088,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000020199"
+    },
+    {
+      "id": 44,
+      "name": "산방산",
+      "latitude": 33.236614,
+      "longitude": 126.31289,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500285"
+    },
+    {
+      "id": 45,
+      "name": "서귀포자연휴양림",
+      "latitude": 33.31167,
+      "longitude": 126.45876,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500327"
+    },
+    {
+      "id": 46,
+      "name": "보목포구",
+      "latitude": 33.239265,
+      "longitude": 126.606895,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000021411"
+    },
+    {
+      "id": 47,
+      "name": "법환포구",
+      "latitude": 33.237774,
+      "longitude": 126.51579,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000018406"
+    },
+    {
+      "id": 48,
+      "name": "칠십리시공원",
+      "latitude": 33.24609,
+      "longitude": 126.5538,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000018447"
+    },
+    {
+      "id": 49,
+      "name": "삼매봉",
+      "latitude": 33.2639577,
+      "longitude": 126.5507293,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500297"
+    },
+    {
+      "id": 50,
+      "name": "서귀포문화예술회관",
+      "latitude": 33.24523,
+      "longitude": 126.55175,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000000979"
+    },
+    {
+      "id": 51,
+      "name": "서귀포잠수함",
+      "latitude": 33.2392231,
+      "longitude": 126.5586562,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500329"
+    },
+    {
+      "id": 52,
+      "name": "카멜리아힐",
+      "latitude": 33.289135,
+      "longitude": 126.37011,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000001195"
+    },
+    {
+      "id": 53,
+      "name": "신화테마월드",
+      "latitude": 33.30525966712617,
+      "longitude": 126.31521554103088,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000022771"
+    },
+    {
+      "id": 54,
+      "name": "도순다원",
+      "latitude": 33.273037,
+      "longitude": 126.48306,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000019984"
+    },
+    {
+      "id": 55,
+      "name": "머체왓숲길",
+      "latitude": 33.3301649,
+      "longitude": 126.6789687,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_200000000008001"
+    },
+    {
+      "id": 56,
+      "name": "백약이오름",
+      "latitude": 33.437283,
+      "longitude": 126.79018,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500232"
+    },
+    {
+      "id": 57,
+      "name": "드르쿰다in성산",
+      "latitude": 33.45,
+      "longitude": 126.92,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_300000000014605"
+    },
+    {
+      "id": 58,
+      "name": "마노르블랑",
+      "latitude": 33.254242,
+      "longitude": 126.29465,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_000000000022562"
+    },
+    {
+      "id": 59,
+      "name": "용두암",
+      "latitude": 33.5149624,
+      "longitude": 126.5116869,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500469"
+    },
+    {
+      "id": 60,
+      "name": "이호테우해변",
+      "latitude": 33.4961851,
+      "longitude": 126.4559518,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_200000000007344"
+    },
+    {
+      "id": 61,
+      "name": "한라수목원",
+      "latitude": 33.469604,
+      "longitude": 126.4918,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500689"
+    },
+    {
+      "id": 62,
+      "name": "도두동 무지개도로",
+      "latitude": 33.5093109,
+      "longitude": 126.4739327,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_200000000007625"
+    },
+    {
+      "id": 63,
+      "name": "삼양검은모래해변",
+      "latitude": 33.525845,
+      "longitude": 126.5863,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500301"
+    },
+    {
+      "id": 64,
+      "name": "제주목관아",
+      "latitude": 33.514103,
+      "longitude": 126.52193,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500551"
+    },
+    {
+      "id": 65,
+      "name": "동문시장",
+      "latitude": 33.5116033,
+      "longitude": 126.5260192,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500745"
+    },
+    {
+      "id": 66,
+      "name": "산지천갤러리",
+      "latitude": 33.5151351,
+      "longitude": 126.5284001,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_200000000008025"
+    },
+    {
+      "id": 67,
+      "name": "사라봉공원",
+      "latitude": 33.51921,
+      "longitude": 126.5473,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500277"
+    },
+    {
+      "id": 68,
+      "name": "제주돌문화공원",
+      "latitude": 33.4180631,
+      "longitude": 126.6534847,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500547"
+    },
+    {
+      "id": 69,
+      "name": "넥슨컴퓨터박물관",
+      "latitude": 33.4862871,
+      "longitude": 126.428576,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500099"
+    },
+    {
+      "id": 70,
+      "name": "제주난타극장",
+      "latitude": 33.445293,
+      "longitude": 126.54792,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500541"
+    },
+    {
+      "id": 71,
+      "name": "수목원테마파크",
+      "latitude": 33.4705937,
+      "longitude": 126.4883601,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500386"
+    },
+    {
+      "id": 72,
+      "name": "한라산 성판악코스",
+      "latitude": 33.385,
+      "longitude": 126.61916666666666,
+      "coordinateSource": "https://www.kma.go.kr/jeju/html/observation/observation_info.jsp"
+    },
+    {
+      "id": 73,
+      "name": "아르떼뮤지엄 제주",
+      "latitude": 33.3973766,
+      "longitude": 126.3457218,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_200000000010958"
+    },
+    {
+      "id": 74,
+      "name": "9.81 파크",
+      "latitude": 33.3928867,
+      "longitude": 126.3586318,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CNTS_200000000008633"
+    },
+    {
+      "id": 75,
+      "name": "제주도립미술관",
+      "latitude": 33.4525957,
+      "longitude": 126.4896313,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500544"
+    },
+    {
+      "id": 76,
+      "name": "제주민속자연사박물관",
+      "latitude": 33.5061399,
+      "longitude": 126.5316454,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500545"
+    },
+    {
+      "id": 77,
+      "name": "용연계곡",
+      "latitude": 33.5152024,
+      "longitude": 126.514026,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500472"
+    },
+    {
+      "id": 78,
+      "name": "제주향교",
+      "latitude": 33.5115293,
+      "longitude": 126.5158233,
+      "coordinateSource": "https://visitjeju.net/kr/detail/view?contentsid=CONT_000000000500581"
+    }
+  ]
+}
