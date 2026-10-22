@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>식단 문제 확인하기 | 자료 검색</title>
+<style>
+:root{color-scheme:light;--ink:#242424;--orange:#fa6c07;--green:#1dbf68}
+*{box-sizing:border-box}body{margin:0;background:#f2f4f7;color:var(--ink);font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif}main{width:min(1050px,calc(100% - 30px));margin:28px auto;background:white;padding:clamp(25px,5vw,66px);border-radius:20px;box-shadow:0 8px 30px #1111}.heading{text-align:center;font-size:clamp(27px,4vw,45px);font-weight:850;letter-spacing:-1.4px}.heading span{color:var(--orange);margin-right:15px}.rule{border-bottom:2px dashed #dedede;margin:26px 0 42px}.section{font-size:clamp(22px,3vw,30px);font-weight:850;border-left:8px solid var(--green);padding-left:13px;margin-bottom:10px}.description{color:#666;font-size:16px;line-height:1.6;margin:0 0 28px 20px}.buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.search{display:flex;align-items:center;justify-content:space-between;gap:14px;border:2px solid #dfeee5;background:#f7fcf9;padding:20px 21px;border-radius:14px;text-decoration:none;color:#202020;font-weight:750;font-size:clamp(17px,2vw,23px);transition:transform .15s,border-color .15s,background .15s}.search:hover,.search:focus-visible{border-color:var(--green);background:#eafbf0;transform:translateY(-2px);outline:none}.num{color:var(--green);font-size:16px;margin-right:12px}.label{flex:1}.arrow{color:#12a557;font-size:22px}.tip{margin-top:30px;background:#fff7ee;border-radius:11px;padding:17px 20px;color:#7e4b1b;line-height:1.6;font-size:15px}.tip strong{color:#d96300}.custom{margin-top:26px;border:1px solid #cae7d6;border-radius:15px;background:#f7fcf9;padding:22px}.custom h3{margin:0 0 9px;font-size:21px}.custom p{margin:0 0 14px;font-size:15px;color:#555;line-height:1.65}.query{font-family:Consolas,monospace;background:#e9f5ed;padding:3px 7px;border-radius:5px;color:#137744}.custom form{display:flex;gap:10px}.custom input{flex:1;min-width:0;border:1.5px solid #bed7c7;border-radius:10px;padding:14px;font-size:17px}.custom button{border:0;border-radius:10px;background:#138d50;color:white;font-weight:750;font-size:16px;padding:12px 20px;cursor:pointer}.custom button:hover{background:#0a6d3c}@media(max-width:530px){.custom form{flex-direction:column}}.bottom{margin-top:30px;text-align:right;font-weight:800;color:#79b72b} @media(max-width:700px){.buttons{grid-template-columns:1fr}.rule{margin:20px 0 32px}.search{padding:18px}.description{margin-left:0}}
+</style>
+</head>
+<body><main>
+<div class="heading"><span>01</span>식단 문제 확인하기</div><div class="rule"></div>
+<div class="section">관련 자료 수집하기</div>
+<p class="description">팀에서 정한 주제의 버튼을 눌러 관련 자료를 찾아보세요.<br>정부기관 사이트(<b>go.kr</b>)의 <b>PDF 자료</b>를 검색합니다.</p>
+<div class="buttons" id="links"></div>
+<section class="custom" aria-labelledby="custom-title">
+<h3 id="custom-title">🔎 다른 키워드도 검색해 보세요!</h3>
+<p>위 버튼을 누르면 <span class="query">site:go.kr filetype:pdf</span> 조건으로 구글 검색 결과가 <b>새 탭</b>에서 열립니다.<br><b>site:go.kr</b>은 정부기관 홈페이지를, <b>filetype:pdf</b>는 PDF 문서를 찾는 검색 조건이에요.<br>원하는 주제가 없다면 아래에 키워드를 직접 입력해 보세요. 같은 조건이 자동으로 적용됩니다.</p>
+<form id="custom-search"><input id="keyword" type="search" placeholder="예: 청소년 수분 섭취" aria-label="검색할 키워드 입력" required><button type="submit">자료 검색 ↗</button></form>
+</section>
+<div class="tip"><strong>활동 방법</strong> · STEP 1. 팀별로 키워드 하나 선택 → STEP 2. 팀원 각자 자료 수집 → STEP 3. 협의하여 사용할 자료 선별</div>
+<div class="bottom">디지털새싹</div>
+</main>
+<script>
+const topics=[
+'청소년 아침결식',
+'청소년 편식',
+'청소년 영양불균형',
+'청소년 패스트푸드섭취',
+'청소년 채소섭취',
+'청소년 당류섭취',
+'청소년 식습관'
+];
+document.querySelector('#links').replaceChildren(...topics.map((topic,i)=>{
+ const a=document.createElement('a');a.className='search';a.href='https://www.google.com/search?q='+encodeURIComponent(topic+' site:go.kr filetype:pdf');a.target='_blank';a.rel='noopener noreferrer';
+ const num=document.createElement('span');num.className='num';num.textContent=String(i+1).padStart(2,'0');
+ const label=document.createElement('span');label.className='label';label.textContent=topic;
+ const arrow=document.createElement('span');arrow.className='arrow';arrow.textContent='↗';a.append(num,label,arrow);return a;
+}));
+document.querySelector('#custom-search').addEventListener('submit',e=>{
+ e.preventDefault();const keyword=document.querySelector('#keyword').value.trim();if(!keyword)return;
+ window.open('https://www.google.com/search?q='+encodeURIComponent(keyword+' site:go.kr filetype:pdf'),'_blank','noopener,noreferrer');
+});
+</script></body></html>
