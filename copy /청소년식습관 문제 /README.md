@@ -1,1 +1,1 @@
-https://yemehub.github.io/school/copy/청소년식습관문제/
+https://yemehub.github.io/school/copy%20/청소년식습관%20문제%20
