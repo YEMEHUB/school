@@ -1,1 +1,2 @@
-https://github.com/YEMEHUB/school/new/main/hyodon_excel_generator/
+https://github.com/YEMEHUB/school/hyodon_excel_generator/
+hyodon_excel_generator/index.html
