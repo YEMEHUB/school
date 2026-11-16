@@ -19,16 +19,80 @@ button{width:100%;padding:16px;border:0;border-radius:12px;background:#2ed7a5;fo
 <div class="sub">필요한 코드는 물론, 실습용 긴 글도 버튼 한 번으로 복사!</div>
 
 <div class="card">
-<div class="tag">CODE 01</div><h2>🔢 소수 판별하기</h2>
-<pre id="prime">{{ (() => {
-  const n = $json.숫자;
-  if (n < 2) return false;
-  for (let i = 2; i <= Math.sqrt(n); i++) {
-    if (n % i === 0) return false;
+<div class="tag">CODE 01</div><h2>💻 결과페이지 만들기 </h2>
+<pre id="prime"><!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+
+<style>
+  body {
+    margin: 0;
+    padding: 50px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #fff7d6, #e8f7ff);
   }
-  return true;
-})() }}</pre>
-<button onclick="copyIt('prime','m1')">📋 소수 판별식 복사하기</button><div id="m1" class="msg"></div>
+
+  .card {
+    max-width: 700px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 30px;
+    padding: 50px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  }
+
+  .emoji {
+    font-size: 70px;
+  }
+
+  h1 {
+    font-size: 36px;
+    margin: 15px 0;
+  }
+
+  .message {
+    margin-top: 30px;
+    padding: 25px;
+    background: #fff7cc;
+    border-radius: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.6;
+  }
+
+  .footer {
+    margin-top: 25px;
+    font-size: 16px;
+    color: #777;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <div class="emoji">👋</div>
+
+  <h1>AI AGENT RESULT</h1>
+
+  <p>당신을 위한 메시지가 도착했어요!</p>
+
+  <div class="message">
+    {{ $json["결과메시지"] }}
+  </div>
+
+  <div class="footer">
+    ✨ 우리팀이 만든 AI 에이전트 ✨
+  </div>
+
+</div>
+
+</body>
+</html></pre>
+<button onclick="copyIt('prime','m1')">📋 결과페이지 html 코드 복사하기</button><div id="m1" class="msg"></div>
 </div>
 
 <div class="card">
@@ -44,7 +108,7 @@ button{width:100%;padding:16px;border:0;border-radius:12px;background:#2ed7a5;fo
 
 
 <div class="card">
-<div class="tag">CODE 02</div><h2>🔒 개인정보 가리기</h2>
+<div class="tag">CODE 02</div><h2> 🔒개인정보 가리기</h2>
 <pre id="privacy">const name = $json['이름'] || '';
 const phone = $json['전화번호'] || '';
 
