@@ -16,80 +16,8 @@ button{width:100%;padding:16px;border:0;border-radius:12px;background:#2ed7a5;fo
 </head>
 <body><div class="wrap">
 <h1>🍋 n8n 실습 자료 보관함</h1>
-<div class="sub">필요한 코드는 물론, 실습용 긴 글도 버튼 한 번으로 복사!</div>
+<div class="sub"> 복사하기 버튼을 눌러 복사하세요! </div>
 
-<div class="card">
-<div class="tag">CODE 01</div><h2>💻 결과페이지 만들기 </h2>
-<pre id="prime">
-<style>
-  body {
-    margin: 0;
-    padding: 50px;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #fff7d6, #e8f7ff);
-  }
-
-  .card {
-    max-width: 700px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 30px;
-    padding: 50px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-  }
-
-  .emoji {
-    font-size: 70px;
-  }
-
-  h1 {
-    font-size: 36px;
-    margin: 15px 0;
-  }
-
-  .message {
-    margin-top: 30px;
-    padding: 25px;
-    background: #fff7cc;
-    border-radius: 20px;
-    font-size: 26px;
-    font-weight: bold;
-    line-height: 1.6;
-  }
-
-  .footer {
-    margin-top: 25px;
-    font-size: 16px;
-    color: #777;
-  }
-</style>
-</head>
-
-<body>
-
-<div class="card">
-
-  <div class="emoji">👋</div>
-
-  <h1>AI AGENT RESULT</h1>
-
-  <p>당신을 위한 메시지가 도착했어요!</p>
-
-  <div class="message">
-    {{ $json["결과메시지"] }}
-  </div>
-
-  <div class="footer">
-    ✨ 우리팀이 만든 AI 에이전트 ✨
-  </div>
-
-</div>
-
-</body>
-</html></pre>
-<button onclick="copyIt('prime','m1')">📋 결과페이지 html 코드 복사하기</button><div id="m1" class="msg"></div>
-</div>
 
 <div class="card">
 <div class="tag">TEXT 01</div><h2>🤖 AI 요약 실습 원문</h2>
