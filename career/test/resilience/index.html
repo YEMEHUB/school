@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나의 역경지수 진단하기</title>
+<style>
+  :root{color-scheme:light;--ink:#30243e;--muted:#61536d;--purple:#704798;--line:#e6d9ee;--pink:#ffedf3;--lilac:#f1eafa}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fcf8fc;color:var(--ink);font-family:"Malgun Gothic",system-ui,sans-serif;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+  main{width:min(920px,calc(100% - 32px));margin:clamp(16px,5vw,60px) auto}
+  h1,h2,h3,p{margin:0} h1{font-size:clamp(1.75rem,5vw,3.25rem);line-height:1.2;letter-spacing:-.06em}
+  h2{font-size:1.45rem;letter-spacing:-.04em} h3{font-size:1rem}
+  .hero{padding:clamp(24px,6vw,62px);border-radius:28px;background:linear-gradient(125deg,#ffe4ee,#ede1fc);border:1px solid var(--line)}
+  .hero p{color:var(--muted);margin-top:14px}
+  .progress{position:sticky;top:0;z-index:1;padding:14px 16px;background:#fcf8fc;border-bottom:1px solid var(--line)}
+  .progress div,.section-head,.score-line,.result-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  progress{display:block;width:100%;height:9px;margin-top:7px;border:0;border-radius:10px;overflow:hidden;background:#e8ddf0;accent-color:var(--purple)}
+  progress::-webkit-progress-bar{background:#e8ddf0} progress::-webkit-progress-value{background:var(--purple)} progress::-moz-progress-bar{background:var(--purple)}
+  .muted,small{color:var(--muted)}
+  .area,.summary,.result-card{margin-top:20px;padding:clamp(14px,3vw,28px);background:white;border:1px solid var(--line);border-radius:22px}
+  .section-head{margin-bottom:16px}
+  .question{min-width:0;margin:0 0 12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff7fa;scroll-margin-top:90px}
+  .question:nth-of-type(even){background:#f8f3fe}
+  .question.missing{border:2px solid #a22f57}
+  legend{max-width:100%;padding:0 4px;font-weight:650}
+  .number{display:inline-block;color:#6a4489;margin-right:6px;min-width:2ch}
+  .choices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+  .choice{position:relative}
+  .choice input{position:absolute;width:1px;height:1px;opacity:0}
+  .choice span{display:grid;place-content:center;text-align:center;min-height:63px;padding:4px 2px;border:1px solid var(--line);border-radius:10px;background:white;cursor:pointer;line-height:1.25;font-size:clamp(.65rem,2vw,.85rem)}
+  .choice b{font-size:1rem;margin-bottom:3px}
+  .choice span:hover{border-color:var(--purple)}
+  .choice input:checked + span{background:var(--purple);color:white;border-color:var(--purple)}
+  :focus-visible,.choice input:focus-visible + span{outline:3px solid #8a409b;outline-offset:3px}
+  button{font:inherit;font-weight:700;min-height:46px;padding:9px 19px;border-radius:12px;border:1px solid transparent;background:var(--purple);color:white;cursor:pointer}
+  button.secondary{background:white;border-color:var(--line);color:var(--ink)}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+  .error{color:#912648;font-weight:650}
+  .result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px}
+  .result-card{padding:16px;background:#fff7fa}
+  .result-card:nth-child(2){background:#f5eefc}
+  .score-line{margin:8px 0}.score{font-size:1.65rem;font-weight:800;color:#633d88}
+  .assessment{font-weight:700;margin:10px 0}
+  dl{margin:12px 0 0} dl div{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid var(--line)} dd{margin:0;text-align:right}
+  #results{scroll-margin-top:90px}
+  details{margin-top:14px;font-size:.875rem} summary{cursor:pointer;font-weight:700}
+  @media(max-width:420px){main{width:calc(100% - 20px)} .question{padding:8px} .choice span{min-height:66px} .choices{gap:4px}}
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <h1>나의 역경지수 진단하기</h1>
+    <p>각 문장이 평소의 나와 얼마나 비슷한지 생각하고, 1점부터 5점까지 하나를 골라 주세요.</p>
+  </header>
+  <div class="progress">
+    <div><label for="progress">응답 진행률</label><strong id="count">0 / 53문항</strong></div>
+    <progress id="progress" value="0" max="53"></progress>
+  </div>
+  <form id="quiz" novalidate>
+    <div id="areas"></div>
+    <p id="missing" class="error" role="alert"></p>
+    <div class="actions"><button type="submit">결과 보기</button></div>
+  </form>
+  <section id="results" class="summary" aria-labelledby="result-title" hidden>
+    <div class="result-head"><h2 id="result-title" tabindex="-1">나의 결과</h2><strong id="total"></strong></div>
+    <p class="muted">앞으로 어떤 힘을 더 키우면 좋을지 살펴보는 참고 자료입니다.</p>
+    <div id="cards" class="result-grid"></div>
+    <details><summary>채점 방식</summary>
+      <p>선택 버튼의 숫자는 동의 정도입니다. 원본에서 5→1 순서로 인쇄된 문항은 6에서 선택한 숫자를 빼서 채점합니다.</p>
+      <p id="reverse-list"></p>
+    </details>
+    <div class="actions"><button id="edit" type="button" class="secondary">응답 수정</button><button id="restart" type="button">다시하기</button></div>
+  </section>
+  <noscript><p>문항에 응답하고 결과를 계산하려면 브라우저에서 자바스크립트를 켜 주세요.</p></noscript>
+</main>
+<script>
+const questions = [
+  '나는 어려운 일이 닥쳤을 때 감정을 통제할 수 있다',
+  '내가 무슨 생각을 하면, 그 생각이 내 기분에 어떤 영향을 미칠지 잘 알아챈다',
+  '논쟁거리가 되는 문제를 가족이나 친구들과 토론할 때 내 감정을 잘 통제할 수 있다',
+  '집중해야 할 중요한 일이 생기면 신바람이 나기보다는 더 스트레스를 받는 편이다',
+  '나는 내 감정에 잘 휘말린다',
+  '때때로 내 감정적인 문제 때문에 학교나 직장에서 공부하거나 일할 때 집중하기 힘들다',
+  '당장 해야 할 일이 있으면 나는 어떠한 유혹이나 방해도 잘 이겨내고 할 일을 한다',
+  '아무리 당황스럽고 어려운 상황이 닥쳐도, 나는 내가 어떤 생각을 하고 있는지 스스로 잘 안다',
+  '누군가가 나에게 화를 낼 경우 나는 우선 그 사람의 의견을 잘 듣는다',
+  '일이 생각대로 잘 안 풀리면 쉽게 포기하는 편이다',
+  '평소 경제적인 소비나 지출 규모에 대해 별 다른 계획 없이 지낸다',
+  '미리 계획을 세우기보다는 즉흥적으로 일을 처리하는 편이다',
+  '문제가 생기면 여러 가지 가능한 해결 방안에 대해 먼저 생각한 후에 해결하려고 노력한다',
+  '어려운 일이 생기면 그 원인이 무엇인지 신중하게 생각한 후에 그 문제를 해결하려고 노력한다',
+  '나는 대부분의 상황에서 문제의 원인을 잘 알고 있다고 믿는다',
+  '나는 사건이나 상황을 잘 파악하지 못한다는 이야기를 종종 듣는다',
+  '문제가 생기면 나는 성급하게 결론을 내린다는 이야기를 종종 듣는다',
+  '어려운 일이 생기면 그 원인을 완전히 이해하지 못했다 하더라도 일단 빨리 해결하는 것이 좋다고 생각한다',
+  '나는 분위기나 대화 상대에 따라 대화를 잘 이끌어 갈 수 있다',
+  '나는 재치 있는 농담을 잘한다',
+  '나는 내가 표현하고자 하는 바에 대한 적절한 문구나 단어를 잘 찾아낸다',
+  '나는 윗사람과 대화하는 것이 부담스럽다',
+  '나는 대화 중에 다른 생각을 하느라 대화 내용을 놓칠 때가 종종 있다',
+  '대화를 할 때 하고 싶은 말을 다 하지 못하고 주저할 때가 종종 있다',
+  '사람들의 얼굴 표정을 보면 어떤 감정인지 알 수 있다',
+  '슬퍼하거나 화를 내거나 당황하는 사람을 보면 그들이 어떤 생각을 하는지 잘 알 수 있다',
+  '동료가 화를 낼 경우 나는 그 이유를 꽤 잘 아는 편이다',
+  '나는 사람들의 행동방식을 때로 이해하기 힘들다',
+  '친한 친구나 애인 혹은 배우자로부터 “당신은 나를 이해 못해”라는 말을 종종 듣는다',
+  '동료와 친구들은 내가 자기 말을 잘 듣지 않는다고 한다',
+  '나는 내 주변 사람들로부터 사랑과 관심을 받고 있다',
+  '나는 내 친구들을 정말로 좋아한다',
+  '내 주변 사람들은 내 기분을 잘 이해한다',
+  '서로 도움을 주고 받는 친구가 별로 없는 편이다',
+  '나는 정기적으로 만나는 사람들은 대부분 나를 싫어하게 된다',
+  '서로 마음을 터놓고 얘기할 수 있는 친구가 거의 없다',
+  '열심히 일하면 언제나 보답이 있으리라고 생각한다',
+  '맞든 아니든 “아무리 어려운 문제라도 나는 해결할 수 있다”고 일단 믿는 것이 좋다고 생각한다',
+  '어려운 상황이 닥쳐도 나는 모든 일이 다 잘 해결될 거라고 확신한다',
+  '내가 어떤 일을 마치고 나면, 주변 사람들이 부정적인 평가를 할까봐 걱정한다',
+  '나에게 일어나는 대부분의 문제들은 나로서는 어쩔 수 없는 상황에 의해 발생한다고 믿는다',
+  '누가 나의 미래에 대해 물어보면 성공한 나의 모습을 상상하기 힘들다',
+  '내 삶은 내가 생각하는 이상적인 삶에 가깝다',
+  '내 인생의 여러가지 조건들은 만족스럽다',
+  '나는 내 삶에 만족한다',
+  '나는 내 삶에서 중요하다고 생각한 것들은 다 갖고 있다',
+  '나는 다시 태어나도 나의 현재 삶을 다시 살고 싶다',
+  '나는 다양한 종류의 많은 사람들에게 고마움을 느낀다',
+  '내가 고맙게 여기는 것들을 모두 적는다면 아주 긴 목록이 될 것이다',
+  '나이가 들어갈 수록 내 삶의 일부가 된 사람, 사건, 생활에 대해 감사하는 마음이 더 커져간다',
+  '나는 감사해야 할 것이 별로 없다',
+  '세상을 둘러볼 때, 내가 고마워 할 것은 별로 없다',
+  '사람이나 일에 대한 고마움을 한참 시간이 지난 후에야 겨우 느낀다'
+];
+
+const reverse = new Set([4,5,6,10,11,12,16,17,18,22,23,24,28,29,30,34,35,36,40,41,42,51,52,53]);
+const choices = ['전혀 그렇지 않다','그렇지 않다','보통이다','약간 그렇다','매우 그렇다'];
+const areas = [
+  {name:'자기조절능력', start:1, end:18, average:63.5, high:75, good:70, low:63, bottom:55, top:7, goodLabel:'자기조절능력 양호',
+    parts:[['감정조절력',1,6],['충동통제력',7,12],['원인분석력',13,18]]},
+  {name:'대인관계능력', start:19, end:36, average:67.8, high:80, good:74, low:67, bottom:62, top:6, goodLabel:'대인 관계 양호',
+    parts:[['소통능력',19,24],['공감능력',25,30],['자아확장력',31,36]]},
+  {name:'긍정성', start:37, end:53, average:63.4, high:75, good:70, low:63, bottom:56, top:7, goodLabel:'긍정성에 별 문제 없음',
+    parts:[['자아낙관성',37,42],['생활만족도',43,47],['감사하기',48,53]]}
+];
+
+const byId = id => document.getElementById(id);
+const form = byId('quiz');
+const progress = byId('progress');
+const results = byId('results');
+const missing = byId('missing');
+const answers = new Map();
+let checkedForMissing = false;
+
+function renderArea(area) {
+  const rows = questions.slice(area.start - 1, area.end).map((question, index) => {
+    const number = area.start + index;
+    const options = choices.map((choice, option) => `
+      <label class="choice">
+        <input type="radio" name="q${number}" data-question="${number}" value="${option + 1}">
+        <span><b>${option + 1}</b>${choice}</span>
+      </label>`).join('');
+    return `<fieldset class="question" id="question-${number}">
+      <legend><span class="number">${number}.</span> ${question}</legend>
+      <div class="choices">${options}</div>
+    </fieldset>`;
+  }).join('');
+  return `<section class="area"><div class="section-head">
+    <h2>${area.name}</h2><span class="muted">${area.start}–${area.end}번</span>
+  </div>${rows}</section>`;
+}
+
+function sumScores(start, end) {
+  let sum = 0;
+  for (let number = start; number <= end; number++) {
+    const answer = answers.get(number);
+    sum += reverse.has(number) ? 6 - answer : answer;
+  }
+  return sum;
+}
+
+function assessment(score, area) {
+  if (score >= area.high) return `상위 ${area.top}% 이내`;
+  if (score >= area.good) return area.goodLabel;
+  if (score <= area.bottom) return '반드시 노력 (하위 20%)';
+  if (score <= area.low) return '노력 필요';
+  return '원본 해석표에 평가 기준 없음';
+}
+
+function refresh() {
+  progress.value = answers.size;
+  byId('count').textContent = `${answers.size} / ${questions.length}문항 · ${Math.round(answers.size / questions.length * 100)}%`;
+  const unanswered = questions.map((_, index) => index + 1).filter(number => !answers.has(number));
+  if (checkedForMissing) {
+    for (const number of unanswered) byId(`question-${number}`).classList.add('missing');
+    missing.textContent = unanswered.length ? `미응답 ${unanswered.length}문항 · ${unanswered.join(', ')}번` : '';
+  }
+  return unanswered;
+}
+
+function renderResult(area) {
+  const score = sumScores(area.start, area.end);
+  const max = (area.end - area.start + 1) * 5;
+  const parts = area.parts.map(([name, start, end]) =>
+    `<div><dt>${name}</dt><dd>${sumScores(start, end)} / ${(end - start + 1) * 5}점</dd></div>`).join('');
+  return `<article class="result-card">
+    <h3>${area.name}</h3>
+    <div class="score-line"><span class="score">${score} / ${max}점</span><small>성인 평균 ${area.average}점</small></div>
+    <p class="assessment">${assessment(score, area)}</p>
+    <dl>${parts}</dl>
+    <details><summary>원본 해석 기준</summary><dl>
+      <div><dt>${area.high}점 이상</dt><dd>상위 ${area.top}% 이내</dd></div>
+      <div><dt>${area.good}–${area.high - 1}점</dt><dd>${area.goodLabel}</dd></div>
+      <div><dt>${area.low + 1}–${area.good - 1}점</dt><dd>기준 없음</dd></div>
+      <div><dt>${area.bottom + 1}–${area.low}점</dt><dd>노력 필요</dd></div>
+      <div><dt>${area.bottom}점 이하</dt><dd>반드시 노력 (하위 20%)</dd></div>
+    </dl></details>
+  </article>`;
+}
+
+byId('areas').innerHTML = areas.map(renderArea).join('');
+byId('reverse-list').textContent = `역채점 문항 · ${[...reverse].join(', ')}번`;
+refresh();
+
+form.addEventListener('change', event => {
+  const number = Number(event.target.dataset.question);
+  answers.set(number, Number(event.target.value));
+  byId(`question-${number}`).classList.remove('missing');
+  refresh();
+});
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  checkedForMissing = true;
+  const unanswered = refresh();
+  if (unanswered.length) {
+    const first = byId(`question-${unanswered[0]}`);
+    first.scrollIntoView({block:'start'});
+    first.querySelector('input').focus({preventScroll:true});
+    return;
+  }
+  byId('total').textContent = `총점 ${sumScores(1, questions.length)} / ${questions.length * 5}점`;
+  byId('cards').innerHTML = areas.map(renderResult).join('');
+  form.hidden = true;
+  results.hidden = false;
+  results.scrollIntoView({block:'start'});
+  byId('result-title').focus({preventScroll:true});
+});
+
+function showQuestions() {
+  results.hidden = true;
+  form.hidden = false;
+  window.scrollTo(0, 0);
+  form.querySelector('input').focus({preventScroll:true});
+}
+
+byId('edit').addEventListener('click', showQuestions);
+byId('restart').addEventListener('click', () => {
+  form.reset();
+  answers.clear();
+  checkedForMissing = false;
+  missing.textContent = '';
+  refresh();
+  showQuestions();
+});
+</script>
+</body>
+</html>
