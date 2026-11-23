@@ -29,7 +29,6 @@
   .choice{position:relative}
   .choice input{position:absolute;width:1px;height:1px;opacity:0}
   .choice span{display:grid;place-content:center;text-align:center;min-height:63px;padding:4px 2px;border:1px solid var(--line);border-radius:10px;background:white;cursor:pointer;line-height:1.25;font-size:clamp(.65rem,2vw,.85rem)}
-  .choice b{font-size:1rem;margin-bottom:3px}
   .choice span:hover{border-color:var(--purple)}
   .choice input:checked + span{background:var(--purple);color:white;border-color:var(--purple)}
   :focus-visible,.choice input:focus-visible + span{outline:3px solid #8a409b;outline-offset:3px}
@@ -52,13 +51,18 @@
 <main>
   <header class="hero">
     <h1>나의 역경지수 진단하기</h1>
-    <p>각 문장이 평소의 나와 얼마나 비슷한지 생각하고, 1점부터 5점까지 하나를 골라 주세요.</p>
+    <p>각 문장이 평소의 나와 얼마나 비슷한지 생각하고, 가장 가까운 응답을 하나 골라 주세요.</p>
   </header>
   <div class="progress">
     <div><label for="progress">응답 진행률</label><strong id="count">0 / 53문항</strong></div>
     <progress id="progress" value="0" max="53"></progress>
   </div>
   <form id="quiz" novalidate>
+    <div class="actions">
+      <button id="shuffle" type="button" class="secondary">문제 랜덤 섞기</button>
+      <button id="restore-order" type="button" class="secondary" hidden>원래 순서로</button>
+    </div>
+    <p id="order-status" class="muted" role="status"></p>
     <div id="areas"></div>
     <p id="missing" class="error" role="alert"></p>
     <div class="actions"><button type="submit">결과 보기</button></div>
@@ -67,10 +71,6 @@
     <div class="result-head"><h2 id="result-title" tabindex="-1">나의 결과</h2><strong id="total"></strong></div>
     <p class="muted">앞으로 어떤 힘을 더 키우면 좋을지 살펴보는 참고 자료입니다.</p>
     <div id="cards" class="result-grid"></div>
-    <details><summary>채점 방식</summary>
-      <p>선택 버튼의 숫자는 동의 정도입니다. 원본에서 5→1 순서로 인쇄된 문항은 6에서 선택한 숫자를 빼서 채점합니다.</p>
-      <p id="reverse-list"></p>
-    </details>
     <div class="actions"><button id="edit" type="button" class="secondary">응답 수정</button><button id="restart" type="button">다시하기</button></div>
   </section>
   <noscript><p>문항에 응답하고 결과를 계산하려면 브라우저에서 자바스크립트를 켜 주세요.</p></noscript>
@@ -149,24 +149,27 @@ const progress = byId('progress');
 const results = byId('results');
 const missing = byId('missing');
 const answers = new Map();
+const originalOrder = questions.map((_, index) => index + 1);
+let order = [...originalOrder];
 let checkedForMissing = false;
 
-function renderArea(area) {
-  const rows = questions.slice(area.start - 1, area.end).map((question, index) => {
-    const number = area.start + index;
-    const options = choices.map((choice, option) => `
-      <label class="choice">
-        <input type="radio" name="q${number}" data-question="${number}" value="${option + 1}">
-        <span><b>${option + 1}</b>${choice}</span>
-      </label>`).join('');
+function renderQuestions() {
+  const rows = order.map((number, index) => {
+    const options = choices.map((choice, option) => {
+      const score = option + 1;
+      const checked = answers.get(number) === score ? ' checked' : '';
+      return `<label class="choice">
+        <input type="radio" name="q${number}" data-question="${number}" value="${score}"${checked}>
+        <span>${choice}</span>
+      </label>`;
+    }).join('');
     return `<fieldset class="question" id="question-${number}">
-      <legend><span class="number">${number}.</span> ${question}</legend>
+      <legend><span class="number">${index + 1}.</span> ${questions[number - 1]}</legend>
       <div class="choices">${options}</div>
     </fieldset>`;
   }).join('');
-  return `<section class="area"><div class="section-head">
-    <h2>${area.name}</h2><span class="muted">${area.start}–${area.end}번</span>
-  </div>${rows}</section>`;
+  byId('areas').innerHTML = `<section class="area" aria-label="설문 문항">${rows}</section>`;
+  refresh();
 }
 
 function sumScores(start, end) {
@@ -189,10 +192,11 @@ function assessment(score, area) {
 function refresh() {
   progress.value = answers.size;
   byId('count').textContent = `${answers.size} / ${questions.length}문항 · ${Math.round(answers.size / questions.length * 100)}%`;
-  const unanswered = questions.map((_, index) => index + 1).filter(number => !answers.has(number));
+  const unanswered = order.filter(number => !answers.has(number));
   if (checkedForMissing) {
     for (const number of unanswered) byId(`question-${number}`).classList.add('missing');
-    missing.textContent = unanswered.length ? `미응답 ${unanswered.length}문항 · ${unanswered.join(', ')}번` : '';
+    const positions = unanswered.map(number => order.indexOf(number) + 1);
+    missing.textContent = unanswered.length ? `미응답 ${unanswered.length}문항 · ${positions.join(', ')}번` : '';
   }
   return unanswered;
 }
@@ -217,9 +221,34 @@ function renderResult(area) {
   </article>`;
 }
 
-byId('areas').innerHTML = areas.map(renderArea).join('');
-byId('reverse-list').textContent = `역채점 문항 · ${[...reverse].join(', ')}번`;
-refresh();
+function restoreOrder(message = '') {
+  order = [...originalOrder];
+  byId('restore-order').hidden = true;
+  byId('order-status').textContent = message;
+  renderQuestions();
+}
+
+renderQuestions();
+
+byId('shuffle').addEventListener('click', () => {
+  const shuffled = [...order];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[other]] = [shuffled[other], shuffled[index]];
+  }
+  if (shuffled.every((number, index) => number === order[index])) {
+    shuffled.push(shuffled.shift());
+  }
+  order = shuffled;
+  byId('restore-order').hidden = false;
+  byId('order-status').textContent = '문항 순서를 섞었습니다. 이미 선택한 응답은 유지됩니다.';
+  renderQuestions();
+});
+
+byId('restore-order').addEventListener('click', () => {
+  restoreOrder('원래 문항 순서로 돌아왔습니다.');
+  byId('shuffle').focus();
+});
 
 form.addEventListener('change', event => {
   const number = Number(event.target.dataset.question);
@@ -255,11 +284,10 @@ function showQuestions() {
 
 byId('edit').addEventListener('click', showQuestions);
 byId('restart').addEventListener('click', () => {
-  form.reset();
   answers.clear();
   checkedForMissing = false;
   missing.textContent = '';
-  refresh();
+  restoreOrder();
   showQuestions();
 });
 </script>
