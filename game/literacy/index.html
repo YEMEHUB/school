@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무릉중 문해력 퀴즈</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0e1c;color:#f7f5ff;font:1rem/1.45 system-ui,sans-serif}
+main{width:min(1440px,calc(100% - 24px));margin:16px auto}
+header,nav,.controls,.zoom-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+header,.controls,.zoom-controls{justify-content:space-between}
+h1,p{margin:0}
+h1{font-size:clamp(1.2rem,4vw,1.8rem)}
+nav,.controls{margin:10px 0}
+button{font:inherit;min-height:44px;padding:7px 12px;border:1px solid #565c82;border-radius:9px;background:#222747;color:inherit;cursor:pointer}
+button:hover:not(:disabled){background:#393f69}
+button[aria-current=true],button.primary{background:#c5c8ff;color:#15172c;font-weight:750}
+button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:3px solid #ffeb89;outline-offset:2px}
+figure{margin:0;border:1px solid #3f4569;border-radius:10px;overflow:hidden;background:#000}
+figure img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+#status,#zoom-status{color:#d7daf3}
+dialog{width:100%;max-width:none;height:100%;max-height:none;margin:0;padding:0;border:0;background:#080a14;color:#fff}
+dialog[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}
+.zoom-controls{padding:8px 12px}
+.zoom-window{overflow:auto;overscroll-behavior:contain;background:#000}
+.zoom-window img{display:block;height:auto;margin:auto;max-width:none}
+@media(max-width:480px){main{width:calc(100% - 16px)}button{padding:6px 9px}}
+</style>
+</head>
+<body>
+<main>
+  <header><h1>무릉중 문해력 퀴즈</h1><p id="status" role="status"></p></header>
+  <nav aria-label="학습 단계">
+    <button data-go="0">처음</button>
+    <button data-go="1">레벨 1</button>
+    <button data-go="8">레벨 2</button>
+    <button data-go="11">레벨 3</button>
+    <button data-go="17">레벨 4</button>
+  </nav>
+  <figure><img id="slide" src="slides/15.png" alt="문해력 퀴즈 표지"></figure>
+  <div class="controls">
+    <div class="actions"><button id="previous">← 이전</button><button id="zoom">화면 확대</button></div>
+    <div class="actions">
+      <button id="hint" aria-pressed="false" hidden>초성 힌트</button>
+      <button id="answer" aria-pressed="false" hidden>정답 보기</button>
+      <button id="next" class="primary">시작하기 →</button>
+    </div>
+  </div>
+  <noscript>퀴즈를 이용하려면 브라우저에서 자바스크립트를 켜 주세요.</noscript>
+</main>
+<dialog id="zoom-dialog" aria-label="퀴즈 화면 확대">
+  <div class="zoom-controls">
+    <div class="actions"><button id="smaller" aria-label="축소">−</button><span id="zoom-status" role="status"></span><button id="larger" aria-label="확대">+</button></div>
+    <button id="close-zoom">닫기</button>
+  </div>
+  <div id="zoom-window" class="zoom-window"><img id="zoom-image" alt=""></div>
+</dialog>
+<script>
+const cards = [
+  [0,15],
+  [1,16],[1,17,18],[1,19,20],[1,21,22],[1,23,24],[1,25,26],[1,27,28],
+  [2,29],[2,30,31],[2,32,33],
+  [3,34],[3,35,37,36],[3,38,40,39],[3,41,43,42],[3,44,46,45],[3,47,49,48],
+  [4,50],[4,51,52],[4,53,54],[4,55,56],[4,57,58],[4,59,60],[4,61,62],[4,63,64],[4,65,66],
+  [5,67]
+];
+const byId = id => document.getElementById(id);
+const slide = byId('slide');
+const hint = byId('hint');
+const answer = byId('answer');
+const previous = byId('previous');
+const next = byId('next');
+const zoomDialog = byId('zoom-dialog');
+const zoomImage = byId('zoom-image');
+const zoomWindow = byId('zoom-window');
+const jumps = document.querySelectorAll('[data-go]');
+let current = 0;
+let face = 'question';
+let zoom = 1;
+
+function render() {
+  const [level, question, solution, clue] = cards[current];
+  const source = face === 'answer' ? solution : face === 'hint' ? clue : question;
+  const label = level === 0 ? '퀴즈 표지' : level === 5 ? '퀴즈 완료' : '레벨 ' + level;
+  const questions = cards.filter(card => card[0] === level && card[2]);
+  const position = questions.indexOf(cards[current]) + 1;
+  const progress = position ? ' · ' + position + ' / ' + questions.length : '';
+  slide.src = 'slides/' + source + '.png';
+  slide.alt = label + progress + (position ? ' · ' + ({question:'문제',hint:'초성 힌트',answer:'정답'})[face] : '');
+  byId('status').textContent = label + progress;
+  hint.hidden = !clue;
+  answer.hidden = !solution;
+  hint.textContent = face === 'hint' ? '힌트 가리기' : '초성 힌트';
+  answer.textContent = face === 'answer' ? '정답 가리기' : '정답 보기';
+  hint.setAttribute('aria-pressed', String(face === 'hint'));
+  answer.setAttribute('aria-pressed', String(face === 'answer'));
+  previous.disabled = current === 0;
+  next.disabled = current === cards.length - 1;
+  next.textContent = current === 0 ? '시작하기 →' : current === cards.length - 2 ? '퀴즈 완료 →' : '다음 →';
+  for (const button of jumps) button.setAttribute('aria-current', String(cards[Number(button.dataset.go)][0] === level));
+}
+
+function go(index) {
+  if (index < 0 || index >= cards.length) return;
+  current = index;
+  face = 'question';
+  render();
+}
+
+function toggle(target) {
+  face = face === target ? 'question' : target;
+  render();
+}
+
+function setZoom(value) {
+  zoom = Math.min(3, Math.max(1, value));
+  const fitWidth = Math.min(zoomWindow.clientWidth, zoomWindow.clientHeight * 16 / 9);
+  zoomImage.style.width = Math.round(fitWidth * zoom) + 'px';
+  byId('zoom-status').textContent = Math.round(zoom * 100) + '%';
+  byId('smaller').disabled = zoom === 1;
+  byId('larger').disabled = zoom === 3;
+}
+
+previous.addEventListener('click', () => go(current - 1));
+next.addEventListener('click', () => go(current + 1));
+hint.addEventListener('click', () => toggle('hint'));
+answer.addEventListener('click', () => toggle('answer'));
+for (const button of jumps) button.addEventListener('click', () => go(Number(button.dataset.go)));
+byId('zoom').addEventListener('click', () => {
+  zoomImage.src = slide.src;
+  zoomImage.alt = slide.alt;
+  zoomDialog.showModal();
+  zoomWindow.scrollTop = 0;
+  zoomWindow.scrollLeft = 0;
+  setZoom(1);
+});
+byId('close-zoom').addEventListener('click', () => zoomDialog.close());
+byId('smaller').addEventListener('click', () => setZoom(zoom - .25));
+byId('larger').addEventListener('click', () => setZoom(zoom + .25));
+window.addEventListener('resize', () => { if (zoomDialog.open) setZoom(zoom); });
+document.addEventListener('keydown', event => {
+  if (zoomDialog.open || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+  if (event.key === 'ArrowLeft') go(current - 1);
+  if (event.key === 'ArrowRight') go(current + 1);
+});
+render();
+</script>
+</body>
+</html>
