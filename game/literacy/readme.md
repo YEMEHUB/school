@@ -1,1 +1,1 @@
-https://yemehub.github.io//school/game/literacy/
+https://yemehub.github.io/school/game/literacy/
